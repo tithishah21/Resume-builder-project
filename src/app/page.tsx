@@ -1,5 +1,13 @@
+"use client";
 import LandingPage from "./components/landingpage";
+import GooeyNav from './gooeynavbar';
 export default function Home() {
+  const items = [
+    { label: "Home", href: "#" },
+    { label: "Features", href: "#" },
+    { label: "Templates", href: "#" },
+    { label: "Contact", href: "#" },
+  ];
   return (
     <>
       {/* Navbar */}
@@ -9,11 +17,17 @@ export default function Home() {
                 ResumeBuilder Pro
               </h1>
             </div>
-            <div className="flex flex-row gap-12 text-lg font-semibold">
-              <button className="hover:text-cyan-400">Home</button>
-              <button className="hover:text-cyan-400">Features</button>
-              <button className="hover:text-cyan-400">Templates</button>
-              <button className="hover:text-cyan-400">Contact</button>
+            <div style={{ position: 'relative'}}>
+              <GooeyNav
+                items={items}
+                particleCount={15}
+                particleDistances={[90, 10]}
+                particleR={100}
+                initialActiveIndex={0}
+                animationTime={600}
+                timeVariance={300}
+                colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+              />
             </div>
             <div className="flex flex-row gap-5 pr-9 justify-center items-center">
               <button className=" text-gray-400 bg-gray-200 border-gray-300 border-[0.1rem] rounded-lg px-7 py-[0.6rem] font-bold hover:bg-gray-800 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-200">Sign In</button>
