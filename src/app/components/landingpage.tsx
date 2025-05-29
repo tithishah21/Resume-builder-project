@@ -1,10 +1,12 @@
 import React from 'react'
 import Image from 'next/image';
+import Features from './features';
 
 function LandingPage() {
   return (
     <>
-      <section className="bg-gradient-to-br from-blue-900/20 via-gray-950 to-cyan-900/20 h-[180vw] lg:h-[65vw] w-full px-10 flex flex-col lg:flex-row gap-10">
+      <section className="bg-gradient-to-br from-blue-900/20 via-gray-950 to-cyan-900/20 h-[180vw] lg:h-[48vw] w-full px-10 ">
+        <div className="flex flex-col lg:flex-row gap-10">
         <div className='mt-28'>
           <div className='font-extrabold text-8xl leading-tight'>Build Your</div>
           <div className='font-extrabold text-8xl bg-gradient-to-r from-blue-700 to-cyan-400 bg-clip-text text-transparent'>Dream Resume</div>
@@ -26,7 +28,9 @@ function LandingPage() {
             className="rounded-xl drop-shadow-2xl"
           />
         </div>
+        </div>
       </section>
+      <Features />
     </>
   );
 }
