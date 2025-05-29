@@ -1,6 +1,7 @@
 import React from 'react'
 import Image from 'next/image';
 import Features from './features';
+import Contact from './about';
 
 function LandingPage() {
   return (
@@ -31,6 +32,7 @@ function LandingPage() {
         </div>
       </section>
       <Features />
+      <Contact />
     </>
   );
 }

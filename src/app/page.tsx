@@ -6,7 +6,7 @@ export default function Home() {
     { label: "Home", href: "#" },
     { label: "Features", href: "#" },
     { label: "Templates", href: "#" },
-    { label: "Contact", href: "#" },
+    { label: "About Me", href: "#" },
   ];
   return (
     <>
@@ -30,7 +30,7 @@ export default function Home() {
               />
             </div>
             <div className="flex flex-row gap-5 pr-9 justify-center items-center">
-              <button className=" text-gray-400 bg-gray-200 border-gray-300 border-[0.1rem] rounded-lg px-7 py-[0.6rem] font-bold hover:bg-gray-800 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-200">Sign In</button>
+              <button className="border-[0.1rem] rounded-lg px-7 py-[0.6rem] font-bold :bg-gray-800 border-cyan-400 text-cyan-400 hover:bg-slate-800 transition-all duration-200">Sign In</button>
               <button className="rounded-lg px-7 py-[0.6rem] font-bold bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white shadow-lg hover:shadow-blue-500/25 transition-all duration-200">Sign Up</button>
             </div>
       </div>
