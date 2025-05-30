@@ -1,5 +1,5 @@
 import React from 'react';
-import SpotlightCard from './spotlightcard';
+import SpotlightCard from '../components/spotlightcard';
 import { RxLightningBolt } from "react-icons/rx";
 import { MdOutlineShield } from "react-icons/md";
 import { FaRegFilePdf } from "react-icons/fa6";

@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image';
-import Features from './features';
-import Contact from './about';
+import Features from '../features/page';
+import Contact from '../about/page';
 
 function LandingPage() {
   return (

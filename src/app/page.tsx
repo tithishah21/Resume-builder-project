@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from 'next/navigation';
 import LandingPage from "./components/landingpage";
-import GooeyNav from './gooeynavbar';
+import GooeyNav from './components/gooeynavbar';
 
 export default function Home() {
   const router = useRouter();
@@ -26,8 +26,8 @@ export default function Home() {
           <GooeyNav
             items={items}
             particleCount={10}
-            particleDistances={[90, 10]}
-            particleR={100}
+            particleDistances={[60, 10]}
+            particleR={300}
             initialActiveIndex={0}
             animationTime={600}
             timeVariance={300}

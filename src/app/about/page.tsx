@@ -1,5 +1,6 @@
+"use client"
 import React, { useRef } from 'react';
-import VariableProximity from './variable_proximity';
+import VariableProximity from '../components/variable_proximity';
 import { Roboto_Flex } from 'next/font/google';
 import Image from 'next/image';
 
