@@ -174,7 +174,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             pointer-events: none;
             display: grid;
             place-items: center;
-            z-index: 1;
+            
           }
           .effect.text {
             color: white;
@@ -184,28 +184,28 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             color: black;
           }
           .effect.filter {
-            filter: blur(7px) contrast(100) blur(0);
+            filter: blur(0px) contrast(100) blur(0);
             mix-blend-mode: lighten;
           }
           .effect.filter::before {
             content: "";
             position: absolute;
             inset: -75px;
-            z-index: -2;
-            background: black;
+            
+            background: transparent;
           }
           .effect.filter::after {
             content: "";
             position: absolute;
             inset: 0;
             background: white;
-            transform: scale(0);
+            transform: scale(5);
             opacity: 0;
-            z-index: -1;
+            
             border-radius: 9999px;
           }
           .effect.active::after {
-            animation: pill 0.3s ease both;
+            animation:  0.3s ease both;
           }
           @keyframes pill {
             to {
@@ -297,7 +297,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             opacity: 0;
             transform: scale(0);
             transition: all 0.3s ease;
-            z-index: -1;
+            
           }
         `}
       </style>

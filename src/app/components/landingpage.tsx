@@ -6,7 +6,7 @@ import Contact from './about';
 function LandingPage() {
   return (
     <>
-      <section className="bg-gradient-to-br from-blue-900/20 via-gray-950 to-cyan-900/20 h-[180vw] lg:h-[48vw] w-full px-10 ">
+      <section className="bg-gradient-to-br from-blue-900/20 via-gray-950 to-cyan-900/20 h-[180vw] lg:h-[48vw] w-full px-10 z-10">
         <div className="flex flex-col lg:flex-row gap-10">
         <div className='mt-28'>
           <div className='font-extrabold text-8xl leading-tight'>Build Your</div>
