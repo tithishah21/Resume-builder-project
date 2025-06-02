@@ -6,7 +6,7 @@ import { FaRegFilePdf } from "react-icons/fa6";
 
 function features() {
   return (
-    <section className='bg-gray-900/50 w-full h-[50vw]'>
+    <section className='bg-gray-900/50 w-full h-[50vw] scroll-mt-24' id="features">
     <div className='pt-20 text-white font-semibold text-5xl text-center leading-tight'>Why Choose ResumeBuilder Pro?</div>
     <div className='pt-6 text-white font-medium text-3xl text-center leading-tight mb-14'>Let's explore the features...</div>
     <div className='flex flex-row justify-evenly'>

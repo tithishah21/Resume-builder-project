@@ -6,9 +6,9 @@ import GooeyNav from './gooeynavbar';
 function header() {
     const items = [
         { label: "Home", href: "" },
-        { label: "Features", href: "#" },
+        { label: "Features", href: "#features" },
         { label: "Templates", href: "#" },
-        { label: "About Me", href: "#" },
+        { label: "About Me", href: "#contact" },
       ];
       const router = useRouter();
   return (
