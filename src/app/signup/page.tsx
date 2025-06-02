@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+import  Footer from '../components/footer';
 
 function Page() {
   const router = useRouter();
@@ -50,6 +51,7 @@ function Page() {
   };
 
   return (
+    <div>
     <div className="h-screen flex justify-center items-center bg-gray-950 text-white">
       <form
         onSubmit={handleSubmit}
@@ -115,6 +117,8 @@ function Page() {
           </button>
         </div>
       </form>
+    </div>
+    <Footer />
     </div>
   );
 }
