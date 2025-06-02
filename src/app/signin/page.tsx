@@ -1,10 +1,44 @@
 // /src/app/signin/page.tsx
 "use client";
 import { useRouter } from 'next/navigation';
-import React from 'react'
+import React from 'react';
+import { useState } from 'react';
 
 function page() {
   const router = useRouter();
+
+  const [email , setEmail] = useState("");
+  const [emailError , setEmailError] = useState("");
+  const [password , setPassword] = useState("");
+  const [passwordError , setPasswordError] = useState("");
+
+  const validateEmail = (email : string) =>{
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+  const handleSignIn = () =>{
+    let isValid = true;
+    if (!validateEmail(email)) {
+      setEmailError("Please enter a valid email address.");
+      isValid = false;
+    } else {
+      setEmailError("");
+    }
+
+    if(password.length < 8){
+      setPasswordError("Password must be atleast 8 characters long.");
+      isValid = false;
+    }
+    else{
+      isValid=true;
+    }
+    if(!isValid){
+      return;
+    }
+    console.log("logging in",email,password);
+  
+  }
+
   return (
     <div className="h-screen flex justify-center items-center bg-gray-950 text-white">
       <div className='rounded-xl container mx-auto h-[50vw] w-[40vw] px-6 py-16 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col'>
@@ -20,7 +54,10 @@ function page() {
             type="email"
             placeholder='Enter your email'
             className='mt-3 py-2 px-3 w-[32rem] rounded-lg bg-gray-800 border border-gray-600 placeholder:text-white placeholder:font-medium'
+            value={email}
+            onChange={(e)=> setEmail(e.target.value)}
           />
+          {emailError && <p className='text-red-500 text-xs mt-1'>{emailError}</p>}
         </div>
 
         
@@ -35,7 +72,10 @@ function page() {
             type="password"
             placeholder='Enter your password'
             className='mt-3 py-2 px-3 w-[32rem] rounded-lg bg-gray-800 border border-gray-600 placeholder:text-white placeholder:font-medium'
+            value={password}
+            onChange={(e)=> setPassword(e.target.value)}
           />
+          {passwordError && <p className='text-red-500 text-xs mt-1'>{passwordError}</p>}
         </div>
         
         <span>
@@ -43,7 +83,9 @@ function page() {
         <label className='ml-2'>Remember me</label>
         </span>
         
-        <button className='mt-14 w-[32rem] py-3 text-lg rounded-lg bg-gradient-to-r from-blue-600 to-cyan-500 hover:bg-gradient-to-r hover:from-blue-700 hover:to-cyan-600 shadow-md hover:shadow-md hover:shadow-blue-400 font-bold'>Sign In</button>
+        <button onClick={handleSignIn}
+        className='mt-14 w-[32rem] py-3 text-lg rounded-lg bg-gradient-to-r from-blue-600 to-cyan-500 hover:bg-gradient-to-r hover:from-blue-700 hover:to-cyan-600 shadow-md hover:shadow-md hover:shadow-blue-400 font-bold'>
+          Sign In</button>
 
         <div className='mt-7 mx-auto'>
           <span className='text-gray-400 mt-5 text-lg mr-2'>Don't have an account?</span>
