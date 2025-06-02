@@ -1,67 +1,49 @@
 "use client";
 import { useRouter } from 'next/navigation';
-import LandingPage from "./components/landingpage";
-import GooeyNav from './components/gooeynavbar';
+import Header from "./components/header";
+import Footer from "./components/footer";
+import Image from 'next/image';
+import Features from './features/page';
+import Contact from './contact/page';
 
 export default function Home() {
   const router = useRouter();
 
-  const items = [
-    { label: "Home", href: "" },
-    { label: "Features", href: "#" },
-    { label: "Templates", href: "#" },
-    { label: "About Me", href: "#" },
-  ];
-
   return (
     <>
-      {/* Navbar */}
-      <div className="bg-gray-900 py-10 border-b border-slate-800 flex flex-col lg:flex-row justify-between items-center top-0 sticky z-50" id="header">
-        <div className="mb-0 lg:pl-9">
-          <h1 className="text-2xl lg:text-3xl font-semibold text-white">
-            ResumeBuilder Pro
-          </h1>
-        </div>
-        <div style={{ position: 'relative' }}>
-          <GooeyNav
-            items={items}
-            particleCount={10}
-            particleDistances={[60, 10]}
-            particleR={300}
-            initialActiveIndex={0}
-            animationTime={600}
-            timeVariance={300}
-            colors={[1, 2, 3, 1, 2, 3, 1, 4]}
-          />
-        </div>
-        <div className="flex flex-row gap-5 pr-9 justify-center items-center">
-          <button
-            onClick={() => router.push('/signin')}
-            className="border-[0.1rem] rounded-lg px-7 py-[0.6rem] font-bold :bg-gray-800 border-cyan-400 text-cyan-400 hover:bg-slate-800 transition-all duration-200"
-          >
-            Sign In
-          </button>
-          <button 
-          onClick={() => router.push('/signup')}
-          className="rounded-lg px-7 py-[0.6rem] font-bold bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white shadow-lg hover:shadow-blue-500/25 transition-all duration-200">
-            Sign Up
-          </button>
-        </div>
-      </div>
+      <Header />
+      {/* Landing Section */}
+      <section className="bg-gradient-to-br from-blue-900/20 via-gray-950 to-cyan-900/20 h-[180vw] lg:h-[48vw] w-full px-10 z-10">
+        <div className="flex flex-col lg:flex-row gap-10">
+          <div className='mt-28'>
+            <div className='font-extrabold text-8xl leading-tight'>Build Your</div>
+            <div className='font-extrabold text-8xl bg-gradient-to-r from-blue-700 to-cyan-400 bg-clip-text text-transparent'>Dream Resume</div>
+            <div className='mt-12 text-[2rem] font-medium'>
+              Build, edit, and export resumes effortlessly using<br />professional & sleek templates designed for you.
+            </div>
+            <button
+              onClick={() => router.push('/signup')}
+              className='mt-14 py-4 px-60 rounded-lg text-3xl leading-tight bg-gradient-to-r from-blue-800 to-cyan-400 font-semibold hover:bg-gradient-to-r hover:from-blue-900 hover:to-cyan-600 shadow-lg hover:shadow-blue-500/25 transition-all duration-200'
+            >
+              Let's Get Started
+            </button>
+          </div>
 
-      <LandingPage />
-
-      {/* Footer */}
-      <footer className="py-10 bg-gray-900 border-t border-gray-800 flex flex-col lg:flex-row justify-between items-center lg:px-9">
-        <div className="mb-4 lg:mb-0">
-          <h1 className="text-2xl lg:text-3xl font-semibold text-white">
-            ResumeBuilder Pro
-          </h1>
+          {/* Hero Image */}
+          <div className="ml-10 mt-24 hidden lg:block">
+            <Image
+              src="/resume.png"
+              alt="Resume Illustration"
+              width={500}
+              height={600}
+              className="rounded-xl drop-shadow-2xl"
+            />
+          </div>
         </div>
-        <div className="text-base lg:text-lg text-gray-400">
-          © 2025 ResumeBuilder Pro. All rights reserved.
-        </div>
-      </footer>
+      </section>
+      <Features />
+      <Contact />
+      <Footer />
     </>
   );
 }
