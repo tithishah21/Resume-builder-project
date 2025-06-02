@@ -1,13 +1,16 @@
 // /src/app/signin/page.tsx
+"use client";
+import { useRouter } from 'next/navigation';
 import React from 'react'
 
 function page() {
+    const router = useRouter();
   return (
     <div className="h-screen flex justify-center items-center bg-gray-950 text-white">
       <div className='rounded-xl container mx-auto h-[53vw] w-[40vw] px-6 py-16 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col'>
         <div className='font-extrabold text-4xl mx-auto'>Create Account</div>
         <div className='text-gray-400 mt-5 text-xl mx-auto'>
-          Join thousand of professionals building standout resumes
+          Join thousands of professionals building standout resumes
         </div>
         
 
@@ -48,7 +51,9 @@ function page() {
 
         <div className='mt-7 mx-auto'>
           <span className='text-gray-400 mt-5 text-lg mr-2'>Already have an account?</span>
-          <button className='text-cyan-400 font-bold hover:text-cyan-200'>Sign in here</button>
+          <button 
+          onClick={() => router.push('/signin')}
+          className='text-cyan-400 font-bold hover:text-cyan-200'>Sign in here</button>
         </div>
       </div>
     </div>

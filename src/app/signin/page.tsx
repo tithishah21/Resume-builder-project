@@ -1,7 +1,10 @@
 // /src/app/signin/page.tsx
+"use client";
+import { useRouter } from 'next/navigation';
 import React from 'react'
 
 function page() {
+  const router = useRouter();
   return (
     <div className="h-screen flex justify-center items-center bg-gray-950 text-white">
       <div className='rounded-xl container mx-auto h-[50vw] w-[40vw] px-6 py-16 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col'>
@@ -44,7 +47,8 @@ function page() {
 
         <div className='mt-7 mx-auto'>
           <span className='text-gray-400 mt-5 text-lg mr-2'>Don't have an account?</span>
-          <button className='text-cyan-400 font-bold hover:text-cyan-200'>Sign up here</button>
+          <button onClick={() => router.push('/signup')}
+          className='text-cyan-400 font-bold hover:text-cyan-200'>Sign up here</button>
         </div>
       </div>
     </div>
