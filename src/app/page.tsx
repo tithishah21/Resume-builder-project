@@ -28,8 +28,6 @@ export default function Home() {
               Let's Get Started
             </button>
           </div>
-
-          {/* Hero Image */}
           <div className="ml-10 mt-24 hidden lg:block">
             <Image
               src="/resume.png"

@@ -12,8 +12,8 @@ function header() {
       ];
       const router = useRouter();
   return (
-    <div>
-      <div className="bg-gray-900 py-10 border-b border-slate-800 flex flex-col lg:flex-row justify-between items-center top-0 sticky z-50" id="header">
+    <div className='sticky top-0 z-50 bg-black' id="header">
+      <div className="bg-gray-900 py-10 border-b border-slate-800 flex flex-col lg:flex-row justify-between items-center top-0 " >
         <div className="mb-0 lg:pl-9">
           <h1 className="text-2xl lg:text-3xl font-semibold text-white">
             ResumeBuilder Pro
