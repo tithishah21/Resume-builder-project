@@ -8,7 +8,7 @@ function header() {
         { label: "Home", href: "" },
         { label: "Features", href: "#features" },
         { label: "Templates", href: "#" },
-        { label: "About Me", href: "#contact" },
+        { label: "About Me", href: "#about" },
       ];
       const router = useRouter();
   return (

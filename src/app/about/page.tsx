@@ -14,7 +14,7 @@ function Contact() {
   const containerRef = useRef(null);
 
   return (
-    <section className="bg-gradient-to-br from-blue-900/20 via-gray-950 to-cyan-900/20 h-[180vw] lg:h-[55vw] w-full px-10 scroll-mt-24" id="contact">
+    <section className="bg-gradient-to-br from-blue-900/20 via-gray-950 to-cyan-900/20 h-[180vw] lg:h-[55vw] w-full px-10 scroll-mt-24" id="about">
       <div
         ref={containerRef}
         style={{ position: 'relative' ,fontSize:'8vw',fontWeight:'bolder', color:'#f8fafc'}}
