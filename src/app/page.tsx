@@ -7,7 +7,7 @@ export default function Home() {
   const router = useRouter();
 
   const items = [
-    { label: "Home", href: "#" },
+    { label: "Home", href: "" },
     { label: "Features", href: "#" },
     { label: "Templates", href: "#" },
     { label: "About Me", href: "#" },
@@ -41,7 +41,9 @@ export default function Home() {
           >
             Sign In
           </button>
-          <button className="rounded-lg px-7 py-[0.6rem] font-bold bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white shadow-lg hover:shadow-blue-500/25 transition-all duration-200">
+          <button 
+          onClick={() => router.push('/signup')}
+          className="rounded-lg px-7 py-[0.6rem] font-bold bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white shadow-lg hover:shadow-blue-500/25 transition-all duration-200">
             Sign Up
           </button>
         </div>

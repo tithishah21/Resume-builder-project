@@ -14,7 +14,7 @@ function page() {
         <div className='mt-14'>
           <label className='text-xl text-white'>Email Address</label>
           <input
-            type="text"
+            type="email"
             placeholder='Enter your email'
             className='mt-3 py-2 px-3 w-[32rem] rounded-lg bg-gray-800 border border-gray-600 placeholder:text-white placeholder:font-medium'
           />
