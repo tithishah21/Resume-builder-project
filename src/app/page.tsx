@@ -4,7 +4,7 @@ import Header from "./components/header";
 import Footer from "./components/footer";
 import Image from 'next/image';
 import Features from './features/page';
-import Contact from './about/page';
+import About from './about/page';
 
 export default function Home() {
   const router = useRouter();
@@ -40,7 +40,7 @@ export default function Home() {
         </div>
       </section>
       <Features />
-      <Contact />
+      <About />
       <Footer />
     </>
   );

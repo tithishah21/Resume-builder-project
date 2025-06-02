@@ -2,16 +2,18 @@
 import React from 'react'
 import { useRouter } from 'next/navigation';
 import GooeyNav from './gooeynavbar';
+import { Link as ScrollLink } from 'react-scroll';
 
 function header() {
     const items = [
-        { label: "Home", href: "" },
+        { label: "Home", href: "/" },
         { label: "Features", href: "#features" },
         { label: "Templates", href: "#" },
         { label: "About Me", href: "#about" },
       ];
       const router = useRouter();
   return (
+    
     <div className='sticky top-0 z-50 bg-black' id="header">
       <div className="bg-gray-900 py-10 border-b border-slate-800 flex flex-col lg:flex-row justify-between items-center top-0 " >
         <div className="mb-0 lg:pl-9">

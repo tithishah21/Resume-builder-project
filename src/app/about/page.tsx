@@ -10,7 +10,7 @@ const roboto = Roboto_Flex({
   display: 'swap',
 });
 
-function Contact() {
+function About() {
   const containerRef = useRef(null);
 
   return (
@@ -55,4 +55,4 @@ function Contact() {
   );
 }
 
-export default Contact;
+export default About;
