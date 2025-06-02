@@ -45,7 +45,6 @@ function Page() {
     }
 
     if (isValid) {
-      // You can handle API call or redirection here
       alert('Account created successfully!');
     }
   };
