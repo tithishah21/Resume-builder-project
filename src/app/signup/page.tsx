@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import Footer from '../components/footer';
 import { createClient } from '../../../utils/supabase/client'; 
+import bcrypt from 'bcryptjs';
 
 function Page() {
   const router = useRouter();
@@ -59,51 +60,41 @@ function Page() {
     if (!isValid) return;
 
     setIsLoading(true);
-  
-    try {
-      const supabase = createClient();
-  
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
+
+      try {
+        const supabase = createClient();
+        // Hash password
+        const hashedPassword = bcrypt.hashSync(password, 10);
+        const { data, error } = await supabase.from('users').insert([
+          {
             full_name: fullName,
-            display_name: fullName
+            email,
+            password: hashedPassword,
+            created_at: new Date().toISOString()
           }
+        ]);
+
+        if (error) {
+          if (error.message.includes('duplicate key')) {
+            setEmailError('An account with this email already exists. Try signing in instead.');
+          } else {
+            setGeneralError(error.message);
+          }
+          return;
         }
-      });
-  
-      if (error) {
-        
-        if (error.message.includes('User already registered')) {
-          setEmailError('An account with this email already exists. Try signing in instead.');
-        } else if (error.message.includes('Password should be at least')) {
-          setPasswordError(error.message);
-        } else if (error.message.includes('Unable to validate email address')) {
-          setEmailError('Please enter a valid email address');
-        } else {
-          setGeneralError(error.message);
-        }
-        return;
-      }
-  
-      if (data.user) {
-        
-        alert('Account created successfully! Please check your email to confirm your account before signing in.');
+
+        alert('Account created successfully! You can now sign in.');
         setFullName('');
         setEmail('');
         setPassword('');
-        
-        // Redirect to signin
         router.push('/signin');
+      } catch (err) {
+        console.error('Unexpected error during signup:', err);
+        setGeneralError('An unexpected error occurred. Please try again.');
+      } finally {
+        setIsLoading(false);
       }
-    } catch (err) {
-      console.error('Unexpected error during signup:', err);
-      setGeneralError('An unexpected error occurred. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+
   };
 
   return (

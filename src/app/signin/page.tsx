@@ -4,6 +4,7 @@ import React from 'react';
 import { useState } from 'react';
 import Footer from '../components/footer';
 import { createClient } from '../../../utils/supabase/client';
+import bcrypt from 'bcryptjs';
 
 function page() {
   const router = useRouter();
@@ -23,46 +24,74 @@ function page() {
     let isValid = true;
     setEmailError("");
     setPasswordError("");
-
+  
     if (!validateEmail(email)) {
       setEmailError("Please enter a valid email address.");
       isValid = false;
     }
-
+  
     if (password.length < 8) {
       setPasswordError("Password must be at least 8 characters long.");
       isValid = false;
     }
-
+  
     if (!isValid) return;
-
+  
     setIsLoading(true);
-
+  
     try {
       const supabase = createClient();
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (error) {
-        if (error.message.includes('Invalid login credentials')) {
-          setEmailError("Invalid email or password. Please try again.");
-        } else if (error.message.includes('Email not confirmed')) {
-          setEmailError("Please check your email and confirm your account first.");
-        } else {
-          setEmailError(error.message);
-        }
+  
+      // 1. Fetch user from your custom 'users' table
+      const { data: users, error: fetchError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', email)
+        .single();
+  
+      console.log("Fetch result:", { users, fetchError }); // Debug log
+  
+      if (fetchError) {
+        console.error("Database error:", fetchError);
+        setEmailError("Invalid email or password. Please try again.");
         return;
       }
-
-      if (data.user) {
-        console.log("User signed in:", data.user);
-        router.push('/private'); 
-        router.refresh(); 
+  
+      if (!users) {
+        console.log("No user found with this email");
+        setEmailError("Invalid email or password. Please try again.");
+        return;
       }
+  
+      console.log("User found:", users); // Debug log
+  
+      // 2. Compare the entered password with the hashed one
+      const passwordMatch = await bcrypt.compare(password, users.password);
+      console.log("Password match:", passwordMatch); // Debug log
+  
+      if (!passwordMatch) {
+        console.log("Password doesn't match");
+        setEmailError("Invalid email or password. Please try again.");
+        return;
+      }
+  
+      // 3. Create a session or store user info in localStorage for your custom auth
+      // Since you're using custom auth, you need to manage the session yourself
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('user', JSON.stringify({
+          id: users.id,
+          email: users.email,
+          // Add other user fields you need
+        }));
+      }
+  
+      console.log("User signed in successfully:", users);
+      
+      // 4. Redirect to private page
+      router.push('/private');
+      
     } catch (err) {
-      console.error('Unexpected error:', err);
+      console.error('Unexpected error during sign in:', err);
       setEmailError("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
