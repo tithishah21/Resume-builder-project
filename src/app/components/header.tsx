@@ -10,10 +10,10 @@ function Header() {
   const router = useRouter();
 
   const items = [
-    { label: "Home", to: "" },
-    { label: "Features", to: "features" },
+    { label: "Home", to: "/" },
+    { label: "Features", to: "#features" },
     { label: "Templates", to: "templates" },
-    { label: "About Me", to: "about" },
+    { label: "About Me", to: "#about" },
   ];
 
   return (
@@ -50,7 +50,7 @@ function Header() {
             <GooeyNav
               items={items.map((item) => ({
                 label: item.label,
-                href: `#${item.to}`,
+                href: `${item.to}`,
               }))}
               particleCount={10}
               particleDistances={[60, 10]}
