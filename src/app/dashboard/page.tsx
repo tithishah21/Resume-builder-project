@@ -50,9 +50,9 @@ export default function PrivatePage() {
   if (!user) {
     return null;
   }
-
   return (
     <>
+    
     {/* <Header /> */}
     <div className="h-[75vw] bg-gray-950 text-white p-8">
       <div className="max-w-fit mt-5">
@@ -91,7 +91,9 @@ export default function PrivatePage() {
             <div className="text-5xl mt-8 w-24 h-24 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300"><FaPlus /></div>
             <div className='text-3xl font-semibold mt-10 mb-5 leading-tight text-center'>Create New Resume</div>
             <div className='text-xl text-center mb-5'>Start fresh with our professional templates designed to get you noticed!</div>
-            <button className='w-[27.5rem] py-3 bg-gradient-to-r from-blue-700 to-cyan-500 hover:from-blue-800 hover:to-cyan-600 text-white font-semibold rounded-lg mt-5'>Get Started</button>
+            <button 
+            onClick={() => router.push('/templates')}
+            className='w-[27.5rem] py-3 bg-gradient-to-r from-blue-700 to-cyan-500 hover:from-blue-800 hover:to-cyan-600 text-white font-semibold rounded-lg mt-5'>Get Started</button>
         </div>
         <div className="w-[35vw] h-[33vw] bg-gradient-to-br from-purple-200/100 to-pink-900/100 border-purple-500/30 p-8 cursor-pointer hover:from-purple-900/70 hover:to-pink-900/70 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/25 rounded-xl justify-center">
             <div className="text-5xl mt-8 w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-400 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300"><FiEdit /></div>
