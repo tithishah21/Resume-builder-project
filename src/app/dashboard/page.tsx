@@ -55,10 +55,9 @@ export default function PrivatePage() {
     
     {/* <Header /> */}
     <div className="h-[75vw] bg-gray-950 text-white p-8">
-      <div className="max-w-fit mt-5">
-        <div className="flex justify-between items-center mb-8">
-          
-          <h1 className="text-7xl font-bold">Welcome to Dashboard</h1>
+      <div className="w-auto mt-5">
+        <div className="flex justify-between items-center mb-5">
+          <h1 className="text-4xl font-bold">Welcome to Dashboard</h1>
           <button 
             onClick={handleLogout}
             className="ml-[28rem] px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg font-bold transition-colors"
@@ -66,7 +65,8 @@ export default function PrivatePage() {
             Logout
           </button>
         </div>
-        <div className="flex items-center space-x-2 text-4xl font-bold mt-10 mb-6">
+        <hr style={{borderColor:'gray'}}/>
+        <div className="flex items-center space-x-2 text-3xl font-bold mt-10 mb-6">
         <span className="text-white">Build</span>
         <RotatingText
           texts={['Impactful', 'Creative', 'Professional', 'Stunning', 'Smart']}
@@ -104,7 +104,7 @@ export default function PrivatePage() {
         </div>
       </div>
 
-        <div className="mx-auto items-center w-[60rem] mt-10 bg-[#d1ecf1] text-[#0c5460] rounded-lg p-6 border border-[#bee5eb]">
+        <div className="mx-auto items-center w-[60rem] mt-12 bg-[#d1ecf1] text-[#0c5460] rounded-lg p-6 border border-[#bee5eb]">
           <h3 className="text-lg font-semibold mb-4">Protected Content</h3>
           <p className="text-[#0c5460]">
             This is your private dashboard. Only authenticated users can see this content.
