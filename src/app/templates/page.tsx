@@ -29,7 +29,7 @@ function page() {
 
         <div className='bg-[#0f172a] rounded-2xl p-6 border border-gray-700 shadow-md hover:shadow-pink-500/20 transition duration-300'>
           <div className='bg-gradient-to-r from-pink-500 to-purple-500 h-32 w-full rounded-lg mb-6' />
-          <h2 className='text-xl font-semibold mb-2'>Vibrant & Expressive (Gen Z / Creative)</h2>
+          <h2 className='text-xl font-semibold mb-2'>Vibrant & Expressive (Gen Z)</h2>
           <span className='inline-flex items-center text-sm bg-pink-600 text-white px-3 py-1 rounded-full mb-4'>
             <FaPalette className='mr-2' /> Creative
           </span>

@@ -66,10 +66,7 @@ export default function PrivatePage() {
             Logout
           </button>
         </div>
-
-      <div className='text-gray-300 text-2xl'>Ready to take your career to the next level? Let's build something amazing.</div>
-
-      <div className="flex items-center space-x-2 text-4xl font-bold mt-10">
+        <div className="flex items-center space-x-2 text-4xl font-bold mt-10 mb-6">
         <span className="text-white">Build</span>
         <RotatingText
           texts={['Impactful', 'Creative', 'Professional', 'Stunning', 'Smart']}
@@ -85,6 +82,10 @@ export default function PrivatePage() {
         />
         <span className='text-white'>Resume!</span>
       </div>
+
+      <div className='text-gray-300 text-2xl'>Ready to take your career to the next level? Let's build something amazing.</div>
+
+      
 
       <div className='flex flex-row justify-evenly mt-7 mx-20'>
         <div className="w-[35vw] h-[33vw] bg-gradient-to-br from-blue-200/100 to-cyan-900/100 border-blue-500/30 p-8 cursor-pointer hover:from-blue-900/70 hover:to-cyan-900/70 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 rounded-xl justify-center">
