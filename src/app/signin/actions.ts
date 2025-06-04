@@ -4,20 +4,23 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 import { createClient } from '../../../utils/supabase/server'
+import bcrypt from 'bcryptjs'
 
-export async function login(formData: FormData) {
+// SIGN UP: Insert user with hashed password
+export async function signup(formData: FormData) {
   const supabase = await createClient()
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
-  }
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
 
-  const { error } = await supabase.auth.signInWithPassword(data)
+  const hashedPassword = await bcrypt.hash(password, 10)
+
+  const { error } = await supabase
+    .from('users')
+    .insert([{ email, password: hashedPassword }])
 
   if (error) {
+    console.error('Signup error:', error)
     redirect('/error')
   }
 
@@ -25,22 +28,32 @@ export async function login(formData: FormData) {
   redirect('/')
 }
 
-export async function signup(formData: FormData) {
+// LOGIN: Validate credentials from your users table
+export async function login(formData: FormData) {
   const supabase = await createClient()
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
-  }
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
 
-  const { error } = await supabase.auth.signUp(data)
+  const { data: user, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('email', email)
+    .single()
 
-  if (error) {
+  if (error || !user) {
+    console.error('Login fetch error:', error)
     redirect('/error')
   }
 
+  const passwordMatch = await bcrypt.compare(password, user.password)
+
+  if (!passwordMatch) {
+    console.error('Invalid password')
+    redirect('/error')
+  }
+
+  // You can store session info or redirect to a private route
   revalidatePath('/', 'layout')
-  redirect('/')
+  redirect('/private')
 }

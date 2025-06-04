@@ -50,7 +50,6 @@ function Page() {
       isValid = false;
     }
   
-    // Validate password
     const passwordValidation = validatePassword(password);
     if (passwordValidation) {
       setPasswordError(passwordValidation);
@@ -64,7 +63,7 @@ function Page() {
       try {
         const supabase = createClient();
         // Hash password
-        const hashedPassword = bcrypt.hashSync(password, 10);
+        const hashedPassword = await bcrypt.hashSync(password, 10);
         const { data, error } = await supabase.from('users').insert([
           {
             full_name: fullName,

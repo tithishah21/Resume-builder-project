@@ -41,15 +41,13 @@ function page() {
   
     try {
       const supabase = createClient();
-  
-      // 1. Fetch user from your custom 'users' table
       const { data: users, error: fetchError } = await supabase
         .from('users')
         .select('*')
-        .eq('email', email)
-        .single();
+        .eq('email', email.toLowerCase())
+        .maybeSingle()
   
-      console.log("Fetch result:", { users, fetchError }); // Debug log
+      console.log("Fetch result:", { users, fetchError }); 
   
       if (fetchError) {
         console.error("Database error:", fetchError);
@@ -59,35 +57,30 @@ function page() {
   
       if (!users) {
         console.log("No user found with this email");
-        setEmailError("Invalid email or password. Please try again.");
+        setEmailError("Invalid email or password. Please try again..");
         return;
       }
   
-      console.log("User found:", users); // Debug log
-  
-      // 2. Compare the entered password with the hashed one
+      console.log("User found:", users); 
+      //comparing password with the hashed password
       const passwordMatch = await bcrypt.compare(password, users.password);
-      console.log("Password match:", passwordMatch); // Debug log
+      console.log("Password match:", passwordMatch); 
   
       if (!passwordMatch) {
         console.log("Password doesn't match");
-        setEmailError("Invalid email or password. Please try again.");
+        setEmailError("Invalid email or password. Please try again...");
         return;
       }
   
-      // 3. Create a session or store user info in localStorage for your custom auth
-      // Since you're using custom auth, you need to manage the session yourself
+      //stroing the user infor in "users" table created by me
       if (typeof window !== 'undefined') {
         localStorage.setItem('user', JSON.stringify({
           id: users.id,
           email: users.email,
-          // Add other user fields you need
         }));
       }
   
       console.log("User signed in successfully:", users);
-      
-      // 4. Redirect to private page
       router.push('/private');
       
     } catch (err) {
@@ -97,6 +90,19 @@ function page() {
       setIsLoading(false);
     }
   };
+  async function testBcrypt() {
+    const plain = "mysecretpassword";
+    const hash = await bcrypt.hash(plain, 10);
+    console.log("Generated Hash:", hash);
+  
+    const match = await bcrypt.compare(plain, hash);
+    console.log("Compare with correct password:", match); 
+  
+    const match2 = await bcrypt.compare("wrongpassword", hash);
+    console.log("Compare with wrong password:", match2); 
+  }
+  
+  
 
   return (
     <div>
