@@ -81,7 +81,7 @@ function page() {
       }
   
       console.log("User signed in successfully:", users);
-      router.push('/private');
+      router.push('/dashboard');
       
     } catch (err) {
       console.error('Unexpected error during sign in:', err);
