@@ -1,9 +1,12 @@
+"use client";
 import React from 'react'
+import { useRouter } from 'next/navigation';
 import { FaBriefcase, FaPalette } from 'react-icons/fa'
 import { MdCorporateFare } from "react-icons/md";
 import { IoBulb } from "react-icons/io5";
 
 function page() {
+    const router = useRouter();
   return (
     <div className='w-full min-h-screen bg-gray-950 text-white px-8 py-24'>
       <h1 className='text-5xl text-center font-bold'>Choose Your Template</h1>
@@ -22,7 +25,9 @@ function page() {
           <p className='text-gray-400 mb-6'>
           Clean lines, subtle design, and strategic use of white space for a polished, impactful presentation.
           </p>
-          <button className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
+          <button 
+          onClick={() => router.push('/modernresume')}
+          className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
             Select Template
           </button>
         </div>
