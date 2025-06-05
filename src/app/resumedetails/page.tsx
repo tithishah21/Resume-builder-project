@@ -8,6 +8,8 @@ import { BsBagDashFill } from "react-icons/bs";
 import { BsFillBookmarkPlusFill } from "react-icons/bs";
 import Header2 from '../components/header2';
 import Footer from '../components/footer';
+import { FaProjectDiagram } from "react-icons/fa";
+import { FaTrophy } from "react-icons/fa6";
 
 function Page() {
   // skills
@@ -85,6 +87,47 @@ function Page() {
     const updated = [...languages];
     updated.splice(index, 1);
     setLanguages(updated);
+  };
+  
+  {/*Projects */}
+  const [projectList, setProjectList] = useState<{ project: string; description: string }[]>([
+    { project: '', description: '' }
+  ]);
+
+  const handleProjectChange = (index:number, field: keyof typeof projectList[0], value:string) => {
+    const updated = [...projectList];
+    updated[index][field] = value;
+    setProjectList(updated);
+  };
+  
+  const addProject = () => {
+    setProjectList([...projectList, { project: '', description: '' }]);
+  };
+  
+  const removeProject = (index:number) => {
+    const updated = [...projectList];
+    updated.splice(index, 1);
+    setProjectList(updated);
+  };
+
+  {/*Achievements */}
+  const [achievementList, setAchievementList] = useState<{ project: string; description: string }[]>([
+    { project: '', description: '' }
+  ]);
+  const handleAchievementChange = (index:number, field: keyof typeof achievementList[0], value:string) => {
+    const updated = [...achievementList];
+    updated[index][field] = value;
+    setAchievementList(updated);
+  };
+  
+  const addAchievement = () => {
+    setAchievementList([...achievementList, { project: '', description: '' }]);
+  };
+  
+  const removeAchievement = (index:number) => {
+    const updated = [...achievementList];
+    updated.splice(index, 1);
+    setAchievementList(updated);
   };
 
   
@@ -174,7 +217,6 @@ function Page() {
           ))}
         </div>
 
-        {/* Input + Add Button */}
         <div className='flex gap-3'>
           <input
             type="text"
@@ -395,6 +437,108 @@ function Page() {
         </button>
 
       </div>
+
+      {/* Projects Section */}
+    <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
+      <span className='inline-flex gap-2 my-5'>
+        <p className='text-cyan-400 text-3xl font-bold'><FaProjectDiagram /></p>
+        <p className='text-3xl font-bold'>Projects</p>
+      </span>
+
+      {projectList.map((proj, index) => (
+        <div key={index} className='mt-5 flex flex-col gap-4 mb-6 border-b border-gray-700 pb-6'>
+          <div className='flex flex-col gap-2'>
+            <label className="text-lg text-gray-300 font-semibold">Project</label>
+            <input
+              type="text"
+              value={proj.project}
+              onChange={(e) => handleProjectChange(index, 'project', e.target.value)}
+              placeholder='e.g., E-commerce Website'
+              className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
+            />
+          </div>
+
+          <div className='flex flex-col gap-2'>
+            <label className="text-lg text-gray-300 font-semibold">Description</label>
+            <textarea
+              rows={4}
+              value={proj.description}
+              onChange={(e) => handleProjectChange(index, 'description', e.target.value)}
+              placeholder='Describe your project, technologies used, and key features'
+              className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
+            />
+          </div>
+
+          {projectList.length > 1 && (
+            <button
+                    onClick={() => removeProject(index)}
+                    className='self-start text-red-400 hover:underline text-sm mt-2'
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
+            ))}
+
+        <button
+          onClick={addProject}
+          className='px-5 py-3 bg-cyan-700 hover:bg-cyan-600 text-white rounded-lg text-lg font-semibold w-max'
+        >
+          + Add Another Project
+        </button>
+      </div>
+
+      {/* Achievements Section */}
+      <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
+        <span className='inline-flex gap-2 my-5'>
+          <p className='text-cyan-400 text-3xl font-bold'><FaTrophy /></p>
+          <p className='text-3xl font-bold'>Achievements</p>
+        </span>
+
+        {achievementList.map((achievement, index) => (
+          <div key={index} className='mt-5 flex flex-col gap-4 mb-6 border-b border-gray-700 pb-6'>
+            <div className='flex flex-col gap-2'>
+              <label className="text-lg text-gray-300 font-semibold">Project</label>
+              <input
+                type="text"
+                value={achievement.project}
+                onChange={(e) => handleAchievementChange(index, 'project', e.target.value)}
+                placeholder='e.g., Hackathon Winner, Certification'
+                className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
+              />
+            </div>
+
+            <div className='flex flex-col gap-2'>
+              <label className="text-lg text-gray-300 font-semibold">Description</label>
+              <textarea
+                rows={3}
+                value={achievement.description}
+                onChange={(e) => handleAchievementChange(index, 'description', e.target.value)}
+                placeholder='Describe your achievement and its significance'
+                className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
+              />
+            </div>
+
+            {achievementList.length > 1 && (
+              <button
+                onClick={() => removeAchievement(index)}
+                className='self-start text-red-400 hover:underline text-sm mt-2'
+              >
+                Remove
+              </button>
+            )}
+          </div>
+        ))}
+
+        <button
+          onClick={addAchievement}
+          className='px-5 py-3 bg-cyan-700 hover:bg-cyan-600 text-white rounded-lg text-lg font-semibold w-max'
+        >
+          + Add Another Achievement
+        </button>
+      </div>
+
+      {/*Additional Add-ons */}
       <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
         <span className='inline-flex gap-2 my-5'>
           <p className='text-cyan-400 text-3xl font-bold'><BsFillBookmarkPlusFill /></p>
