@@ -6,6 +6,8 @@ import { FaGraduationCap } from "react-icons/fa6";
 import { IoLanguage } from "react-icons/io5";
 import { BsBagDashFill } from "react-icons/bs";
 import { BsFillBookmarkPlusFill } from "react-icons/bs";
+import Header2 from '../components/header2';
+import Footer from '../components/footer';
 
 function Page() {
   // skills
@@ -88,6 +90,8 @@ function Page() {
   
 
   return (
+    <>
+    <Header2 />
     <div className='w-full min-h-screen bg-gray-950 text-white px-8 py-12'>
 
       {/*Personal Information*/}
@@ -116,6 +120,11 @@ function Page() {
             />
           </div>
         </div>
+
+      {/* image */}
+      {/* <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" >Upload file</label>
+      <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file"> */}
+
 
         <label className='text-lg text-gray-300 font-semibold mt-6'>Email Address</label>
         <input
@@ -397,7 +406,9 @@ function Page() {
           className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
           ></textarea>
       </div>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 }
 

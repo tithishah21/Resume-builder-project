@@ -54,19 +54,20 @@ export default function PrivatePage() {
     <>
     
     {/* <Header /> */}
-    <div className="h-[75vw] bg-gray-950 text-white p-8">
-      <div className="w-auto mt-5">
-        <div className="flex justify-between items-center mb-5">
-          <h1 className="text-4xl font-bold">Welcome to Dashboard</h1>
-          <button 
+    <div className="sticky top-0 z-50 bg-black" id="header2">
+    <div className="bg-gray-900 py-6 border-b border-slate-800 flex justify-between items-center px-4 lg:px-9">
+    <h1 className="text-xl font-semibold text-white mx-2">ResumeBuilder Pro's Dashboard</h1>
+    <button 
             onClick={handleLogout}
             className="ml-[28rem] px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg font-bold transition-colors"
           >
             Logout
           </button>
-        </div>
-        <hr style={{borderColor:'gray'}}/>
-        <div className="flex items-center space-x-2 text-3xl font-bold mt-10 mb-6">
+    </div>
+    </div>
+    <div className="h-[75vw] bg-gray-950 text-white p-8">
+      <div className="w-auto">
+        <div className="flex items-center space-x-2 text-5xl font-bold mt-3 mb-4">
         <span className="text-white">Build</span>
         <RotatingText
           texts={['Impactful', 'Creative', 'Professional', 'Stunning', 'Smart']}
@@ -83,7 +84,7 @@ export default function PrivatePage() {
         <span className='text-white'>Resume!</span>
       </div>
 
-      <div className='text-gray-300 text-2xl'>Ready to take your career to the next level? Let's build something amazing.</div>
+      <div className='text-gray-300 text-xl mb-12'>Ready to take your career to the next level? Let's build something amazing.</div>
 
       
 

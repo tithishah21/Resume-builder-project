@@ -4,11 +4,14 @@ import { useRouter } from 'next/navigation';
 import { FaBriefcase, FaPalette } from 'react-icons/fa'
 import { MdCorporateFare } from "react-icons/md";
 import { IoBulb } from "react-icons/io5";
+import Header2 from '../components/header2';
+import Footer from '../components/footer';
 
 function page() {
     const router = useRouter();
   return (
-    <div className='w-full min-h-screen bg-gray-950 text-white px-8 py-24'>
+    <><Header2 />
+    <div className='w-full min-h-screen bg-gray-950 text-white px-8 py-12'>
       <h1 className='text-5xl text-center font-bold'>Choose Your Template</h1>
       <div className='text-center text-2xl text-gray-400 font-medium mt-10 mb-20'>
         Select a professional template that best represents your career goals and industry.
@@ -26,7 +29,7 @@ function page() {
           Clean lines, subtle design, and strategic use of white space for a polished, impactful presentation.
           </p>
           <button 
-          onClick={() => router.push('/modernresume')}
+          onClick={() => router.push('/resumedetails')}
           className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
             Select Template
           </button>
@@ -41,7 +44,9 @@ function page() {
           <p className='text-gray-400 mb-6'>
             Eye-catching design ideal for creative industries and design roles.
           </p>
-          <button className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
+          <button 
+          onClick={() => router.push('/resumedetails')}
+          className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
             Select Template
           </button>
         </div>
@@ -55,7 +60,9 @@ function page() {
           <p className='text-gray-400 mb-6'>
            Traditional format perfect for corporate environments and formal industries.
           </p>
-          <button className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
+          <button 
+          onClick={() => router.push('/resumedetails')}
+          className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
             Select Template
           </button>
         </div>
@@ -69,12 +76,16 @@ function page() {
           <p className='text-gray-400 mb-6'>
           Highlighting skills and achievements with a clear, concise format optimized for data-driven and engineering roles.
           </p>
-          <button className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
+          <button 
+          onClick={() => router.push('/resumedetails')}
+          className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
             Select Template
           </button>
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   )
 }
 
