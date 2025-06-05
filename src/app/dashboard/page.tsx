@@ -36,7 +36,7 @@ export default function PrivatePage() {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    router.push('/signin');
+    router.push('/');
   };
 
   if (loading) {
