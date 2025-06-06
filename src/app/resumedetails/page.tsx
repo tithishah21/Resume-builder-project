@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
-import { Formik, Form, Field, FieldArray } from 'formik'; // Removed useFormik as we are using <Formik> component
-import * as Yup from 'yup'; // Import Yup for validation
+import { Formik, Form, Field, FieldArray } from 'formik'; 
+import * as Yup from 'yup'; //Yup is for validation
 
 import { IoPeopleOutline } from "react-icons/io5";
 import { HiOutlineLightBulb } from "react-icons/hi";
@@ -14,7 +14,7 @@ import Footer from '../components/footer';
 import { FaProjectDiagram } from "react-icons/fa";
 import { FaTrophy } from "react-icons/fa6";
 
-// Define your form values interface for better type checking
+
 interface FormValues {
   full_name: string;
   phone: string;
@@ -66,45 +66,45 @@ function Page() {
     setSkills(updated);
   };
 
-  // Define the validation schema using Yup
+
   const validationSchema = Yup.object().shape({
-    full_name: Yup.string().required('Full Name is required'),
-    phone: Yup.string().matches(/^\+?[0-9]{10,15}$/, 'Invalid phone number').required('Phone number is required'),
-    email: Yup.string().email('Invalid email address').required('Email is required'),
-    home: Yup.string().min(10, 'Address must be at least 10 characters').required('Home Address is required'),
-    summary: Yup.string().min(50, 'Summary must be at least 50 characters').required('Professional Summary is required'),
+    full_name: Yup.string().required('*Full Name is required'),
+    phone: Yup.string().matches(/^\+?[0-9]{10,15}$/, 'Invalid phone number').required('*Phone number is required'),
+    email: Yup.string().email('Invalid email address').required('*Email is required'),
+    home: Yup.string().min(10, 'Address must be at least 10 characters').required('*Home Address is required'),
+    summary: Yup.string().min(50, 'Summary must be at least 50 characters').required('*Professional Summary is required'),
     education: Yup.array().of(
       Yup.object().shape({
-        institution: Yup.string().required('Institution name is required'),
-        passing_year: Yup.string().matches(/^\d{4}$/, 'Invalid year (e.g., 2027)').required('Passing year is required'),
+        institution: Yup.string().required('*Institution name is required'),
+        passing_year: Yup.string().matches(/^\d{4}$/, 'Invalid year (e.g., 2027)').required('*Passing year is required'),
         grade: Yup.string(),
       })
-    ).min(1, 'At least one education entry is required'), // Ensure at least one entry
+    ).min(1, '*At least one education entry is required'), // Ensure at least one entry
     languages: Yup.array().of(
       Yup.object().shape({
-        language: Yup.string().required('Language is required'),
-        proficiency_level: Yup.string().required('Proficiency level is required'),
+        language: Yup.string().required('*Language is required'),
+        proficiency_level: Yup.string().required('*Proficiency level is required'),
       })
-    ).min(1, 'At least one language entry is required'), // Ensure at least one entry
+    ).min(1, '*At least one language entry is required'), // Ensure at least one entry
     experience: Yup.array().of(
       Yup.object().shape({
-        company_name: Yup.string().required('Company name is required'),
-        key_role: Yup.string().required('Key role is required'),
-        start_date: Yup.string().required('Start date is required'), // Consider more robust date validation
-        end_date: Yup.string().required('End date is required'),
-        job_summary: Yup.string().min(30, 'Summary must be at least 30 characters').required('Job summary is required'),
+        company_name: Yup.string().required('*Company name is required'),
+        key_role: Yup.string().required('*Key role is required'),
+        start_date: Yup.string().required('*Start date is required'), // Consider more robust date validation
+        end_date: Yup.string().required('*End date is required'),
+        job_summary: Yup.string().min(30, '*Summary must be at least 30 characters').required('Job summary is required'),
       })
     ),
     project: Yup.array().of(
       Yup.object().shape({
-        project_title: Yup.string().required('Project title is required'),
-        project_description: Yup.string().min(20, 'Description must be at least 20 characters').required('Project description is required'),
+        project_title: Yup.string().required('*Project title is required'),
+        project_description: Yup.string().min(20, '*Description must be at least 20 characters').required('Project description is required'),
       })
     ),
     achievement: Yup.array().of(
       Yup.object().shape({
-        achievement_title: Yup.string().required('Achievement title is required'),
-        achievement_description: Yup.string().min(20, 'Description must be at least 20 characters').required('Achievement description is required'),
+        achievement_title: Yup.string().required('*Achievement title is required'),
+        achievement_description: Yup.string().min(20, '*Description must be at least 20 characters').required('Achievement description is required'),
       })
     ),
     extra: Yup.string(),
@@ -129,7 +129,7 @@ function Page() {
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
-          const formData = { ...values, skills }; // Include skills here
+          const formData = { ...values, skills };
           alert(JSON.stringify(formData, null, 2));
           console.log(formData);
           setSubmitting(false);
@@ -272,7 +272,7 @@ function Page() {
                               placeholder='e.g., VIT University, Vellore'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
-                            {/* Corrected error access with optional chaining and type assertion */}
+                            
                             {touched.education?.[index]?.institution && (errors.education?.[index] as any)?.institution && (
                               <div className="text-red-500 text-sm mt-1">
                                 {(errors.education?.[index] as any).institution as React.ReactNode}
@@ -290,7 +290,7 @@ function Page() {
                                 placeholder='e.g., 2027'
                                 className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                               />
-                              {/* Corrected error access with optional chaining and type assertion */}
+                              
                               {touched.education?.[index]?.passing_year && (errors.education?.[index] as any)?.passing_year && (
                                 <div className="text-red-500 text-sm mt-1">
                                   {(errors.education?.[index] as any).passing_year as React.ReactNode}
@@ -306,7 +306,7 @@ function Page() {
                                 placeholder='e.g., 9.0 CGPA'
                                 className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                               />
-                              {/* No error message for optional grade, so no special handling needed here */}
+                             
                             </div>
                           </div>
 
@@ -334,8 +334,7 @@ function Page() {
                 </FieldArray>
               </div>
 
-              {/* Apply the same pattern to Languages, Experience, Projects, Achievements */}
-              {/* Example for Languages */}
+            
               <FieldArray name="languages">
                 {({ push, remove }) => (
                   <>
@@ -494,7 +493,7 @@ function Page() {
                         </div>
                       ))}
 
-                      {/* Add More Experience Button */}
+                    
                       <button
                         type="button"
                         onClick={() => push({ company_name: '', key_role: '', start_date: '', end_date: '', job_summary: '' })}
