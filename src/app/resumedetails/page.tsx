@@ -1,7 +1,7 @@
 'use client';
-import React, { useState } from 'react';
-import { Formik, Form, Field, FieldArray } from 'formik'; 
-import * as Yup from 'yup'; //Yup is for validation
+import React, { useState, useEffect } from 'react';
+import { Formik, Form, Field, FieldArray, FormikErrors, FormikTouched } from 'formik'; // Import FormikErrors, FormikTouched
+import * as Yup from 'yup';
 
 import { IoPeopleOutline } from "react-icons/io5";
 import { HiOutlineLightBulb } from "react-icons/hi";
@@ -14,6 +14,7 @@ import Footer from '../components/footer';
 import { FaProjectDiagram } from "react-icons/fa";
 import { FaTrophy } from "react-icons/fa6";
 
+import { createClient } from '../../../utils/supabase/client';
 
 interface FormValues {
   full_name: string;
@@ -48,9 +49,41 @@ interface FormValues {
   extra: string;
 }
 
+// Helper type to correctly narrow down FieldArray errors
+type FieldArrayErrors<T> = FormikErrors<T> | FormikErrors<T[]>;
+
 function Page() {
   const [skillInput, setSkillInput] = useState('');
   const [skills, setSkills] = useState<string[]>([]);
+  const [userId, setUserId] = useState<number | null>(null);
+  const [loadingUser, setLoadingUser] = useState(true);
+
+  const supabase = createClient();
+
+  useEffect(() => {
+    const getCustomUserId = async () => {
+      try {
+        const response = await fetch('/api/get-current-user-id');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.userId) {
+            setUserId(data.userId);
+          } else {
+            console.warn('Custom user ID not found in response. User might not be logged in.');
+            // Optionally, handle redirection or display a message
+          }
+        } else {
+          console.error('Failed to fetch custom user ID:', response.status, response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching custom user ID:', error);
+      } finally {
+        setLoadingUser(false);
+      }
+    };
+
+    getCustomUserId();
+  }, []);
 
   const addSkill = () => {
     const trimmed = skillInput.trim();
@@ -66,7 +99,6 @@ function Page() {
     setSkills(updated);
   };
 
-
   const validationSchema = Yup.object().shape({
     full_name: Yup.string().required('*Full Name is required'),
     phone: Yup.string().matches(/^\+?[0-9]{10,15}$/, 'Invalid phone number').required('*Phone number is required'),
@@ -79,18 +111,18 @@ function Page() {
         passing_year: Yup.string().matches(/^\d{4}$/, 'Invalid year (e.g., 2027)').required('*Passing year is required'),
         grade: Yup.string(),
       })
-    ).min(1, '*At least one education entry is required'), // Ensure at least one entry
+    ).min(1, '*At least one education entry is required'),
     languages: Yup.array().of(
       Yup.object().shape({
         language: Yup.string().required('*Language is required'),
         proficiency_level: Yup.string().required('*Proficiency level is required'),
       })
-    ).min(1, '*At least one language entry is required'), // Ensure at least one entry
+    ).min(1, '*At least one language entry is required'),
     experience: Yup.array().of(
       Yup.object().shape({
         company_name: Yup.string().required('*Company name is required'),
         key_role: Yup.string().required('*Key role is required'),
-        start_date: Yup.string().required('*Start date is required'), // Consider more robust date validation
+        start_date: Yup.string().required('*Start date is required'),
         end_date: Yup.string().required('*End date is required'),
         job_summary: Yup.string().min(30, '*Summary must be at least 30 characters').required('Job summary is required'),
       })
@@ -128,11 +160,50 @@ function Page() {
           extra: '',
         }}
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          const formData = { ...values, skills };
-          alert(JSON.stringify(formData, null, 2));
-          console.log(formData);
-          setSubmitting(false);
+        onSubmit={async (values, { setSubmitting }) => {
+          if (userId === null) {
+            alert('User not logged in or user ID not found. Please log in.');
+            setSubmitting(false);
+            return;
+          }
+
+          const formDataToSubmit = {
+            user_id: userId,
+            full_name: values.full_name,
+            phone: values.phone,
+            email: values.email,
+            home: values.home,
+            summary: values.summary,
+            skills: skills,
+            education: values.education,
+            languages: values.languages,
+            experience: values.experience,
+            project: values.project,
+            achievement: values.achievement,
+            extra: values.extra,
+          };
+
+          console.log("Submitting Data:", formDataToSubmit);
+
+          try {
+            const { data, error } = await supabase
+              .from('resumes')
+              .insert([formDataToSubmit])
+              .select();
+
+            if (error) {
+              console.error('Error inserting resume data:', error);
+              alert(`Error saving resume: ${error.message}`);
+            } else {
+              console.log('Resume data inserted successfully:', data);
+              alert('Resume saved successfully!');
+            }
+          } catch (err) {
+            console.error('Unexpected error during submission:', err);
+            alert('An unexpected error occurred.');
+          } finally {
+            setSubmitting(false);
+          }
         }}
       >
         {({ values, handleChange, handleBlur, errors, touched, isSubmitting }) => (
@@ -272,12 +343,16 @@ function Page() {
                               placeholder='e.g., VIT University, Vellore'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
-                            
-                            {touched.education?.[index]?.institution && (errors.education?.[index] as any)?.institution && (
-                              <div className="text-red-500 text-sm mt-1">
-                                {(errors.education?.[index] as any).institution as React.ReactNode}
-                              </div>
-                            )}
+
+                            {/* Corrected type checking for education errors */}
+                            {touched.education?.[index] &&
+                             (errors.education as FieldArrayErrors<typeof values.education>)?.[index] &&
+                             typeof (errors.education as FieldArrayErrors<typeof values.education>)[index] === 'object' &&
+                             ((errors.education as FormikErrors<typeof values.education[number]>[])[index] as FormikErrors<typeof values.education[number]>).institution && (
+                               <div className="text-red-500 text-sm mt-1">
+                                 {((errors.education as FormikErrors<typeof values.education[number]>[])[index] as FormikErrors<typeof values.education[number]>).institution}
+                               </div>
+                             )}
                           </div>
 
                           <div className='flex flex-wrap gap-5'>
@@ -290,10 +365,14 @@ function Page() {
                                 placeholder='e.g., 2027'
                                 className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                               />
-                              
-                              {touched.education?.[index]?.passing_year && (errors.education?.[index] as any)?.passing_year && (
+
+                              {/* Corrected type checking for education errors */}
+                              {touched.education?.[index] &&
+                               (errors.education as FieldArrayErrors<typeof values.education>)?.[index] &&
+                               typeof (errors.education as FieldArrayErrors<typeof values.education>)[index] === 'object' &&
+                               ((errors.education as FormikErrors<typeof values.education[number]>[])[index] as FormikErrors<typeof values.education[number]>).passing_year && (
                                 <div className="text-red-500 text-sm mt-1">
-                                  {(errors.education?.[index] as any).passing_year as React.ReactNode}
+                                  {((errors.education as FormikErrors<typeof values.education[number]>[])[index] as FormikErrors<typeof values.education[number]>).passing_year}
                                 </div>
                               )}
                             </div>
@@ -306,7 +385,7 @@ function Page() {
                                 placeholder='e.g., 9.0 CGPA'
                                 className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                               />
-                             
+
                             </div>
                           </div>
 
@@ -352,8 +431,14 @@ function Page() {
                             placeholder="e.g., English"
                             className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                           />
-                          {touched.languages?.[index]?.language && (errors.languages?.[index] as any)?.language && (
-                            <div className="text-red-500 text-sm mt-1">{(errors.languages?.[index] as any).language as React.ReactNode}</div>
+                          {/* Corrected type checking for languages errors */}
+                          {touched.languages?.[index] &&
+                           (errors.languages as FieldArrayErrors<typeof values.languages>)?.[index] &&
+                           typeof (errors.languages as FieldArrayErrors<typeof values.languages>)[index] === 'object' &&
+                           ((errors.languages as FormikErrors<typeof values.languages[number]>[])[index] as FormikErrors<typeof values.languages[number]>).language && (
+                            <div className="text-red-500 text-sm mt-1">
+                              {((errors.languages as FormikErrors<typeof values.languages[number]>[])[index] as FormikErrors<typeof values.languages[number]>).language}
+                            </div>
                           )}
                         </div>
 
@@ -371,8 +456,14 @@ function Page() {
                             <option value="Limited Working Proficiency">Limited Working Proficiency</option>
                             <option value="Elementary Proficiency">Elementary Proficiency</option>
                           </Field>
-                          {touched.languages?.[index]?.proficiency_level && (errors.languages?.[index] as any)?.proficiency_level && (
-                            <div className="text-red-500 text-sm mt-1">{(errors.languages?.[index] as any).proficiency_level as React.ReactNode}</div>
+                          {/* Corrected type checking for languages errors */}
+                          {touched.languages?.[index] &&
+                           (errors.languages as FieldArrayErrors<typeof values.languages>)?.[index] &&
+                           typeof (errors.languages as FieldArrayErrors<typeof values.languages>)[index] === 'object' &&
+                           ((errors.languages as FormikErrors<typeof values.languages[number]>[])[index] as FormikErrors<typeof values.languages[number]>).proficiency_level && (
+                            <div className="text-red-500 text-sm mt-1">
+                              {((errors.languages as FormikErrors<typeof values.languages[number]>[])[index] as FormikErrors<typeof values.languages[number]>).proficiency_level}
+                            </div>
                           )}
                         </div>
 
@@ -423,8 +514,14 @@ function Page() {
                               placeholder='e.g., JP Morgan Chase'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
-                            {touched.experience?.[index]?.company_name && (errors.experience?.[index] as any)?.company_name && (
-                              <div className="text-red-500 text-sm mt-1">{(errors.experience?.[index] as any).company_name as React.ReactNode}</div>
+                            {/* Corrected type checking for experience errors */}
+                            {touched.experience?.[index] &&
+                             (errors.experience as FieldArrayErrors<typeof values.experience>)?.[index] &&
+                             typeof (errors.experience as FieldArrayErrors<typeof values.experience>)[index] === 'object' &&
+                             ((errors.experience as FormikErrors<typeof values.experience[number]>[])[index] as FormikErrors<typeof values.experience[number]>).company_name && (
+                              <div className="text-red-500 text-sm mt-1">
+                                {((errors.experience as FormikErrors<typeof values.experience[number]>[])[index] as FormikErrors<typeof values.experience[number]>).company_name}
+                              </div>
                             )}
                           </div>
 
@@ -437,8 +534,14 @@ function Page() {
                               placeholder='e.g., Software Developer Engineer'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
-                            {touched.experience?.[index]?.key_role && (errors.experience?.[index] as any)?.key_role && (
-                              <div className="text-red-500 text-sm mt-1">{(errors.experience?.[index] as any).key_role as React.ReactNode}</div>
+                            {/* Corrected type checking for experience errors */}
+                            {touched.experience?.[index] &&
+                             (errors.experience as FieldArrayErrors<typeof values.experience>)?.[index] &&
+                             typeof (errors.experience as FieldArrayErrors<typeof values.experience>)[index] === 'object' &&
+                             ((errors.experience as FormikErrors<typeof values.experience[number]>[])[index] as FormikErrors<typeof values.experience[number]>).key_role && (
+                              <div className="text-red-500 text-sm mt-1">
+                                {((errors.experience as FormikErrors<typeof values.experience[number]>[])[index] as FormikErrors<typeof values.experience[number]>).key_role}
+                              </div>
                             )}
                           </div>
 
@@ -451,8 +554,14 @@ function Page() {
                                 name={`experience.${index}.start_date`}
                                 className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                               />
-                              {touched.experience?.[index]?.start_date && (errors.experience?.[index] as any)?.start_date && (
-                                <div className="text-red-500 text-sm mt-1">{(errors.experience?.[index] as any).start_date as React.ReactNode}</div>
+                              {/* Corrected type checking for experience errors */}
+                              {touched.experience?.[index] &&
+                               (errors.experience as FieldArrayErrors<typeof values.experience>)?.[index] &&
+                               typeof (errors.experience as FieldArrayErrors<typeof values.experience>)[index] === 'object' &&
+                               ((errors.experience as FormikErrors<typeof values.experience[number]>[])[index] as FormikErrors<typeof values.experience[number]>).start_date && (
+                                <div className="text-red-500 text-sm mt-1">
+                                  {((errors.experience as FormikErrors<typeof values.experience[number]>[])[index] as FormikErrors<typeof values.experience[number]>).start_date}
+                                </div>
                               )}
                             </div>
 
@@ -465,8 +574,14 @@ function Page() {
                                 placeholder='e.g., Currently / May, 2025'
                                 className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                               />
-                              {touched.experience?.[index]?.end_date && (errors.experience?.[index] as any)?.end_date && (
-                                <div className="text-red-500 text-sm mt-1">{(errors.experience?.[index] as any).end_date as React.ReactNode}</div>
+                              {/* Corrected type checking for experience errors */}
+                              {touched.experience?.[index] &&
+                               (errors.experience as FieldArrayErrors<typeof values.experience>)?.[index] &&
+                               typeof (errors.experience as FieldArrayErrors<typeof values.experience>)[index] === 'object' &&
+                               ((errors.experience as FormikErrors<typeof values.experience[number]>[])[index] as FormikErrors<typeof values.experience[number]>).end_date && (
+                                <div className="text-red-500 text-sm mt-1">
+                                  {((errors.experience as FormikErrors<typeof values.experience[number]>[])[index] as FormikErrors<typeof values.experience[number]>).end_date}
+                                </div>
                               )}
                             </div>
                           </div>
@@ -481,9 +596,15 @@ function Page() {
                               placeholder='Describe your responsibilities and achievements'
                               className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
                             />
-                            {touched.experience?.[index]?.job_summary && (errors.experience?.[index] as any)?.job_summary && (
-                              <div className="text-red-500 text-sm mt-1">{(errors.experience?.[index] as any).job_summary as React.ReactNode}</div>
-                            )}
+                            {/* Corrected type checking for experience errors */}
+                            {touched.experience?.[index] &&
+                               (errors.experience as FieldArrayErrors<typeof values.experience>)?.[index] &&
+                               typeof (errors.experience as FieldArrayErrors<typeof values.experience>)[index] === 'object' &&
+                               ((errors.experience as FormikErrors<typeof values.experience[number]>[])[index] as FormikErrors<typeof values.experience[number]>).job_summary && (
+                                <div className="text-red-500 text-sm mt-1">
+                                  {((errors.experience as FormikErrors<typeof values.experience[number]>[])[index] as FormikErrors<typeof values.experience[number]>).job_summary}
+                                </div>
+                              )}
                           </div>
 
                           {values.experience.length > 1 && (
@@ -498,7 +619,7 @@ function Page() {
                         </div>
                       ))}
 
-                    
+
                       <button
                         type="button"
                         onClick={() => push({ company_name: '', key_role: '', start_date: '', end_date: '', job_summary: '' })}
@@ -532,8 +653,14 @@ function Page() {
                               placeholder='e.g., E-commerce Website'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
-                            {touched.project?.[index]?.project_title && (errors.project?.[index] as any)?.project_title && (
-                              <div className="text-red-500 text-sm mt-1">{(errors.project?.[index] as any).project_title as React.ReactNode}</div>
+                            {/* Corrected type checking for project errors */}
+                            {touched.project?.[index] &&
+                               (errors.project as FieldArrayErrors<typeof values.project>)?.[index] &&
+                               typeof (errors.project as FieldArrayErrors<typeof values.project>)[index] === 'object' &&
+                               ((errors.project as FormikErrors<typeof values.project[number]>[])[index] as FormikErrors<typeof values.project[number]>).project_title && (
+                              <div className="text-red-500 text-sm mt-1">
+                                {((errors.project as FormikErrors<typeof values.project[number]>[])[index] as FormikErrors<typeof values.project[number]>).project_title}
+                              </div>
                             )}
                           </div>
 
@@ -547,8 +674,14 @@ function Page() {
                               placeholder='Describe your project, technologies used, and key features'
                               className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
                             />
-                            {touched.project?.[index]?.project_description && (errors.project?.[index] as any)?.project_description && (
-                              <div className="text-red-500 text-sm mt-1">{(errors.project?.[index] as any).project_description as React.ReactNode}</div>
+                            {/* Corrected type checking for project errors */}
+                            {touched.project?.[index] &&
+                               (errors.project as FieldArrayErrors<typeof values.project>)?.[index] &&
+                               typeof (errors.project as FieldArrayErrors<typeof values.project>)[index] === 'object' &&
+                               ((errors.project as FormikErrors<typeof values.project[number]>[])[index] as FormikErrors<typeof values.project[number]>).project_description && (
+                              <div className="text-red-500 text-sm mt-1">
+                                {((errors.project as FormikErrors<typeof values.project[number]>[])[index] as FormikErrors<typeof values.project[number]>).project_description}
+                              </div>
                             )}
                           </div>
 
@@ -577,7 +710,7 @@ function Page() {
               </div>
 
 
-              
+
                 {/* Achievements Section */}
               <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
@@ -599,8 +732,14 @@ function Page() {
                               placeholder='e.g., Hackathon Winner, Certification'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
-                            {touched.achievement?.[index]?.achievement_title && (errors.achievement?.[index] as any)?.achievement_title && (
-                              <div className="text-red-500 text-sm mt-1">{(errors.achievement?.[index] as any).achievement_title as React.ReactNode}</div>
+                            {/* Corrected type checking for achievement errors */}
+                            {touched.achievement?.[index] &&
+                               (errors.achievement as FieldArrayErrors<typeof values.achievement>)?.[index] &&
+                               typeof (errors.achievement as FieldArrayErrors<typeof values.achievement>)[index] === 'object' &&
+                               ((errors.achievement as FormikErrors<typeof values.achievement[number]>[])[index] as FormikErrors<typeof values.achievement[number]>).achievement_title && (
+                              <div className="text-red-500 text-sm mt-1">
+                                {((errors.achievement as FormikErrors<typeof values.achievement[number]>[])[index] as FormikErrors<typeof values.achievement[number]>).achievement_title}
+                              </div>
                             )}
                           </div>
 
@@ -614,8 +753,14 @@ function Page() {
                               placeholder='Describe your achievement and its significance'
                               className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
                             />
-                            {touched.achievement?.[index]?.achievement_description && (errors.achievement?.[index] as any)?.achievement_description && (
-                              <div className="text-red-500 text-sm mt-1">{(errors.achievement?.[index] as any).achievement_description as React.ReactNode}</div>
+                            {/* Corrected type checking for achievement errors */}
+                            {touched.achievement?.[index] &&
+                               (errors.achievement as FieldArrayErrors<typeof values.achievement>)?.[index] &&
+                               typeof (errors.achievement as FieldArrayErrors<typeof values.achievement>)[index] === 'object' &&
+                               ((errors.achievement as FormikErrors<typeof values.achievement[number]>[])[index] as FormikErrors<typeof values.achievement[number]>).achievement_description && (
+                              <div className="text-red-500 text-sm mt-1">
+                                {((errors.achievement as FormikErrors<typeof values.achievement[number]>[])[index] as FormikErrors<typeof values.achievement[number]>).achievement_description}
+                              </div>
                             )}
                           </div>
 
@@ -662,10 +807,10 @@ function Page() {
 
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || loadingUser}
                 className='bg-gradient-to-r from-green-500 to-lime-500 hover:bg-gradient-to-r hover:from-lime-500 hover:to-green-500 w-[63rem] text-xl py-3 rounded-lg font-bold mx-auto block mt-20 text-green-950'
               >
-                {isSubmitting ? 'Generating...' : 'Generate Resume'}
+                {isSubmitting ? 'Saving...' : (loadingUser ? 'Loading User...' : 'Generate Resume')}
               </button>
             </div>
           </Form>
