@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
-import { Formik, Form, Field, FieldArray, useFormik } from 'formik'; // Added useFormik here, though we'll use <Formik>
-import * as Yup from 'yup'; // Import Yup for validation (install if you haven't: npm install yup)
+import { Formik, Form, Field, FieldArray } from 'formik'; // Removed useFormik as we are using <Formik> component
+import * as Yup from 'yup'; // Import Yup for validation
 
 import { IoPeopleOutline } from "react-icons/io5";
 import { HiOutlineLightBulb } from "react-icons/hi";
@@ -49,9 +49,6 @@ interface FormValues {
 }
 
 function Page() {
-  // Skills will be managed outside of Formik for simplicity, as it has custom add/remove logic
-  // If you wanted to include it in Formik, you'd use FieldArray but manage the input/display
-  // somewhat manually similar to how you have it.
   const [skillInput, setSkillInput] = useState('');
   const [skills, setSkills] = useState<string[]>([]);
 
@@ -74,21 +71,21 @@ function Page() {
     full_name: Yup.string().required('Full Name is required'),
     phone: Yup.string().matches(/^\+?[0-9]{10,15}$/, 'Invalid phone number').required('Phone number is required'),
     email: Yup.string().email('Invalid email address').required('Email is required'),
-    home: Yup.string().min(10, 'Address must be at least 10 characters'),
+    home: Yup.string().min(10, 'Address must be at least 10 characters').required('Home Address is required'),
     summary: Yup.string().min(50, 'Summary must be at least 50 characters').required('Professional Summary is required'),
     education: Yup.array().of(
       Yup.object().shape({
         institution: Yup.string().required('Institution name is required'),
-        passing_year: Yup.string().required('Passing year is required'),
+        passing_year: Yup.string().matches(/^\d{4}$/, 'Invalid year (e.g., 2027)').required('Passing year is required'),
         grade: Yup.string(),
       })
-    ),
+    ).min(1, 'At least one education entry is required'), // Ensure at least one entry
     languages: Yup.array().of(
       Yup.object().shape({
         language: Yup.string().required('Language is required'),
         proficiency_level: Yup.string().required('Proficiency level is required'),
       })
-    ),
+    ).min(1, 'At least one language entry is required'), // Ensure at least one entry
     experience: Yup.array().of(
       Yup.object().shape({
         company_name: Yup.string().required('Company name is required'),
@@ -116,7 +113,7 @@ function Page() {
   return (
     <>
       <Header2 />
-      <Formik<FormValues> // Specify the type for Formik
+      <Formik<FormValues>
         initialValues={{
           full_name: '',
           phone: '',
@@ -130,17 +127,16 @@ function Page() {
           achievement: [{ achievement_title: '', achievement_description: '' }],
           extra: '',
         }}
-        validationSchema={validationSchema} // Link the validation schema
+        validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
-          // You can also include the locally managed skills here if needed for submission
-          const formData = { ...values, skills };
+          const formData = { ...values, skills }; // Include skills here
           alert(JSON.stringify(formData, null, 2));
           console.log(formData);
           setSubmitting(false);
         }}
       >
         {({ values, handleChange, handleBlur, errors, touched, isSubmitting }) => (
-          <Form> {/* Use Formik's <Form> component */}
+          <Form>
             <div className='w-full min-h-screen bg-gray-950 text-white px-8 py-12'>
               {/*Personal Information*/}
               <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
@@ -155,20 +151,18 @@ function Page() {
                     <label htmlFor="full_name" className="text-lg text-gray-300 font-semibold">Full Name</label>
                     <label htmlFor="phone" className="text-lg text-gray-300 font-semibold">Phone Number</label>
                   </div>
-                  {/*full name */}
                   <div className="flex justify-between gap-10">
                     <Field
                       type="text"
                       id="full_name"
-                      name="full_name" // Crucial: name attribute matches initialValues
+                      name="full_name"
                       placeholder='Enter your full name'
                       className="placeholder:text-base w-1/2 px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                     />
-                    {/*phone */}
                     <Field
                       type="tel"
                       id="phone"
-                      name="phone" // Crucial: name attribute
+                      name="phone"
                       placeholder='Enter your phone number'
                       className="placeholder:text-base w-1/2 px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                     />
@@ -181,7 +175,7 @@ function Page() {
                 <Field
                   type='email'
                   id="email"
-                  name="email" // Crucial: name attribute
+                  name="email"
                   placeholder='Enter your email address'
                   className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
                 />
@@ -190,10 +184,10 @@ function Page() {
                 {/* Address */}
                 <label htmlFor="home" className='text-lg text-gray-300 font-semibold mt-6'>Home Address</label>
                 <Field
-                  as="textarea" // Use 'as' prop for textarea
+                  as="textarea"
                   rows={3}
                   id="home"
-                  name="home" // Crucial: name attribute
+                  name="home"
                   placeholder='Enter your home address'
                   className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
                 />
@@ -203,10 +197,10 @@ function Page() {
                 {/* Summary */}
                 <label htmlFor="summary" className='text-lg text-gray-300 font-semibold mt-6'>Professional Summary</label>
                 <Field
-                  as="textarea" // Use 'as' prop for textarea
+                  as="textarea"
                   rows={6}
                   id="summary"
-                  name="summary" // Crucial: name attribute
+                  name="summary"
                   placeholder='Enter a short paragraph that best describes you'
                   className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
                 />
@@ -228,7 +222,7 @@ function Page() {
                     >
                       {skill}
                       <button
-                        type="button" // Important: type="button" to prevent form submission
+                        type="button"
                         onClick={() => removeSkill(index)}
                         className="text-white hover:text-red-400"
                       >
@@ -248,7 +242,7 @@ function Page() {
                     className='placeholder:text-base flex-1 px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:outline-none focus:border-cyan-400 focus:ring-cyan-400/20'
                   />
                   <button
-                    type="button" // Important: type="button"
+                    type="button"
                     onClick={addSkill}
                     className='px-5 py-3 bg-cyan-700 hover:bg-cyan-600 text-white rounded-lg text-lg font-semibold'
                   >
@@ -278,8 +272,11 @@ function Page() {
                               placeholder='e.g., VIT University, Vellore'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
-                            {touched.education?.[index]?.institution && errors.education?.[index]?.institution && (
-                              <div className="text-red-500 text-sm mt-1">{errors.education[index]?.institution}</div>
+                            {/* Corrected error access with optional chaining and type assertion */}
+                            {touched.education?.[index]?.institution && (errors.education?.[index] as any)?.institution && (
+                              <div className="text-red-500 text-sm mt-1">
+                                {(errors.education?.[index] as any).institution as React.ReactNode}
+                              </div>
                             )}
                           </div>
 
@@ -293,8 +290,11 @@ function Page() {
                                 placeholder='e.g., 2027'
                                 className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                               />
-                              {touched.education?.[index]?.passing_year && errors.education?.[index]?.passing_year && (
-                                <div className="text-red-500 text-sm mt-1">{errors.education[index]?.passing_year}</div>
+                              {/* Corrected error access with optional chaining and type assertion */}
+                              {touched.education?.[index]?.passing_year && (errors.education?.[index] as any)?.passing_year && (
+                                <div className="text-red-500 text-sm mt-1">
+                                  {(errors.education?.[index] as any).passing_year as React.ReactNode}
+                                </div>
                               )}
                             </div>
                             <div className='flex-1'>
@@ -306,12 +306,13 @@ function Page() {
                                 placeholder='e.g., 9.0 CGPA'
                                 className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                               />
+                              {/* No error message for optional grade, so no special handling needed here */}
                             </div>
                           </div>
 
                           {values.education.length > 1 && (
                             <button
-                              type="button" // Important: type="button"
+                              type="button"
                               onClick={() => remove(index)}
                               className='self-start text-red-400 hover:underline text-sm mt-2'
                             >
@@ -322,7 +323,7 @@ function Page() {
                       ))}
 
                       <button
-                        type="button" // Important: type="button"
+                        type="button"
                         onClick={() => push({ institution: '', passing_year: '', grade: '' })}
                         className='px-5 py-3 bg-cyan-700 hover:bg-cyan-600 text-white rounded-lg text-lg font-semibold w-max'
                       >
@@ -333,70 +334,68 @@ function Page() {
                 </FieldArray>
               </div>
 
-              {/* Languages Section */}
-              <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
-                <span className='inline-flex gap-2 my-5'>
-                  <p className='text-cyan-400 text-3xl font-bold'><IoLanguage /></p>
-                  <p className='text-3xl font-bold'>Languages Known</p>
-                </span>
-
-                <FieldArray name="languages">
-                  {({ push, remove }) => (
-                    <>
-                      {values.languages.map((lang, index) => (
-                        <div key={index} className='mt-5 flex flex-col gap-4 mb-6 border-b border-gray-700 pb-6'>
-                          <div className='flex flex-col gap-2'>
-                            <label htmlFor={`languages.${index}.language`} className="text-lg text-gray-300 font-semibold">Language</label>
-                            <Field
-                              name={`languages.${index}.language`}
-                              placeholder="e.g., English"
-                              className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
-                            />
-                            {touched.languages?.[index]?.language && errors.languages?.[index]?.language && (
-                              <div className="text-red-500 text-sm mt-1">{errors.languages[index]?.language}</div>
-                            )}
-                          </div>
-
-                          <div className='flex flex-col gap-2'>
-                            <label htmlFor={`languages.${index}.proficiency_level`} className="text-lg text-gray-300 font-semibold">Proficiency Level</label>
-                            <Field
-                              as="select"
-                              name={`languages.${index}.proficiency_level`}
-                              className='w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
-                            >
-                              <option value="">Select proficiency level</option>
-                              <option value="Native Proficiency">Native Proficiency</option>
-                              <option value="Bilingual Proficiency">Bilingual Proficiency</option>
-                              <option value="Professional Proficiency">Professional Proficiency</option>
-                            </Field>
-                            {touched.languages?.[index]?.proficiency_level && errors.languages?.[index]?.proficiency_level && (
-                              <div className="text-red-500 text-sm mt-1">{errors.languages[index]?.proficiency_level}</div>
-                            )}
-                          </div>
-
-                          {values.languages.length > 1 && (
-                            <button
-                              type="button" // Important: type="button"
-                              onClick={() => remove(index)}
-                              className='self-start text-red-400 hover:underline text-sm mt-2'
-                            >
-                              Remove
-                            </button>
+              {/* Apply the same pattern to Languages, Experience, Projects, Achievements */}
+              {/* Example for Languages */}
+              <FieldArray name="languages">
+                {({ push, remove }) => (
+                  <>
+                    {values.languages.map((lang, index) => (
+                      <div key={index} className='mt-5 flex flex-col gap-4 mb-6 border-b border-gray-700 pb-6'>
+                        <div className='flex flex-col gap-2'>
+                          <label htmlFor={`languages.${index}.language`} className="text-lg text-gray-300 font-semibold">Language</label>
+                          <Field
+                            name={`languages.${index}.language`}
+                            placeholder="e.g., English"
+                            className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
+                          />
+                          {touched.languages?.[index]?.language && (errors.languages?.[index] as any)?.language && (
+                            <div className="text-red-500 text-sm mt-1">{(errors.languages?.[index] as any).language as React.ReactNode}</div>
                           )}
                         </div>
-                      ))}
 
-                      <button
-                        type="button" // Important: type="button"
-                        onClick={() => push({ language: '', proficiency_level: '' })}
-                        className='px-5 py-3 bg-cyan-700 hover:bg-cyan-600 text-white rounded-lg text-lg font-semibold w-max'
-                      >
-                        + Add Another Language
-                      </button>
-                    </>
-                  )}
-                </FieldArray>
-              </div>
+                        <div className='flex flex-col gap-2'>
+                          <label htmlFor={`languages.${index}.proficiency_level`} className="text-lg text-gray-300 font-semibold">Proficiency Level</label>
+                          <Field
+                            as="select"
+                            name={`languages.${index}.proficiency_level`}
+                            className='w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
+                          >
+                            <option value="">Select proficiency level</option>
+                            <option value="Native Proficiency">Native Proficiency</option>
+                            <option value="Bilingual Proficiency">Bilingual Proficiency</option>
+                            <option value="Professional Proficiency">Professional Proficiency</option>
+                            <option value="Limited Working Proficiency">Limited Working Proficiency</option>
+                            <option value="Elementary Proficiency">Elementary Proficiency</option>
+                          </Field>
+                          {touched.languages?.[index]?.proficiency_level && (errors.languages?.[index] as any)?.proficiency_level && (
+                            <div className="text-red-500 text-sm mt-1">{(errors.languages?.[index] as any).proficiency_level as React.ReactNode}</div>
+                          )}
+                        </div>
+
+                        {values.languages.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => remove(index)}
+                            className='self-start text-red-400 hover:underline text-sm mt-2'
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                    ))}
+
+                    <button
+                      type="button"
+                      onClick={() => push({ language: '', proficiency_level: '' })}
+                      className='px-5 py-3 bg-cyan-700 hover:bg-cyan-600 text-white rounded-lg text-lg font-semibold w-max'
+                    >
+                      + Add Another Language
+                    </button>
+                  </>
+                )}
+              </FieldArray>
+
+
 
               {/*Experience */}
               <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
@@ -420,8 +419,8 @@ function Page() {
                               placeholder='e.g., JP Morgan Chase'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
-                            {touched.experience?.[index]?.company_name && errors.experience?.[index]?.company_name && (
-                              <div className="text-red-500 text-sm mt-1">{errors.experience[index]?.company_name}</div>
+                            {touched.experience?.[index]?.company_name && (errors.experience?.[index] as any)?.company_name && (
+                              <div className="text-red-500 text-sm mt-1">{(errors.experience?.[index] as any).company_name as React.ReactNode}</div>
                             )}
                           </div>
 
@@ -434,8 +433,8 @@ function Page() {
                               placeholder='e.g., Software Developer Engineer'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
-                            {touched.experience?.[index]?.key_role && errors.experience?.[index]?.key_role && (
-                              <div className="text-red-500 text-sm mt-1">{errors.experience[index]?.key_role}</div>
+                            {touched.experience?.[index]?.key_role && (errors.experience?.[index] as any)?.key_role && (
+                              <div className="text-red-500 text-sm mt-1">{(errors.experience?.[index] as any).key_role as React.ReactNode}</div>
                             )}
                           </div>
 
@@ -448,8 +447,8 @@ function Page() {
                                 name={`experience.${index}.start_date`}
                                 className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                               />
-                              {touched.experience?.[index]?.start_date && errors.experience?.[index]?.start_date && (
-                                <div className="text-red-500 text-sm mt-1">{errors.experience[index]?.start_date}</div>
+                              {touched.experience?.[index]?.start_date && (errors.experience?.[index] as any)?.start_date && (
+                                <div className="text-red-500 text-sm mt-1">{(errors.experience?.[index] as any).start_date as React.ReactNode}</div>
                               )}
                             </div>
 
@@ -462,8 +461,8 @@ function Page() {
                                 placeholder='e.g., Currently / May, 2025'
                                 className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                               />
-                              {touched.experience?.[index]?.end_date && errors.experience?.[index]?.end_date && (
-                                <div className="text-red-500 text-sm mt-1">{errors.experience[index]?.end_date}</div>
+                              {touched.experience?.[index]?.end_date && (errors.experience?.[index] as any)?.end_date && (
+                                <div className="text-red-500 text-sm mt-1">{(errors.experience?.[index] as any).end_date as React.ReactNode}</div>
                               )}
                             </div>
                           </div>
@@ -478,14 +477,14 @@ function Page() {
                               placeholder='Describe your responsibilities and achievements'
                               className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
                             />
-                            {touched.experience?.[index]?.job_summary && errors.experience?.[index]?.job_summary && (
-                              <div className="text-red-500 text-sm mt-1">{errors.experience[index]?.job_summary}</div>
+                            {touched.experience?.[index]?.job_summary && (errors.experience?.[index] as any)?.job_summary && (
+                              <div className="text-red-500 text-sm mt-1">{(errors.experience?.[index] as any).job_summary as React.ReactNode}</div>
                             )}
                           </div>
 
                           {values.experience.length > 1 && (
                             <button
-                              type="button" // Important: type="button"
+                              type="button"
                               onClick={() => remove(index)}
                               className='self-start text-red-400 hover:underline text-sm mt-2'
                             >
@@ -497,7 +496,7 @@ function Page() {
 
                       {/* Add More Experience Button */}
                       <button
-                        type="button" // Important: type="button"
+                        type="button"
                         onClick={() => push({ company_name: '', key_role: '', start_date: '', end_date: '', job_summary: '' })}
                         className='px-5 py-3 bg-cyan-700 hover:bg-cyan-600 text-white rounded-lg text-lg font-semibold w-max'
                       >
@@ -529,8 +528,8 @@ function Page() {
                               placeholder='e.g., E-commerce Website'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
-                            {touched.project?.[index]?.project_title && errors.project?.[index]?.project_title && (
-                              <div className="text-red-500 text-sm mt-1">{errors.project[index]?.project_title}</div>
+                            {touched.project?.[index]?.project_title && (errors.project?.[index] as any)?.project_title && (
+                              <div className="text-red-500 text-sm mt-1">{(errors.project?.[index] as any).project_title as React.ReactNode}</div>
                             )}
                           </div>
 
@@ -544,14 +543,14 @@ function Page() {
                               placeholder='Describe your project, technologies used, and key features'
                               className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
                             />
-                            {touched.project?.[index]?.project_description && errors.project?.[index]?.project_description && (
-                              <div className="text-red-500 text-sm mt-1">{errors.project[index]?.project_description}</div>
+                            {touched.project?.[index]?.project_description && (errors.project?.[index] as any)?.project_description && (
+                              <div className="text-red-500 text-sm mt-1">{(errors.project?.[index] as any).project_description as React.ReactNode}</div>
                             )}
                           </div>
 
                           {values.project.length > 1 && (
                             <button
-                              type="button" // Important: type="button"
+                              type="button"
                               onClick={() => remove(index)}
                               className='self-start text-red-400 hover:underline text-sm mt-2'
                             >
@@ -562,7 +561,7 @@ function Page() {
                       ))}
 
                       <button
-                        type="button" // Important: type="button"
+                        type="button"
                         onClick={() => push({ project_title: '', project_description: '' })}
                         className='px-5 py-3 bg-cyan-700 hover:bg-cyan-600 text-white rounded-lg text-lg font-semibold w-max'
                       >
@@ -573,7 +572,9 @@ function Page() {
                 </FieldArray>
               </div>
 
-              {/* Achievements Section */}
+
+              
+                {/* Achievements Section */}
               <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><FaTrophy /></p>
@@ -594,8 +595,8 @@ function Page() {
                               placeholder='e.g., Hackathon Winner, Certification'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
-                            {touched.achievement?.[index]?.achievement_title && errors.achievement?.[index]?.achievement_title && (
-                              <div className="text-red-500 text-sm mt-1">{errors.achievement[index]?.achievement_title}</div>
+                            {touched.achievement?.[index]?.achievement_title && (errors.achievement?.[index] as any)?.achievement_title && (
+                              <div className="text-red-500 text-sm mt-1">{(errors.achievement?.[index] as any).achievement_title as React.ReactNode}</div>
                             )}
                           </div>
 
@@ -609,14 +610,14 @@ function Page() {
                               placeholder='Describe your achievement and its significance'
                               className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
                             />
-                            {touched.achievement?.[index]?.achievement_description && errors.achievement?.[index]?.achievement_description && (
-                              <div className="text-red-500 text-sm mt-1">{errors.achievement[index]?.achievement_description}</div>
+                            {touched.achievement?.[index]?.achievement_description && (errors.achievement?.[index] as any)?.achievement_description && (
+                              <div className="text-red-500 text-sm mt-1">{(errors.achievement?.[index] as any).achievement_description as React.ReactNode}</div>
                             )}
                           </div>
 
                           {values.achievement.length > 1 && (
                             <button
-                              type="button" // Important: type="button"
+                              type="button"
                               onClick={() => remove(index)}
                               className='self-start text-red-400 hover:underline text-sm mt-2'
                             >
@@ -627,7 +628,7 @@ function Page() {
                       ))}
 
                       <button
-                        type="button" // Important: type="button"
+                        type="button"
                         onClick={() => push({ achievement_title: '', achievement_description: '' })}
                         className='px-5 py-3 bg-cyan-700 hover:bg-cyan-600 text-white rounded-lg text-lg font-semibold w-max'
                       >
@@ -648,18 +649,17 @@ function Page() {
                   as="textarea"
                   rows={5}
                   id="extra"
-                  name="extra" // Crucial: name attribute
+                  name="extra"
                   placeholder='Extras'
                   className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
                 />
-                 {touched.extra && errors.extra && <div className="text-red-500 text-sm mt-1">{errors.extra}</div>}
+                {touched.extra && errors.extra && <div className="text-red-500 text-sm mt-1">{errors.extra}</div>}
               </div>
 
-              {/* Submit Button */}
               <button
                 type="submit"
-                disabled={isSubmitting} // Disable button while submitting
-                className='bg-gradient-to-r from-blue-500 to-cyan-500 w-[25rem] py-3 rounded-lg font-semibold mx-auto block' // Added mx-auto block for centering
+                disabled={isSubmitting}
+                className='bg-gradient-to-r from-blue-500 to-cyan-500 w-[25rem] py-3 rounded-lg font-semibold mx-auto block'
               >
                 {isSubmitting ? 'Generating...' : 'Generate Resume'}
               </button>
