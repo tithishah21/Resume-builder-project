@@ -334,10 +334,11 @@ function Page() {
                 </FieldArray>
               </div>
 
+                {/*Languages */}
               <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
-                  <p className='text-cyan-400 text-3xl font-bold'><FaGraduationCap /></p>
-                  <p className='text-3xl font-bold'>Education</p>
+                  <p className='text-cyan-400 text-3xl font-bold'><IoLanguage /></p>
+                  <p className='text-3xl font-bold'>Languages known</p>
                 </span>
               <FieldArray name="languages">
                 {({ push, remove }) => (
