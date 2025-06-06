@@ -663,7 +663,7 @@ function Page() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className='bg-gradient-to-r from-blue-500 to-cyan-500 w-[25rem] py-3 rounded-lg font-semibold mx-auto block'
+                className='bg-gradient-to-r from-green-500 to-lime-500 hover:bg-gradient-to-r hover:from-lime-500 hover:to-green-500 w-[63rem] text-xl py-3 rounded-lg font-bold mx-auto block mt-20 text-green-950'
               >
                 {isSubmitting ? 'Generating...' : 'Generate Resume'}
               </button>
