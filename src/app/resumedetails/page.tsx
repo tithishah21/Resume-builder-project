@@ -159,7 +159,7 @@ function Page() {
           achievement: [{ achievement_title: '', achievement_description: '' }],
           extra: '',
         }}
-        validationSchema={validationSchema}
+        // validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting }) => {
           if (userId === null) {
             alert('User not logged in or user ID not found. Please log in.');
