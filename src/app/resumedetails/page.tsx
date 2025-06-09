@@ -807,7 +807,7 @@ function Page() {
                   className='px-8 py-4 bg-green-600 hover:bg-green-500 text-white text-xl font-bold rounded-lg transition-all duration-300'
                   disabled={isSubmitting || loadingUser} // Disable if loading user ID or submitting
                 >
-                  {isSubmitting ? 'Saving Resume...' : 'Save Resume'}
+                  {isSubmitting ? 'Generating Resume...' : 'Generate Resume'}
                 </button>
               </div>
             </div>
