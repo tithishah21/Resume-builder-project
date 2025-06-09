@@ -24,14 +24,13 @@ import Footer from '../components/footer';
 
 import { createClient } from '../../../utils/supabase/client';
 
-// Define the FormValues interface (it's good practice to have this in a shared types file if possible)
 interface FormValues {
   full_name: string;
   phone: string;
   email: string;
   home: string;
   summary: string;
-  skills: string[]; // Ensure this is part of your FormValues
+  skills: string[]; 
   education: {
     institution: string;
     passing_year: string;
@@ -98,10 +97,9 @@ function Page() {
       } else {
         console.warn('User data not found in localStorage. User might not be logged in.');
         setUserId(null);
-        // Optionally redirect to signin if login is mandatory for this page
-        // router.push('/signin');
+        
       }
-      setLoadingUser(false); // Finish loading user status
+      setLoadingUser(false);
     };
 
     const getTemplateFromUrl = () => {
@@ -111,16 +109,14 @@ function Page() {
         console.log('Selected Template from URL:', template);
       } else {
         console.warn('No template selected via URL query parameter. Consider setting a default or redirecting.');
-        // Example: setSelectedTemplate('Modern Professional'); // Set a default template if none is found
+
       }
     };
 
     getUserIdFromLocalStorage();
     getTemplateFromUrl();
 
-  }, [searchParams]); // Re-run if query parameters change
-
-  // --- Skill Management Logic ---
+  }, [searchParams]);
   const addSkill = () => {
     const trimmed = skillInput.trim();
     if (trimmed && !skills.includes(trimmed)) {
@@ -136,21 +132,21 @@ function Page() {
   };
 
   const handleDownloadPdf = async () => {
-    const input = document.getElementById('resume-content'); // Give your ResumePreview a unique ID
+    const input = document.getElementById('resume-content'); 
     if (input) {
-        // Temporarily adjust scale for better resolution (optional)
-        const scale = 2; // Increase for higher resolution
+
+        const scale = 2; 
         const canvas = await html2canvas(input, {
             scale: scale,
-            useCORS: true, // Important if you have external images/fonts
-            windowWidth: input.scrollWidth, // Capture full width
-            windowHeight: input.scrollHeight // Capture full height
+            useCORS: true, 
+            windowWidth: input.scrollWidth,
+            windowHeight: input.scrollHeight 
         });
 
         const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4'); // 'p' for portrait, 'mm' for units, 'a4' for size
-        const imgWidth = 210; // A4 width in mm
-        const pageHeight = 297; // A4 height in mm
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgWidth = 210; 
+        const pageHeight = 297; 
         const imgHeight = canvas.height * imgWidth / canvas.width;
         let heightLeft = imgHeight;
         let position = 0;
@@ -176,8 +172,6 @@ function Page() {
     email: Yup.string().email('Invalid email address').required('*Email is required'),
     home: Yup.string().min(10, 'Address must be at least 10 characters').required('*Home Address is required'),
     summary: Yup.string().min(50, 'Summary must be at least 50 characters').required('*Professional Summary is required'),
-    // Note: 'skills' field isn't directly validated by Formik here as it's managed by local state 'skills'
-    // If you integrate skills into Formik's state, you'd add: skills: Yup.array().min(1, 'At least one skill is required').of(Yup.string().required()),
     education: Yup.array().of(
       Yup.object().shape({
         institution: Yup.string().required('*Institution name is required'),
@@ -218,7 +212,7 @@ function Page() {
   return (
     <>
       <Header2 />
-      {/* Formik Wrapper for the entire form */}
+
       <Formik<FormValues>
         initialValues={{
           full_name: '',
@@ -226,7 +220,7 @@ function Page() {
           email: '',
           home: '',
           summary: '',
-          skills: [], // Initializing skills for Formik, though actual skills come from 'skills' state
+          skills: [], 
           education: [{ institution: '', passing_year: '', grade: '' }],
           languages: [{ language: '', proficiency_level: '' }],
           experience: [{ company_name: '', key_role: '', start_date: '', end_date: '', job_summary: '' }],
@@ -234,7 +228,7 @@ function Page() {
           achievement: [{ achievement_title: '', achievement_description: '' }],
           extra: '',
         }}
-        validationSchema={validationSchema} // Uncomment this when you're ready to enforce validation
+        validationSchema={validationSchema} 
         onSubmit={async (values, { setSubmitting, resetForm }) => {
           if (!userId) {
             alert('User not logged in or user ID not found in local storage. Please log in.');
@@ -242,13 +236,12 @@ function Page() {
             return;
           }
 
-          // Construct the data to submit to Supabase and for the preview
+      
           const formDataToSubmit: FormValues = {
             ...values,
-            skills: skills, // Use the skills from the local state
+            skills: skills, 
           };
 
-          // Set the resume data for preview and show the preview section
           setResumeData(formDataToSubmit);
           setShowPreview(true);
 
@@ -257,7 +250,7 @@ function Page() {
           try {
             const { data, error } = await supabase
               .from('resumes')
-              .insert([{ user_id: userId, ...formDataToSubmit }]) // Ensure user_id is included
+              .insert([{ user_id: userId, ...formDataToSubmit }]) 
               .select();
 
             if (error) {
@@ -266,9 +259,7 @@ function Page() {
             } else {
               console.log('Resume data inserted successfully:', data);
               alert('Resume saved successfully! Scroll down to see the preview.');
-              // Optionally, reset form after successful submission if needed
-              // resetForm();
-              // setSkills([]); // Clear skills if form is reset
+              
             }
           } catch (err) {
             console.error('Unexpected error during submission:', err);

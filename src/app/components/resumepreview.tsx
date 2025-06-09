@@ -45,11 +45,11 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
     return <div className="text-white text-center">No resume data to display.</div>;
   }
 
-  // --- Template-specific styling classes ---
+  //Template-specific styling 
   let containerClasses = "p-8 text-black shadow-lg rounded-lg";
   let headerClasses = "text-center pb-4 mb-6 border-b";
   let sectionTitleClasses = "text-xl font-bold mb-3 mt-6";
-  let accentColor = "text-blue-600"; // Default accent
+  let accentColor = "text-blue-600";
 
   switch (templateName) {
     case 'Modern Professional':
@@ -68,16 +68,16 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       containerClasses = "bg-white p-8 text-gray-700 font-serif shadow-lg rounded-lg max-w-2xl mx-auto border border-gray-200";
       headerClasses = "text-center pb-4 mb-6 border-b border-gray-400";
       sectionTitleClasses = "text-xl font-bold mb-3 mt-6 text-gray-800 uppercase tracking-wide";
-      accentColor = "text-green-700"; // Or deep blue
+      accentColor = "text-green-700"; 
       break;
     case 'Tech Minimalist':
       containerClasses = "bg-gray-900 p-8 text-white font-mono shadow-2xl rounded-xl max-w-2xl mx-auto";
       headerClasses = "text-center pb-4 mb-6 border-b border-gray-700";
       sectionTitleClasses = "text-xl font-bold mb-3 mt-6 text-cyan-400 uppercase tracking-widest";
-      accentColor = "text-lime-400"; // Or orange from template
+      accentColor = "text-lime-400";
       break;
     default:
-      // Default styles if no template is selected or recognized
+      
       containerClasses = "bg-white p-8 text-gray-800 font-sans shadow-lg rounded-lg max-w-2xl mx-auto";
       headerClasses = "text-center pb-4 mb-6 border-b-2 border-gray-300";
       sectionTitleClasses = "text-xl font-bold mb-3 mt-6 text-gray-700 uppercase tracking-wider border-b border-gray-200 pb-2";
