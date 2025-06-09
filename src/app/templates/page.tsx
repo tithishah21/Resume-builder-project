@@ -91,7 +91,7 @@ function Page() {
                             Eye-catching design ideal for creative industries and design roles.
                         </p>
                         <button
-                            onClick={() => handleSelectTemplate('Vibrant Expressive')} 
+                            onClick={() => handleSelectTemplate('Vibrant & Expressive (Gen Z)')} 
                             className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
                             Select Template
                         </button>
