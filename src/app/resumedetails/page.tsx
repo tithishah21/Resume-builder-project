@@ -1,7 +1,8 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Formik, Form, Field, FieldArray, FormikErrors, FormikTouched } from 'formik';
+// Removed FormikTouched from here
+import { Formik, Form, Field, FieldArray, FormikErrors } from 'formik';
 import * as Yup from 'yup';
 
 import html2canvas from 'html2canvas';
@@ -30,7 +31,7 @@ interface FormValues {
   email: string;
   home: string;
   summary: string;
-  skills: string[]; 
+  skills: string[];
   education: {
     institution: string;
     passing_year: string;
@@ -97,7 +98,6 @@ function Page() {
       } else {
         console.warn('User data not found in localStorage. User might not be logged in.');
         setUserId(null);
-        
       }
       setLoadingUser(false);
     };
@@ -109,7 +109,6 @@ function Page() {
         console.log('Selected Template from URL:', template);
       } else {
         console.warn('No template selected via URL query parameter. Consider setting a default or redirecting.');
-
       }
     };
 
@@ -117,6 +116,7 @@ function Page() {
     getTemplateFromUrl();
 
   }, [searchParams]);
+
   const addSkill = () => {
     const trimmed = skillInput.trim();
     if (trimmed && !skills.includes(trimmed)) {
@@ -131,39 +131,57 @@ function Page() {
     setSkills(updated);
   };
 
+  // --- PDF Download Function ---
   const handleDownloadPdf = async () => {
-    const input = document.getElementById('resume-content'); 
+    // Ensure the resume preview is visible before trying to capture it
+    if (!showPreview || !resumeData) {
+        alert("Please generate the resume preview first before downloading.");
+        return;
+    }
+
+    const input = document.getElementById('resume-content');
     if (input) {
+        const scale = 2; // Increase this for higher quality, but be mindful of performance
 
-        const scale = 2; 
-        const canvas = await html2canvas(input, {
-            scale: scale,
-            useCORS: true, 
-            windowWidth: input.scrollWidth,
-            windowHeight: input.scrollHeight 
-        });
+        try {
+            const canvas = await html2canvas(input, {
+                scale: scale,
+                useCORS: true, // Important if you have external images or fonts
+                logging: true, // Enable logging for debugging
+                windowWidth: input.scrollWidth, // Can help capture full width if overflow is an issue
+                windowHeight: input.scrollHeight // Can help capture full height
+            });
 
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const imgWidth = 210; 
-        const pageHeight = 297; 
-        const imgHeight = canvas.height * imgWidth / canvas.width;
-        let heightLeft = imgHeight;
-        let position = 0;
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4'); // 'p' for portrait, 'mm' for units, 'a4' for size
 
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+            const imgWidth = 210; // A4 width in mm
+            const pageHeight = 297; // A4 height in mm
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 0;
 
-        while (heightLeft >= 0) {
-            position = heightLeft - imgHeight;
-            pdf.addPage();
             pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
             heightLeft -= pageHeight;
-        }
 
-        pdf.save('my-resume.pdf');
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+
+            // Use formData.full_name for the filename if available, otherwise a default
+            pdf.save(`${resumeData.full_name || 'My_Resume'}-${selectedTemplate || 'template'}.pdf`);
+        } catch (error) {
+            console.error("Error generating PDF:", error);
+            alert("Failed to generate PDF. Please try again.");
+        }
+    } else {
+        console.error("Could not find element with ID 'resume-content'.");
+        alert("Resume content not found for PDF generation.");
     }
-};
+  };
 
   // --- Yup Validation Schema ---
   const validationSchema = Yup.object().shape({
@@ -220,7 +238,7 @@ function Page() {
           email: '',
           home: '',
           summary: '',
-          skills: [], 
+          skills: [],
           education: [{ institution: '', passing_year: '', grade: '' }],
           languages: [{ language: '', proficiency_level: '' }],
           experience: [{ company_name: '', key_role: '', start_date: '', end_date: '', job_summary: '' }],
@@ -228,18 +246,17 @@ function Page() {
           achievement: [{ achievement_title: '', achievement_description: '' }],
           extra: '',
         }}
-        validationSchema={validationSchema} 
-        onSubmit={async (values, { setSubmitting, resetForm }) => {
+        validationSchema={validationSchema}
+        onSubmit={async (values, { setSubmitting /* Removed resetForm */ }) => {
           if (!userId) {
             alert('User not logged in or user ID not found in local storage. Please log in.');
             setSubmitting(false);
             return;
           }
 
-      
           const formDataToSubmit: FormValues = {
             ...values,
-            skills: skills, 
+            skills: skills,
           };
 
           setResumeData(formDataToSubmit);
@@ -250,7 +267,7 @@ function Page() {
           try {
             const { data, error } = await supabase
               .from('resumes')
-              .insert([{ user_id: userId, ...formDataToSubmit }]) 
+              .insert([{ user_id: userId, ...formDataToSubmit }])
               .select();
 
             if (error) {
@@ -259,7 +276,6 @@ function Page() {
             } else {
               console.log('Resume data inserted successfully:', data);
               alert('Resume saved successfully! Scroll down to see the preview.');
-              
             }
           } catch (err) {
             console.error('Unexpected error during submission:', err);
@@ -269,7 +285,7 @@ function Page() {
           }
         }}
       >
-        {({ values, handleChange, handleBlur, errors, touched, isSubmitting }) => (
+        {({ values, errors, touched, isSubmitting /* Removed handleChange, handleBlur */ }) => (
           <Form>
             <div className='w-full min-h-screen bg-gray-950 text-white px-8 py-12'>
               {/* Personal Information */}
@@ -744,7 +760,7 @@ function Page() {
                               type="text"
                               id={`achievement.${index}.achievement_title`}
                               name={`achievement.${index}.achievement_title`}
-                              placeholder='e.g., Deans List'
+                              placeholder='e.g., Dean’s List'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
                             {touched.achievement?.[index] &&
@@ -819,7 +835,7 @@ function Page() {
               {/* Submit Button */}
               <div className='flex justify-center mt-10'>
                 <button
-                  type="submit" // This type="submit" is crucial for Formik to trigger onSubmit
+                  type="submit"
                   className='px-8 py-4 bg-green-600 hover:bg-green-500 text-white text-xl font-bold rounded-lg transition-all duration-300'
                   disabled={isSubmitting || loadingUser}
                 >

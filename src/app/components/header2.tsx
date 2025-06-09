@@ -2,7 +2,7 @@
 import React from 'react'
 import { useRouter } from 'next/navigation';
 
-function header2() {
+function Header2() {
     const router = useRouter();
   return (
     <div className="sticky top-0 z-50 bg-black" id="header2">
@@ -20,4 +20,4 @@ function header2() {
   )
 }
 
-export default header2
+export default Header2

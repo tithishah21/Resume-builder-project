@@ -64,7 +64,7 @@ function Page() {
         const supabase = createClient();
         // Hash password
         const hashedPassword = await bcrypt.hashSync(password, 10);
-        const { data, error } = await supabase.from('users').insert([
+        const { error } = await supabase.from('users').insert([
           {
             full_name: fullName,
             email,
