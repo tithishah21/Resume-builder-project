@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Formik, Form, Field, FieldArray, FormikErrors, FormikTouched } from 'formik'; // Import FormikErrors, FormikTouched
+import { Formik, Form, Field, FieldArray, FormikErrors, FormikTouched } from 'formik';
 import * as Yup from 'yup';
 
 import { IoPeopleOutline } from "react-icons/io5";
@@ -49,41 +49,30 @@ interface FormValues {
   extra: string;
 }
 
-// Helper type to correctly narrow down FieldArray errors
 type FieldArrayErrors<T> = FormikErrors<T> | FormikErrors<T[]>;
 
 function Page() {
   const [skillInput, setSkillInput] = useState('');
   const [skills, setSkills] = useState<string[]>([]);
-  const [userId, setUserId] = useState<number | null>(null);
+  // userId will store the string representation from localStorage
+  const [userId, setUserId] = useState<string | null>(null);
   const [loadingUser, setLoadingUser] = useState(true);
 
   const supabase = createClient();
 
   useEffect(() => {
-    const getCustomUserId = async () => {
-      try {
-        const response = await fetch('/api/get-current-user-id');
-        if (response.ok) {
-          const data = await response.json();
-          if (data.userId) {
-            setUserId(data.userId);
-          } else {
-            console.warn('Custom user ID not found in response. User might not be logged in.');
-            // Optionally, handle redirection or display a message
-          }
-        } else {
-          console.error('Failed to fetch custom user ID:', response.status, response.statusText);
-        }
-      } catch (error) {
-        console.error('Error fetching custom user ID:', error);
-      } finally {
-        setLoadingUser(false);
+    const getUserIdFromLocalStorage = () => {
+      const storedUserId = localStorage.getItem('user_id'); 
+      if (storedUserId) {
+        setUserId(storedUserId);
+      } else {
+        console.warn('User ID not found in localStorage. User might not be logged in or ID not stored after login.');
       }
+      setLoadingUser(false);
     };
 
-    getCustomUserId();
-  }, []);
+    getUserIdFromLocalStorage();
+  }, []); 
 
   const addSkill = () => {
     const trimmed = skillInput.trim();
@@ -159,16 +148,16 @@ function Page() {
           achievement: [{ achievement_title: '', achievement_description: '' }],
           extra: '',
         }}
-        // validationSchema={validationSchema}
+        // validationSchema={validationSchema} // Uncomment this when ready
         onSubmit={async (values, { setSubmitting }) => {
-          if (userId === null) {
-            alert('User not logged in or user ID not found. Please log in.');
+          if (!userId) { // Check for null or empty string
+            alert('User not logged in or user ID not found in local storage. Please log in.');
             setSubmitting(false);
             return;
           }
 
           const formDataToSubmit = {
-            user_id: userId,
+            user_id: userId, // Use the userId obtained from localStorage
             full_name: values.full_name,
             phone: values.phone,
             email: values.email,
@@ -341,7 +330,7 @@ function Page() {
                               id={`education.${index}.institution`}
                               name={`education.${index}.institution`}
                               placeholder='e.g., VIT University, Vellore'
-                              className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
+                              className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-ring-cyan-400/20"
                             />
 
                             {/* Corrected type checking for education errors */}
@@ -587,27 +576,27 @@ function Page() {
                           </div>
 
                           <div className='flex flex-col gap-2'>
-                            <label htmlFor={`experience.${index}.job_summary`} className="text-lg text-gray-300 font-semibold">Summary</label>
+                            <label htmlFor={`experience.${index}.job_summary`} className="text-lg text-gray-300 font-semibold">Job Summary</label>
                             <Field
                               as="textarea"
-                              rows={5}
+                              rows={4}
                               id={`experience.${index}.job_summary`}
                               name={`experience.${index}.job_summary`}
-                              placeholder='Describe your responsibilities and achievements'
-                              className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
+                              placeholder='Summarize your responsibilities and achievements'
+                              className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
                             {/* Corrected type checking for experience errors */}
                             {touched.experience?.[index] &&
-                               (errors.experience as FieldArrayErrors<typeof values.experience>)?.[index] &&
-                               typeof (errors.experience as FieldArrayErrors<typeof values.experience>)[index] === 'object' &&
-                               ((errors.experience as FormikErrors<typeof values.experience[number]>[])[index] as FormikErrors<typeof values.experience[number]>).job_summary && (
-                                <div className="text-red-500 text-sm mt-1">
-                                  {((errors.experience as FormikErrors<typeof values.experience[number]>[])[index] as FormikErrors<typeof values.experience[number]>).job_summary}
-                                </div>
-                              )}
+                             (errors.experience as FieldArrayErrors<typeof values.experience>)?.[index] &&
+                             typeof (errors.experience as FieldArrayErrors<typeof values.experience>)[index] === 'object' &&
+                             ((errors.experience as FormikErrors<typeof values.experience[number]>[])[index] as FormikErrors<typeof values.experience[number]>).job_summary && (
+                              <div className="text-red-500 text-sm mt-1">
+                                {((errors.experience as FormikErrors<typeof values.experience[number]>[])[index] as FormikErrors<typeof values.experience[number]>).job_summary}
+                              </div>
+                            )}
                           </div>
 
-                          {values.experience.length > 1 && (
+                          {values.experience.length > 0 && (
                             <button
                               type="button"
                               onClick={() => remove(index)}
@@ -618,7 +607,6 @@ function Page() {
                           )}
                         </div>
                       ))}
-
 
                       <button
                         type="button"
@@ -632,7 +620,7 @@ function Page() {
                 </FieldArray>
               </div>
 
-              {/* Projects Section */}
+              {/*Projects */}
               <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><FaProjectDiagram /></p>
@@ -644,20 +632,20 @@ function Page() {
                     <>
                       {values.project.map((proj, index) => (
                         <div key={index} className='mt-5 flex flex-col gap-4 mb-6 border-b border-gray-700 pb-6'>
+
                           <div className='flex flex-col gap-2'>
                             <label htmlFor={`project.${index}.project_title`} className="text-lg text-gray-300 font-semibold">Project Title</label>
                             <Field
                               type="text"
                               id={`project.${index}.project_title`}
                               name={`project.${index}.project_title`}
-                              placeholder='e.g., E-commerce Website'
+                              placeholder='e.g., E-commerce Platform'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
-                            {/* Corrected type checking for project errors */}
                             {touched.project?.[index] &&
-                               (errors.project as FieldArrayErrors<typeof values.project>)?.[index] &&
-                               typeof (errors.project as FieldArrayErrors<typeof values.project>)[index] === 'object' &&
-                               ((errors.project as FormikErrors<typeof values.project[number]>[])[index] as FormikErrors<typeof values.project[number]>).project_title && (
+                             (errors.project as FieldArrayErrors<typeof values.project>)?.[index] &&
+                             typeof (errors.project as FieldArrayErrors<typeof values.project>)[index] === 'object' &&
+                             ((errors.project as FormikErrors<typeof values.project[number]>[])[index] as FormikErrors<typeof values.project[number]>).project_title && (
                               <div className="text-red-500 text-sm mt-1">
                                 {((errors.project as FormikErrors<typeof values.project[number]>[])[index] as FormikErrors<typeof values.project[number]>).project_title}
                               </div>
@@ -665,27 +653,26 @@ function Page() {
                           </div>
 
                           <div className='flex flex-col gap-2'>
-                            <label htmlFor={`project.${index}.project_description`} className="text-lg text-gray-300 font-semibold">Description</label>
+                            <label htmlFor={`project.${index}.project_description`} className="text-lg text-gray-300 font-semibold">Project Description</label>
                             <Field
                               as="textarea"
                               rows={4}
                               id={`project.${index}.project_description`}
                               name={`project.${index}.project_description`}
-                              placeholder='Describe your project, technologies used, and key features'
-                              className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
+                              placeholder='Describe your project, technologies used, and your role.'
+                              className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
-                            {/* Corrected type checking for project errors */}
                             {touched.project?.[index] &&
-                               (errors.project as FieldArrayErrors<typeof values.project>)?.[index] &&
-                               typeof (errors.project as FieldArrayErrors<typeof values.project>)[index] === 'object' &&
-                               ((errors.project as FormikErrors<typeof values.project[number]>[])[index] as FormikErrors<typeof values.project[number]>).project_description && (
+                             (errors.project as FieldArrayErrors<typeof values.project>)?.[index] &&
+                             typeof (errors.project as FieldArrayErrors<typeof values.project>)[index] === 'object' &&
+                             ((errors.project as FormikErrors<typeof values.project[number]>[])[index] as FormikErrors<typeof values.project[number]>).project_description && (
                               <div className="text-red-500 text-sm mt-1">
                                 {((errors.project as FormikErrors<typeof values.project[number]>[])[index] as FormikErrors<typeof values.project[number]>).project_description}
                               </div>
                             )}
                           </div>
 
-                          {values.project.length > 1 && (
+                          {values.project.length > 0 && (
                             <button
                               type="button"
                               onClick={() => remove(index)}
@@ -709,9 +696,7 @@ function Page() {
                 </FieldArray>
               </div>
 
-
-
-                {/* Achievements Section */}
+              {/*Achievements */}
               <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><FaTrophy /></p>
@@ -723,20 +708,20 @@ function Page() {
                     <>
                       {values.achievement.map((ach, index) => (
                         <div key={index} className='mt-5 flex flex-col gap-4 mb-6 border-b border-gray-700 pb-6'>
+
                           <div className='flex flex-col gap-2'>
                             <label htmlFor={`achievement.${index}.achievement_title`} className="text-lg text-gray-300 font-semibold">Achievement Title</label>
                             <Field
                               type="text"
                               id={`achievement.${index}.achievement_title`}
                               name={`achievement.${index}.achievement_title`}
-                              placeholder='e.g., Hackathon Winner, Certification'
+                              placeholder='e.g., Awarded "Employee of the Year"'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
-                            {/* Corrected type checking for achievement errors */}
                             {touched.achievement?.[index] &&
-                               (errors.achievement as FieldArrayErrors<typeof values.achievement>)?.[index] &&
-                               typeof (errors.achievement as FieldArrayErrors<typeof values.achievement>)[index] === 'object' &&
-                               ((errors.achievement as FormikErrors<typeof values.achievement[number]>[])[index] as FormikErrors<typeof values.achievement[number]>).achievement_title && (
+                             (errors.achievement as FieldArrayErrors<typeof values.achievement>)?.[index] &&
+                             typeof (errors.achievement as FieldArrayErrors<typeof values.achievement>)[index] === 'object' &&
+                             ((errors.achievement as FormikErrors<typeof values.achievement[number]>[])[index] as FormikErrors<typeof values.achievement[number]>).achievement_title && (
                               <div className="text-red-500 text-sm mt-1">
                                 {((errors.achievement as FormikErrors<typeof values.achievement[number]>[])[index] as FormikErrors<typeof values.achievement[number]>).achievement_title}
                               </div>
@@ -744,27 +729,26 @@ function Page() {
                           </div>
 
                           <div className='flex flex-col gap-2'>
-                            <label htmlFor={`achievement.${index}.achievement_description`} className="text-lg text-gray-300 font-semibold">Description</label>
+                            <label htmlFor={`achievement.${index}.achievement_description`} className="text-lg text-gray-300 font-semibold">Achievement Description</label>
                             <Field
                               as="textarea"
-                              rows={3}
+                              rows={4}
                               id={`achievement.${index}.achievement_description`}
                               name={`achievement.${index}.achievement_description`}
-                              placeholder='Describe your achievement and its significance'
-                              className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
+                              placeholder='Describe the achievement and its impact.'
+                              className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
-                            {/* Corrected type checking for achievement errors */}
                             {touched.achievement?.[index] &&
-                               (errors.achievement as FieldArrayErrors<typeof values.achievement>)?.[index] &&
-                               typeof (errors.achievement as FieldArrayErrors<typeof values.achievement>)[index] === 'object' &&
-                               ((errors.achievement as FormikErrors<typeof values.achievement[number]>[])[index] as FormikErrors<typeof values.achievement[number]>).achievement_description && (
+                             (errors.achievement as FieldArrayErrors<typeof values.achievement>)?.[index] &&
+                             typeof (errors.achievement as FieldArrayErrors<typeof values.achievement>)[index] === 'object' &&
+                             ((errors.achievement as FormikErrors<typeof values.achievement[number]>[])[index] as FormikErrors<typeof values.achievement[number]>).achievement_description && (
                               <div className="text-red-500 text-sm mt-1">
                                 {((errors.achievement as FormikErrors<typeof values.achievement[number]>[])[index] as FormikErrors<typeof values.achievement[number]>).achievement_description}
                               </div>
                             )}
                           </div>
 
-                          {values.achievement.length > 1 && (
+                          {values.achievement.length > 0 && (
                             <button
                               type="button"
                               onClick={() => remove(index)}
@@ -788,30 +772,34 @@ function Page() {
                 </FieldArray>
               </div>
 
-              {/*Additional Add-ons */}
+              {/*Extra */}
               <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><BsFillBookmarkPlusFill /></p>
-                  <p className='text-3xl font-bold'>Additional add-ons</p>
+                  <p className='text-3xl font-bold'>Extra Information (Optional)</p>
                 </span>
+
+                <label htmlFor="extra" className='text-lg text-gray-300 font-semibold mt-6'>Additional Details</label>
                 <Field
                   as="textarea"
-                  rows={5}
+                  rows={4}
                   id="extra"
                   name="extra"
-                  placeholder='Extras'
+                  placeholder='Any other information you want to include (e.g., hobbies, interests, volunteering).'
                   className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
                 />
-                {touched.extra && errors.extra && <div className="text-red-500 text-sm mt-1">{errors.extra}</div>}
               </div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting || loadingUser}
-                className='bg-gradient-to-r from-green-500 to-lime-500 hover:bg-gradient-to-r hover:from-lime-500 hover:to-green-500 w-[63rem] text-xl py-3 rounded-lg font-bold mx-auto block mt-20 text-green-950'
-              >
-                {isSubmitting ? 'Saving...' : (loadingUser ? 'Loading User...' : 'Generate Resume')}
-              </button>
+              {/* Submit Button */}
+              <div className='flex justify-center mt-10'>
+                <button
+                  type="submit"
+                  className='px-8 py-4 bg-green-600 hover:bg-green-500 text-white text-xl font-bold rounded-lg transition-all duration-300'
+                  disabled={isSubmitting || loadingUser} // Disable if loading user ID or submitting
+                >
+                  {isSubmitting ? 'Saving Resume...' : 'Save Resume'}
+                </button>
+              </div>
             </div>
           </Form>
         )}
