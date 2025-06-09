@@ -60,28 +60,23 @@ function Page() {
 
   const supabase = createClient();
 
-  // In your resume.tsx (or the page that builds the resume)
-
     useEffect(() => {
       const getUserIdFromLocalStorage = () => {
         const storedUserString = localStorage.getItem('user'); // Get the stringified user object
         if (storedUserString) {
           try {
-            const storedUser = JSON.parse(storedUserString); // Parse it back into an object
+            const storedUser = JSON.parse(storedUserString);
             if (storedUser && storedUser.id) {
-              setUserId(storedUser.id); // Set the userId state with the ID from the object
+              setUserId(storedUser.id);
               console.log("User ID retrieved from localStorage:", storedUser.id);
             } else {
               console.warn('User object found in localStorage, but ID is missing or invalid.');
-              // Optionally, redirect to login or show an error
             }
           } catch (e) {
             console.error('Error parsing user data from localStorage:', e);
-            // Handle malformed JSON in localStorage
           }
         } else {
           console.warn('User data not found in localStorage. User might not be logged in or ID not stored after login.');
-          // Consider redirecting to login or showing a message
         }
         setLoadingUser(false);
       };

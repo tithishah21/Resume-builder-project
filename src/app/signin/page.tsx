@@ -72,7 +72,7 @@ function page() {
         return;
       }
   
-      //stroing the user info in "users" table created by me
+      //stroing the user info in custom "users" table created using localStorage
       if (typeof window !== 'undefined') {
         localStorage.setItem('user', JSON.stringify({
           id: users.id,
