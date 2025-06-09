@@ -37,14 +37,14 @@ function Page() {
         checkLoginStatus();
     }, []); 
 
-    const handleSelectTemplate = () => {
-        if (isLoggedIn) {
-            router.push('/resumedetails');
-        } else {
-            alert('Please sign in to create a resume.');
-            router.push('/signin');
-        }
-    };
+    const handleSelectTemplate = (templateName: string) => { 
+      if (isLoggedIn) {
+          router.push(`/resumedetails?template=${encodeURIComponent(templateName)}`);
+      } else {
+          alert('Please sign in to create a resume.');
+          router.push('/signin');
+      }
+  };
 
     if (loadingAuth) {
         return (
@@ -75,7 +75,7 @@ function Page() {
                             Clean lines, subtle design, and strategic use of white space for a polished, impactful presentation.
                         </p>
                         <button
-                            onClick={handleSelectTemplate} // Use the new handler
+                            onClick={() => handleSelectTemplate('Modern Professional')} 
                             className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
                             Select Template
                         </button>
@@ -91,7 +91,7 @@ function Page() {
                             Eye-catching design ideal for creative industries and design roles.
                         </p>
                         <button
-                            onClick={handleSelectTemplate} // Use the new handler
+                            onClick={() => handleSelectTemplate('Vibrant Expressive')} 
                             className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
                             Select Template
                         </button>
@@ -107,7 +107,7 @@ function Page() {
                             Traditional format perfect for corporate environments and formal industries.
                         </p>
                         <button
-                            onClick={handleSelectTemplate} // Use the new handler
+                            onClick={() => handleSelectTemplate('Classic Corporate')} 
                             className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
                             Select Template
                         </button>
@@ -123,7 +123,7 @@ function Page() {
                             Highlighting skills and achievements with a clear, concise format optimized for data-driven and engineering roles.
                         </p>
                         <button
-                            onClick={handleSelectTemplate} // Use the new handler
+                            onClick={() => handleSelectTemplate('Tech Minimalist')} 
                             className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
                             Select Template
                         </button>
