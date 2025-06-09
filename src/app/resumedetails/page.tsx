@@ -60,19 +60,34 @@ function Page() {
 
   const supabase = createClient();
 
-  useEffect(() => {
-    const getUserIdFromLocalStorage = () => {
-      const storedUserId = localStorage.getItem('user_id'); 
-      if (storedUserId) {
-        setUserId(storedUserId);
-      } else {
-        console.warn('User ID not found in localStorage. User might not be logged in or ID not stored after login.');
-      }
-      setLoadingUser(false);
-    };
+  // In your resume.tsx (or the page that builds the resume)
 
-    getUserIdFromLocalStorage();
-  }, []); 
+    useEffect(() => {
+      const getUserIdFromLocalStorage = () => {
+        const storedUserString = localStorage.getItem('user'); // Get the stringified user object
+        if (storedUserString) {
+          try {
+            const storedUser = JSON.parse(storedUserString); // Parse it back into an object
+            if (storedUser && storedUser.id) {
+              setUserId(storedUser.id); // Set the userId state with the ID from the object
+              console.log("User ID retrieved from localStorage:", storedUser.id);
+            } else {
+              console.warn('User object found in localStorage, but ID is missing or invalid.');
+              // Optionally, redirect to login or show an error
+            }
+          } catch (e) {
+            console.error('Error parsing user data from localStorage:', e);
+            // Handle malformed JSON in localStorage
+          }
+        } else {
+          console.warn('User data not found in localStorage. User might not be logged in or ID not stored after login.');
+          // Consider redirecting to login or showing a message
+        }
+        setLoadingUser(false);
+      };
+
+      getUserIdFromLocalStorage();
+    }, []);
 
   const addSkill = () => {
     const trimmed = skillInput.trim();
@@ -150,14 +165,14 @@ function Page() {
         }}
         // validationSchema={validationSchema} // Uncomment this when ready
         onSubmit={async (values, { setSubmitting }) => {
-          if (!userId) { // Check for null or empty string
+          if (!userId) {
             alert('User not logged in or user ID not found in local storage. Please log in.');
             setSubmitting(false);
             return;
           }
 
           const formDataToSubmit = {
-            user_id: userId, // Use the userId obtained from localStorage
+            user_id: userId, 
             full_name: values.full_name,
             phone: values.phone,
             email: values.email,
