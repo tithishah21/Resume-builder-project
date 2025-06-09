@@ -1,7 +1,13 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Formik, Form, Field, FieldArray, FormikErrors, FormikTouched } from 'formik';
 import * as Yup from 'yup';
+
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+
+import ResumePreview from '../components/resumepreview'; // Make sure this path is correct
 
 import { IoPeopleOutline } from "react-icons/io5";
 import { HiOutlineLightBulb } from "react-icons/hi";
@@ -9,19 +15,23 @@ import { FaGraduationCap } from "react-icons/fa6";
 import { IoLanguage } from "react-icons/io5";
 import { BsBagDashFill } from "react-icons/bs";
 import { BsFillBookmarkPlusFill } from "react-icons/bs";
-import Header2 from '../components/header2';
-import Footer from '../components/footer';
+
 import { FaProjectDiagram } from "react-icons/fa";
 import { FaTrophy } from "react-icons/fa6";
 
+import Header2 from '../components/header2';
+import Footer from '../components/footer';
+
 import { createClient } from '../../../utils/supabase/client';
 
+// Define the FormValues interface (it's good practice to have this in a shared types file if possible)
 interface FormValues {
   full_name: string;
   phone: string;
   email: string;
   home: string;
   summary: string;
+  skills: string[]; // Ensure this is part of your FormValues
   education: {
     institution: string;
     passing_year: string;
@@ -49,41 +59,68 @@ interface FormValues {
   extra: string;
 }
 
+// Helper type for Formik FieldArray errors
 type FieldArrayErrors<T> = FormikErrors<T> | FormikErrors<T[]>;
 
 function Page() {
   const [skillInput, setSkillInput] = useState('');
-  const [skills, setSkills] = useState<string[]>([]);
-  // userId will store the string representation from localStorage
+  const [skills, setSkills] = useState<string[]>([]); // This state manages the skills input
   const [userId, setUserId] = useState<string | null>(null);
   const [loadingUser, setLoadingUser] = useState(true);
 
+  const searchParams = useSearchParams();
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const [showPreview, setShowPreview] = useState(false); // Controls visibility of the resume preview
+  const [resumeData, setResumeData] = useState<FormValues | null>(null); // Stores the form data for preview
+
   const supabase = createClient();
 
-    useEffect(() => {
-      const getUserIdFromLocalStorage = () => {
-        const storedUserString = localStorage.getItem('user'); // Get the stringified user object
-        if (storedUserString) {
-          try {
-            const storedUser = JSON.parse(storedUserString);
-            if (storedUser && storedUser.id) {
-              setUserId(storedUser.id);
-              console.log("User ID retrieved from localStorage:", storedUser.id);
-            } else {
-              console.warn('User object found in localStorage, but ID is missing or invalid.');
-            }
-          } catch (e) {
-            console.error('Error parsing user data from localStorage:', e);
+  // Updated useEffect for user ID and template retrieval
+  useEffect(() => {
+    const getUserIdFromLocalStorage = () => {
+      const storedUserString = localStorage.getItem('user');
+      if (storedUserString) {
+        try {
+          const storedUser = JSON.parse(storedUserString);
+          if (storedUser && storedUser.id) {
+            setUserId(storedUser.id);
+            console.log("User ID retrieved from localStorage:", storedUser.id);
+          } else {
+            console.warn('User object found in localStorage, but ID is missing or invalid. Clearing local storage.');
+            localStorage.removeItem('user');
+            setUserId(null);
           }
-        } else {
-          console.warn('User data not found in localStorage. User might not be logged in or ID not stored after login.');
+        } catch (e) {
+          console.error('Error parsing user data from localStorage:', e);
+          localStorage.removeItem('user');
+          setUserId(null);
         }
-        setLoadingUser(false);
-      };
+      } else {
+        console.warn('User data not found in localStorage. User might not be logged in.');
+        setUserId(null);
+        // Optionally redirect to signin if login is mandatory for this page
+        // router.push('/signin');
+      }
+      setLoadingUser(false); // Finish loading user status
+    };
 
-      getUserIdFromLocalStorage();
-    }, []);
+    const getTemplateFromUrl = () => {
+      const template = searchParams.get('template');
+      if (template) {
+        setSelectedTemplate(template);
+        console.log('Selected Template from URL:', template);
+      } else {
+        console.warn('No template selected via URL query parameter. Consider setting a default or redirecting.');
+        // Example: setSelectedTemplate('Modern Professional'); // Set a default template if none is found
+      }
+    };
 
+    getUserIdFromLocalStorage();
+    getTemplateFromUrl();
+
+  }, [searchParams]); // Re-run if query parameters change
+
+  // --- Skill Management Logic ---
   const addSkill = () => {
     const trimmed = skillInput.trim();
     if (trimmed && !skills.includes(trimmed)) {
@@ -98,12 +135,49 @@ function Page() {
     setSkills(updated);
   };
 
+  const handleDownloadPdf = async () => {
+    const input = document.getElementById('resume-content'); // Give your ResumePreview a unique ID
+    if (input) {
+        // Temporarily adjust scale for better resolution (optional)
+        const scale = 2; // Increase for higher resolution
+        const canvas = await html2canvas(input, {
+            scale: scale,
+            useCORS: true, // Important if you have external images/fonts
+            windowWidth: input.scrollWidth, // Capture full width
+            windowHeight: input.scrollHeight // Capture full height
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4'); // 'p' for portrait, 'mm' for units, 'a4' for size
+        const imgWidth = 210; // A4 width in mm
+        const pageHeight = 297; // A4 height in mm
+        const imgHeight = canvas.height * imgWidth / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+
+        pdf.save('my-resume.pdf');
+    }
+};
+
+  // --- Yup Validation Schema ---
   const validationSchema = Yup.object().shape({
     full_name: Yup.string().required('*Full Name is required'),
     phone: Yup.string().matches(/^\+?[0-9]{10,15}$/, 'Invalid phone number').required('*Phone number is required'),
     email: Yup.string().email('Invalid email address').required('*Email is required'),
     home: Yup.string().min(10, 'Address must be at least 10 characters').required('*Home Address is required'),
     summary: Yup.string().min(50, 'Summary must be at least 50 characters').required('*Professional Summary is required'),
+    // Note: 'skills' field isn't directly validated by Formik here as it's managed by local state 'skills'
+    // If you integrate skills into Formik's state, you'd add: skills: Yup.array().min(1, 'At least one skill is required').of(Yup.string().required()),
     education: Yup.array().of(
       Yup.object().shape({
         institution: Yup.string().required('*Institution name is required'),
@@ -144,6 +218,7 @@ function Page() {
   return (
     <>
       <Header2 />
+      {/* Formik Wrapper for the entire form */}
       <Formik<FormValues>
         initialValues={{
           full_name: '',
@@ -151,6 +226,7 @@ function Page() {
           email: '',
           home: '',
           summary: '',
+          skills: [], // Initializing skills for Formik, though actual skills come from 'skills' state
           education: [{ institution: '', passing_year: '', grade: '' }],
           languages: [{ language: '', proficiency_level: '' }],
           experience: [{ company_name: '', key_role: '', start_date: '', end_date: '', job_summary: '' }],
@@ -158,36 +234,30 @@ function Page() {
           achievement: [{ achievement_title: '', achievement_description: '' }],
           extra: '',
         }}
-        // validationSchema={validationSchema} // Uncomment this when ready
-        onSubmit={async (values, { setSubmitting }) => {
+        validationSchema={validationSchema} // Uncomment this when you're ready to enforce validation
+        onSubmit={async (values, { setSubmitting, resetForm }) => {
           if (!userId) {
             alert('User not logged in or user ID not found in local storage. Please log in.');
             setSubmitting(false);
             return;
           }
 
-          const formDataToSubmit = {
-            user_id: userId, 
-            full_name: values.full_name,
-            phone: values.phone,
-            email: values.email,
-            home: values.home,
-            summary: values.summary,
-            skills: skills,
-            education: values.education,
-            languages: values.languages,
-            experience: values.experience,
-            project: values.project,
-            achievement: values.achievement,
-            extra: values.extra,
+          // Construct the data to submit to Supabase and for the preview
+          const formDataToSubmit: FormValues = {
+            ...values,
+            skills: skills, // Use the skills from the local state
           };
 
-          console.log("Submitting Data:", formDataToSubmit);
+          // Set the resume data for preview and show the preview section
+          setResumeData(formDataToSubmit);
+          setShowPreview(true);
+
+          console.log("Submitting Data to Supabase:", formDataToSubmit);
 
           try {
             const { data, error } = await supabase
               .from('resumes')
-              .insert([formDataToSubmit])
+              .insert([{ user_id: userId, ...formDataToSubmit }]) // Ensure user_id is included
               .select();
 
             if (error) {
@@ -195,7 +265,10 @@ function Page() {
               alert(`Error saving resume: ${error.message}`);
             } else {
               console.log('Resume data inserted successfully:', data);
-              alert('Resume saved successfully!');
+              alert('Resume saved successfully! Scroll down to see the preview.');
+              // Optionally, reset form after successful submission if needed
+              // resetForm();
+              // setSkills([]); // Clear skills if form is reset
             }
           } catch (err) {
             console.error('Unexpected error during submission:', err);
@@ -208,14 +281,12 @@ function Page() {
         {({ values, handleChange, handleBlur, errors, touched, isSubmitting }) => (
           <Form>
             <div className='w-full min-h-screen bg-gray-950 text-white px-8 py-12'>
-              {/*Personal Information*/}
+              {/* Personal Information */}
               <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
-
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><IoPeopleOutline /></p>
                   <p className='text-3xl font-bold'>Personal Information</p>
                 </span>
-
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-start gap-[26rem] mt-5">
                     <label htmlFor="full_name" className="text-lg text-gray-300 font-semibold">Full Name</label>
@@ -240,7 +311,6 @@ function Page() {
                   {touched.full_name && errors.full_name && <div className="text-red-500 text-sm mt-1">{errors.full_name}</div>}
                   {touched.phone && errors.phone && <div className="text-red-500 text-sm mt-1">{errors.phone}</div>}
                 </div>
-
                 <label htmlFor="email" className='text-lg text-gray-300 font-semibold mt-6'>Email Address</label>
                 <Field
                   type='email'
@@ -250,8 +320,6 @@ function Page() {
                   className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
                 />
                 {touched.email && errors.email && <div className="text-red-500 text-sm mt-1">{errors.email}</div>}
-
-                {/* Address */}
                 <label htmlFor="home" className='text-lg text-gray-300 font-semibold mt-6'>Home Address</label>
                 <Field
                   as="textarea"
@@ -262,9 +330,6 @@ function Page() {
                   className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
                 />
                 {touched.home && errors.home && <div className="text-red-500 text-sm mt-1">{errors.home}</div>}
-
-
-                {/* Summary */}
                 <label htmlFor="summary" className='text-lg text-gray-300 font-semibold mt-6'>Professional Summary</label>
                 <Field
                   as="textarea"
@@ -277,13 +342,12 @@ function Page() {
                 {touched.summary && errors.summary && <div className="text-red-500 text-sm mt-1">{errors.summary}</div>}
               </div>
 
-              {/*Skills (Still managed by local state, as before) */}
+              {/* Skills (Still managed by local state) */}
               <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><HiOutlineLightBulb /></p>
                   <p className='text-3xl font-bold'>Skills</p>
                 </span>
-
                 <div className='flex flex-wrap gap-3 mb-4'>
                   {skills.map((skill, index) => (
                     <span
@@ -301,14 +365,13 @@ function Page() {
                     </span>
                   ))}
                 </div>
-
                 <div className='flex gap-3'>
                   <input
                     type="text"
                     value={skillInput}
                     onChange={(e) => setSkillInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && addSkill()}
-                    placeholder="Type a skill and press Enter"
+                    placeholder="Type a skill and click on 'Add' button"
                     className='placeholder:text-base flex-1 px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:outline-none focus:border-cyan-400 focus:ring-cyan-400/20'
                   />
                   <button
@@ -327,7 +390,6 @@ function Page() {
                   <p className='text-cyan-400 text-3xl font-bold'><FaGraduationCap /></p>
                   <p className='text-3xl font-bold'>Education</p>
                 </span>
-
                 <FieldArray name="education">
                   {({ push, remove }) => (
                     <>
@@ -342,8 +404,6 @@ function Page() {
                               placeholder='e.g., VIT University, Vellore'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-ring-cyan-400/20"
                             />
-
-                            {/* Corrected type checking for education errors */}
                             {touched.education?.[index] &&
                              (errors.education as FieldArrayErrors<typeof values.education>)?.[index] &&
                              typeof (errors.education as FieldArrayErrors<typeof values.education>)[index] === 'object' &&
@@ -353,7 +413,6 @@ function Page() {
                                </div>
                              )}
                           </div>
-
                           <div className='flex flex-wrap gap-5'>
                             <div className='flex-1'>
                               <label htmlFor={`education.${index}.passing_year`} className="text-lg text-gray-300 font-semibold">Year of Passing</label>
@@ -364,8 +423,6 @@ function Page() {
                                 placeholder='e.g., 2027'
                                 className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                               />
-
-                              {/* Corrected type checking for education errors */}
                               {touched.education?.[index] &&
                                (errors.education as FieldArrayErrors<typeof values.education>)?.[index] &&
                                typeof (errors.education as FieldArrayErrors<typeof values.education>)[index] === 'object' &&
@@ -384,10 +441,8 @@ function Page() {
                                 placeholder='e.g., 9.0 CGPA'
                                 className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                               />
-
                             </div>
                           </div>
-
                           {values.education.length > 1 && (
                             <button
                               type="button"
@@ -399,7 +454,6 @@ function Page() {
                           )}
                         </div>
                       ))}
-
                       <button
                         type="button"
                         onClick={() => push({ institution: '', passing_year: '', grade: '' })}
@@ -412,98 +466,90 @@ function Page() {
                 </FieldArray>
               </div>
 
-                {/*Languages */}
+              {/* Languages */}
               <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><IoLanguage /></p>
                   <p className='text-3xl font-bold'>Languages known</p>
                 </span>
-              <FieldArray name="languages">
-                {({ push, remove }) => (
-                  <>
-                    {values.languages.map((lang, index) => (
-                      <div key={index} className='mt-5 flex flex-col gap-4 mb-6 border-b border-gray-700 pb-6'>
-                        <div className='flex flex-col gap-2'>
-                          <label htmlFor={`languages.${index}.language`} className="text-lg text-gray-300 font-semibold">Language</label>
-                          <Field
-                            name={`languages.${index}.language`}
-                            placeholder="e.g., English"
-                            className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
-                          />
-                          {/* Corrected type checking for languages errors */}
-                          {touched.languages?.[index] &&
-                           (errors.languages as FieldArrayErrors<typeof values.languages>)?.[index] &&
-                           typeof (errors.languages as FieldArrayErrors<typeof values.languages>)[index] === 'object' &&
-                           ((errors.languages as FormikErrors<typeof values.languages[number]>[])[index] as FormikErrors<typeof values.languages[number]>).language && (
-                            <div className="text-red-500 text-sm mt-1">
-                              {((errors.languages as FormikErrors<typeof values.languages[number]>[])[index] as FormikErrors<typeof values.languages[number]>).language}
-                            </div>
+                <FieldArray name="languages">
+                  {({ push, remove }) => (
+                    <>
+                      {values.languages.map((lang, index) => (
+                        <div key={index} className='mt-5 flex flex-col gap-4 mb-6 border-b border-gray-700 pb-6'>
+                          <div className='flex flex-col gap-2'>
+                            <label htmlFor={`languages.${index}.language`} className="text-lg text-gray-300 font-semibold">Language</label>
+                            <Field
+                              name={`languages.${index}.language`}
+                              placeholder="e.g., English"
+                              className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
+                            />
+                            {touched.languages?.[index] &&
+                             (errors.languages as FieldArrayErrors<typeof values.languages>)?.[index] &&
+                             typeof (errors.languages as FieldArrayErrors<typeof values.languages>)[index] === 'object' &&
+                             ((errors.languages as FormikErrors<typeof values.languages[number]>[])[index] as FormikErrors<typeof values.languages[number]>).language && (
+                              <div className="text-red-500 text-sm mt-1">
+                                {((errors.languages as FormikErrors<typeof values.languages[number]>[])[index] as FormikErrors<typeof values.languages[number]>).language}
+                              </div>
+                            )}
+                          </div>
+                          <div className='flex flex-col gap-2'>
+                            <label htmlFor={`languages.${index}.proficiency_level`} className="text-lg text-gray-300 font-semibold">Proficiency Level</label>
+                            <Field
+                              as="select"
+                              name={`languages.${index}.proficiency_level`}
+                              className='w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
+                            >
+                              <option value="">Select proficiency level</option>
+                              <option value="Native Proficiency">Native Proficiency</option>
+                              <option value="Bilingual Proficiency">Bilingual Proficiency</option>
+                              <option value="Professional Proficiency">Professional Proficiency</option>
+                              <option value="Limited Working Proficiency">Limited Working Proficiency</option>
+                              <option value="Elementary Proficiency">Elementary Proficiency</option>
+                            </Field>
+                            {touched.languages?.[index] &&
+                             (errors.languages as FieldArrayErrors<typeof values.languages>)?.[index] &&
+                             typeof (errors.languages as FieldArrayErrors<typeof values.languages>)[index] === 'object' &&
+                             ((errors.languages as FormikErrors<typeof values.languages[number]>[])[index] as FormikErrors<typeof values.languages[number]>).proficiency_level && (
+                              <div className="text-red-500 text-sm mt-1">
+                                {((errors.languages as FormikErrors<typeof values.languages[number]>[])[index] as FormikErrors<typeof values.languages[number]>).proficiency_level}
+                              </div>
+                            )}
+                          </div>
+                          {values.languages.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => remove(index)}
+                              className='self-start text-red-400 hover:underline text-sm mt-2'
+                            >
+                              Remove
+                            </button>
                           )}
                         </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => push({ language: '', proficiency_level: '' })}
+                        className='px-5 py-3 bg-cyan-700 hover:bg-cyan-600 text-white rounded-lg text-lg font-semibold w-max'
+                      >
+                        + Add Another Language
+                      </button>
+                    </>
+                  )}
+                </FieldArray>
+              </div>
 
-                        <div className='flex flex-col gap-2'>
-                          <label htmlFor={`languages.${index}.proficiency_level`} className="text-lg text-gray-300 font-semibold">Proficiency Level</label>
-                          <Field
-                            as="select"
-                            name={`languages.${index}.proficiency_level`}
-                            className='w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
-                          >
-                            <option value="">Select proficiency level</option>
-                            <option value="Native Proficiency">Native Proficiency</option>
-                            <option value="Bilingual Proficiency">Bilingual Proficiency</option>
-                            <option value="Professional Proficiency">Professional Proficiency</option>
-                            <option value="Limited Working Proficiency">Limited Working Proficiency</option>
-                            <option value="Elementary Proficiency">Elementary Proficiency</option>
-                          </Field>
-                          {/* Corrected type checking for languages errors */}
-                          {touched.languages?.[index] &&
-                           (errors.languages as FieldArrayErrors<typeof values.languages>)?.[index] &&
-                           typeof (errors.languages as FieldArrayErrors<typeof values.languages>)[index] === 'object' &&
-                           ((errors.languages as FormikErrors<typeof values.languages[number]>[])[index] as FormikErrors<typeof values.languages[number]>).proficiency_level && (
-                            <div className="text-red-500 text-sm mt-1">
-                              {((errors.languages as FormikErrors<typeof values.languages[number]>[])[index] as FormikErrors<typeof values.languages[number]>).proficiency_level}
-                            </div>
-                          )}
-                        </div>
-
-                        {values.languages.length > 1 && (
-                          <button
-                            type="button"
-                            onClick={() => remove(index)}
-                            className='self-start text-red-400 hover:underline text-sm mt-2'
-                          >
-                            Remove
-                          </button>
-                        )}
-                      </div>
-                    ))}
-
-                    <button
-                      type="button"
-                      onClick={() => push({ language: '', proficiency_level: '' })}
-                      className='px-5 py-3 bg-cyan-700 hover:bg-cyan-600 text-white rounded-lg text-lg font-semibold w-max'
-                    >
-                      + Add Another Language
-                    </button>
-                  </>
-                )}
-              </FieldArray>
-            </div>
-
-
-              {/*Experience */}
+              {/* Experience */}
               <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><BsBagDashFill /></p>
                   <p className='text-3xl font-bold'>Experience</p>
                 </span>
-
                 <FieldArray name="experience">
                   {({ push, remove }) => (
                     <>
                       {values.experience.map((exp, index) => (
                         <div key={index} className='mt-5 flex flex-col gap-4 mb-6 border-b border-gray-700 pb-6'>
-
                           <div className='flex flex-col gap-2'>
                             <label htmlFor={`experience.${index}.company_name`} className="text-lg text-gray-300 font-semibold">Company Name</label>
                             <Field
@@ -513,7 +559,6 @@ function Page() {
                               placeholder='e.g., JP Morgan Chase'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
-                            {/* Corrected type checking for experience errors */}
                             {touched.experience?.[index] &&
                              (errors.experience as FieldArrayErrors<typeof values.experience>)?.[index] &&
                              typeof (errors.experience as FieldArrayErrors<typeof values.experience>)[index] === 'object' &&
@@ -523,7 +568,6 @@ function Page() {
                               </div>
                             )}
                           </div>
-
                           <div className='flex flex-col gap-2'>
                             <label htmlFor={`experience.${index}.key_role`} className="text-lg text-gray-300 font-semibold">Key Role</label>
                             <Field
@@ -533,7 +577,6 @@ function Page() {
                               placeholder='e.g., Software Developer Engineer'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
-                            {/* Corrected type checking for experience errors */}
                             {touched.experience?.[index] &&
                              (errors.experience as FieldArrayErrors<typeof values.experience>)?.[index] &&
                              typeof (errors.experience as FieldArrayErrors<typeof values.experience>)[index] === 'object' &&
@@ -543,7 +586,6 @@ function Page() {
                               </div>
                             )}
                           </div>
-
                           <div className='flex flex-wrap gap-5'>
                             <div className='flex-1'>
                               <label htmlFor={`experience.${index}.start_date`} className="text-lg text-gray-300 font-semibold">Start Date</label>
@@ -553,7 +595,6 @@ function Page() {
                                 name={`experience.${index}.start_date`}
                                 className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                               />
-                              {/* Corrected type checking for experience errors */}
                               {touched.experience?.[index] &&
                                (errors.experience as FieldArrayErrors<typeof values.experience>)?.[index] &&
                                typeof (errors.experience as FieldArrayErrors<typeof values.experience>)[index] === 'object' &&
@@ -563,7 +604,6 @@ function Page() {
                                 </div>
                               )}
                             </div>
-
                             <div className='flex-1'>
                               <label htmlFor={`experience.${index}.end_date`} className="text-lg text-gray-300 font-semibold">End Date</label>
                               <Field
@@ -573,7 +613,6 @@ function Page() {
                                 placeholder='e.g., Currently / May, 2025'
                                 className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                               />
-                              {/* Corrected type checking for experience errors */}
                               {touched.experience?.[index] &&
                                (errors.experience as FieldArrayErrors<typeof values.experience>)?.[index] &&
                                typeof (errors.experience as FieldArrayErrors<typeof values.experience>)[index] === 'object' &&
@@ -584,7 +623,6 @@ function Page() {
                               )}
                             </div>
                           </div>
-
                           <div className='flex flex-col gap-2'>
                             <label htmlFor={`experience.${index}.job_summary`} className="text-lg text-gray-300 font-semibold">Job Summary</label>
                             <Field
@@ -592,10 +630,9 @@ function Page() {
                               rows={4}
                               id={`experience.${index}.job_summary`}
                               name={`experience.${index}.job_summary`}
-                              placeholder='Summarize your responsibilities and achievements'
+                              placeholder='Summarize your key responsibilities and achievements'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
-                            {/* Corrected type checking for experience errors */}
                             {touched.experience?.[index] &&
                              (errors.experience as FieldArrayErrors<typeof values.experience>)?.[index] &&
                              typeof (errors.experience as FieldArrayErrors<typeof values.experience>)[index] === 'object' &&
@@ -605,7 +642,6 @@ function Page() {
                               </div>
                             )}
                           </div>
-
                           {values.experience.length > 0 && (
                             <button
                               type="button"
@@ -617,7 +653,6 @@ function Page() {
                           )}
                         </div>
                       ))}
-
                       <button
                         type="button"
                         onClick={() => push({ company_name: '', key_role: '', start_date: '', end_date: '', job_summary: '' })}
@@ -630,19 +665,17 @@ function Page() {
                 </FieldArray>
               </div>
 
-              {/*Projects */}
+              {/* Projects */}
               <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><FaProjectDiagram /></p>
                   <p className='text-3xl font-bold'>Projects</p>
                 </span>
-
                 <FieldArray name="project">
                   {({ push, remove }) => (
                     <>
                       {values.project.map((proj, index) => (
                         <div key={index} className='mt-5 flex flex-col gap-4 mb-6 border-b border-gray-700 pb-6'>
-
                           <div className='flex flex-col gap-2'>
                             <label htmlFor={`project.${index}.project_title`} className="text-lg text-gray-300 font-semibold">Project Title</label>
                             <Field
@@ -661,7 +694,6 @@ function Page() {
                               </div>
                             )}
                           </div>
-
                           <div className='flex flex-col gap-2'>
                             <label htmlFor={`project.${index}.project_description`} className="text-lg text-gray-300 font-semibold">Project Description</label>
                             <Field
@@ -669,7 +701,7 @@ function Page() {
                               rows={4}
                               id={`project.${index}.project_description`}
                               name={`project.${index}.project_description`}
-                              placeholder='Describe your project, technologies used, and your role.'
+                              placeholder='Describe your project and your contributions'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
                             {touched.project?.[index] &&
@@ -681,7 +713,6 @@ function Page() {
                               </div>
                             )}
                           </div>
-
                           {values.project.length > 0 && (
                             <button
                               type="button"
@@ -693,7 +724,6 @@ function Page() {
                           )}
                         </div>
                       ))}
-
                       <button
                         type="button"
                         onClick={() => push({ project_title: '', project_description: '' })}
@@ -706,26 +736,24 @@ function Page() {
                 </FieldArray>
               </div>
 
-              {/*Achievements */}
+              {/* Achievements */}
               <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><FaTrophy /></p>
                   <p className='text-3xl font-bold'>Achievements</p>
                 </span>
-
                 <FieldArray name="achievement">
                   {({ push, remove }) => (
                     <>
                       {values.achievement.map((ach, index) => (
                         <div key={index} className='mt-5 flex flex-col gap-4 mb-6 border-b border-gray-700 pb-6'>
-
                           <div className='flex flex-col gap-2'>
                             <label htmlFor={`achievement.${index}.achievement_title`} className="text-lg text-gray-300 font-semibold">Achievement Title</label>
                             <Field
                               type="text"
                               id={`achievement.${index}.achievement_title`}
                               name={`achievement.${index}.achievement_title`}
-                              placeholder='e.g., Awarded "Employee of the Year"'
+                              placeholder='e.g., Deans List'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
                             {touched.achievement?.[index] &&
@@ -737,7 +765,6 @@ function Page() {
                               </div>
                             )}
                           </div>
-
                           <div className='flex flex-col gap-2'>
                             <label htmlFor={`achievement.${index}.achievement_description`} className="text-lg text-gray-300 font-semibold">Achievement Description</label>
                             <Field
@@ -745,7 +772,7 @@ function Page() {
                               rows={4}
                               id={`achievement.${index}.achievement_description`}
                               name={`achievement.${index}.achievement_description`}
-                              placeholder='Describe the achievement and its impact.'
+                              placeholder='Describe your achievement'
                               className="placeholder:text-base w-full px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
                             />
                             {touched.achievement?.[index] &&
@@ -757,7 +784,6 @@ function Page() {
                               </div>
                             )}
                           </div>
-
                           {values.achievement.length > 0 && (
                             <button
                               type="button"
@@ -769,7 +795,6 @@ function Page() {
                           )}
                         </div>
                       ))}
-
                       <button
                         type="button"
                         onClick={() => push({ achievement_title: '', achievement_description: '' })}
@@ -782,38 +807,67 @@ function Page() {
                 </FieldArray>
               </div>
 
-              {/*Extra */}
+              {/* Extra Information */}
               <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><BsFillBookmarkPlusFill /></p>
                   <p className='text-3xl font-bold'>Extra Information (Optional)</p>
                 </span>
-
-                <label htmlFor="extra" className='text-lg text-gray-300 font-semibold mt-6'>Additional Details</label>
+                <label htmlFor="extra" className='text-lg text-gray-300 font-semibold mt-2'>Any additional information?</label>
                 <Field
                   as="textarea"
                   rows={4}
                   id="extra"
                   name="extra"
-                  placeholder='Any other information you want to include (e.g., hobbies, interests, volunteering).'
+                  placeholder='E.g., Hobbies, interests, or any other relevant details.'
                   className='placeholder:text-base px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20'
                 />
+                {touched.extra && errors.extra && <div className="text-red-500 text-sm mt-1">{errors.extra}</div>}
               </div>
 
               {/* Submit Button */}
               <div className='flex justify-center mt-10'>
                 <button
-                  type="submit"
+                  type="submit" // This type="submit" is crucial for Formik to trigger onSubmit
                   className='px-8 py-4 bg-green-600 hover:bg-green-500 text-white text-xl font-bold rounded-lg transition-all duration-300'
-                  disabled={isSubmitting || loadingUser} // Disable if loading user ID or submitting
+                  disabled={isSubmitting || loadingUser}
                 >
-                  {isSubmitting ? 'Generating Resume...' : 'Generate Resume'}
+                  {isSubmitting ? 'Generating...' : 'Generate Resume'}
                 </button>
               </div>
             </div>
           </Form>
         )}
       </Formik>
+
+      {/* Resume Preview Section */}
+      {showPreview && resumeData && (
+        <div className="mt-12 py-10 bg-gray-950 flex flex-col items-center justify-center">
+          {/* Apply the ID to the container that holds the actual resume content */}
+          {/* This ID is what html2canvas will target */}
+          <div id="resume-content">
+              <h2 className="text-4xl font-bold text-white mb-8">Your Resume Preview</h2>
+              <ResumePreview formData={resumeData} templateName={selectedTemplate} />
+          </div>
+
+          {/* Buttons related to the preview should be INSIDE this conditional block */}
+          <div className="flex gap-4 mt-8">
+              <button
+                onClick={handleDownloadPdf}
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-lg font-semibold"
+              >
+                Download PDF
+              </button>
+              <button
+                onClick={() => setShowPreview(false)}
+                className="px-6 py-3 bg-red-600 hover:bg-red-500 text-white rounded-lg text-lg font-semibold"
+              >
+                Close Preview
+              </button>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </>
   );
