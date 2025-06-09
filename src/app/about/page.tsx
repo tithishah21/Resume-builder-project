@@ -41,14 +41,20 @@ function About() {
             />
             <div className='mt-5 text-center text-5xl font-bold bg-gradient-to-r from-blue-700 to-cyan-400 bg-clip-text text-transparent'>Tithi Shah</div>
           </div>
-          <div className='text-lg font-semibold'>
-          Deeply passionate about harnessing technology to solve real-world problems, I'm a Computer Science student at VIT Vellore currently working as a Software Development Engineer Intern at Intelivita Private Limited, where I build scalable web applications using React, Node.js, Express.js, TypeScript, Next.js, and Firebase.<br/>
-          As the Senior Core Member at IEEE-CS VIT, I've developed the Hackbattle and ARCS websites along with other members and am currently crafting the most impressive frontend for the VIMAANAS (Aero Design Team at VIT) website. My journey has been a blend of innovation and collaboration, where I've also contributed as a Tech Panelist for Hackbattle(Hackathon at VIT), reviewing groundbreaking projects and interacting with brilliant minds during the 36-hour hackathon.<br/>
-          I'm proud to share that my team won a hackathon with our project PrepMate, a powerful prep tool designed to assist VIT students in exam preparation. PrepMate combines an intuitive and user-friendly frontend with cutting-edge RAG (Retrieval-Augmented Generation) technology, delivering personalized and efficient study experiences.<br/>
-          Alongside web development, I've built a solid foundation in C, C++, Java, JavaScript, Python, and Object-Oriented Programming (OOPs) concepts, enabling me to write efficient, maintainable code across diverse projects. I also actively sharpen my problem-solving skills by tackling DSA challenges on LeetCode.<br/>
-          I'm currently diving deep into the world of AI/ML, exploring tools like TensorFlow, Scikit-learn, MLFlow, and Matplotlib to build intelligent solutions.<br/>
-          I'm excited to continue expanding my technical horizon, embracing new challenges, and contributing to impactful tech solutions. Let's connect!
-          </div>
+            <div className='text-lg font-semibold'>
+          {`Deeply passionate about harnessing technology to solve real-world problems, I'm a Computer Science student at VIT Vellore currently working as a Software Development Engineer Intern at Intelivita Private Limited, where I build scalable web applications using React, Node.js, Express.js, TypeScript, Next.js, and Firebase.
+          
+        As the Senior Core Member at IEEE-CS VIT, I've developed the Hackbattle and ARCS websites along with other members and am currently crafting the most impressive frontend for the VIMAANAS (Aero Design Team at VIT) website. My journey has been a blend of innovation and collaboration, where I've also contributed as a Tech Panelist for Hackbattle(Hackathon at VIT), reviewing groundbreaking projects and interacting with brilliant minds during the 36-hour hackathon.
+
+        I'm proud to share that my team won a hackathon with our project PrepMate, a powerful prep tool designed to assist VIT students in exam preparation. PrepMate combines an intuitive and user-friendly frontend with cutting-edge RAG (Retrieval-Augmented Generation) technology, delivering personalized and efficient study experiences.
+
+        Alongside web development, I've built a solid foundation in C, C++, Java, JavaScript, Python, and Object-Oriented Programming (OOPs) concepts, enabling me to write efficient, maintainable code across diverse projects. I also actively sharpen my problem-solving skills by tackling DSA challenges on LeetCode.
+
+        I'm currently diving deep into the world of AI/ML, exploring tools like TensorFlow, Scikit-learn, MLFlow, and Matplotlib to build intelligent solutions.
+
+        I'm excited to continue expanding my technical horizon, embracing new challenges, and contributing to impactful tech solutions. Let's connect!`}
+        </div>
+
         </div>
       
     </section>
