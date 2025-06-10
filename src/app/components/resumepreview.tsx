@@ -102,16 +102,36 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       return(
         <div className='flex flex-row'>
 
-            <div className='flex'>
-                <div className='bg-gray-700 w-[25rem] text-center mb-10'>
+            <div className='flex flex-col'>
+                <div className='bg-gray-800 w-[25rem] text-center flex flex-col py-10'>
                   <h1 className='text-5xl font-bold'>{displayData.full_name.toUpperCase()}</h1>
-                  <span className='inline-flex gap-2 mt-10'><IoIosHome />+91 {displayData.home}</span>
-                  <span className='inline-flex gap-2 mt-3'><FaPhoneAlt />{displayData.phone}</span>
-                  <span className='inline-flex gap-2 mt-3'><IoMdMail />{displayData.email}</span>
+                  <div className='text-left flex flex-col pl-5'>
+                    <div className='inline-flex gap-3 mt-10 '><IoIosHome size={25}/>{displayData.home}</div>
+                    <div className='inline-flex gap-3 mt-3 '><FaPhoneAlt size={20}/>+91 {displayData.phone}</div>
+                    <div className='inline-flex gap-3 mt-3'><IoMdMail size={20}/>{displayData.email}</div>
+                  </div>
                 </div>
-                <div className=''>
+                <div className="bg-gray-400 w-full max-w-md mx-auto text-center flex flex-col py-10 px-4">
+                {displayData.skills && displayData.skills.length > 0 && (
+                  <section className="mb-6">
+                    <h2 className="text-2xl font-bold text-black mb-4">Skills</h2>
+                    <ul className="space-y-2 text-sm">
+                      {displayData.skills.map((skill, index) => (
+                        <li
+                          key={index}
+                          className={`text-black mx-auto px-4 py-1 rounded-full bg-gray-200 min-w-[8rem] max-w-[14rem] truncate ${accentColor.replace(
+                            'text-',
+                            'bg-'
+                          )}`}
+                        >
+                          {skill}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+              </div>
 
-                </div>
             </div>
 
             <div></div>
