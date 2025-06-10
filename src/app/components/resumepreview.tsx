@@ -93,7 +93,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
 
   //Template-specific styling 
   let containerClasses = "p-8 text-black shadow-lg rounded-lg";
-  let headerClasses = "text-center pb-4 mb-6 border-b";
+  let headerClasses = "pb-4 mb-6 border-b";
   let sectionTitleClasses = "text-xl font-bold mb-3 mt-6";
   let accentColor = "text-blue-600";
 
@@ -324,10 +324,14 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
     <div className={containerClasses}>
       {/* Header - Name, Contact Info */}
       <header className={headerClasses}>
-        <h1 className="text-4xl font-extrabold mb-2">{displayData.full_name}</h1>
+        <h1 className="text-4xl font-extrabold mb-2">{displayData.full_name.toUpperCase()}</h1>
         <p className="text-gray-600">
-          {displayData.phone} | {displayData.email} | {displayData.home}
+          {displayData.home}
         </p>
+        <div className='flex justify-between'>
+          <div><span>+91 </span>{displayData.phone}</div>
+          <div>{displayData.email}</div>
+        </div>
       </header>
 
       {/* Professional Summary */}
@@ -340,9 +344,9 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       {displayData.skills && displayData.skills.length > 0 && (
         <section className="mb-6">
           <h2 className={sectionTitleClasses}>Skills</h2>
-          <ul className="flex flex-wrap gap-2 text-sm">
+          <ul className="flex flex-wrap gap-2 text-sm text-center">
             {displayData.skills.map((skill, index) => (
-              <li key={index} className={`px-3 py-1 rounded-full bg-gray-200 ${accentColor.replace('text-', 'bg-')}`}>
+              <li key={index} className={`text-center px-3 py-1 rounded-full bg-gray-200 ${accentColor.replace('text-', 'bg-')}`}>
                 {skill}
               </li>
             ))}
@@ -356,7 +360,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
           <h2 className={sectionTitleClasses}>Experience</h2>
           {displayData.experience.map((exp, index) => (
             <div key={index} className="mb-4">
-              <h3 className="font-semibold text-lg">{exp.key_role} at {exp.company_name}</h3>
+              <h3 className="font-semibold text-lg">{exp.key_role} @ {exp.company_name}</h3>
               <p className="text-gray-600 text-sm mb-1">{exp.start_date} - {exp.end_date}</p>
               <p className="text-gray-700 text-sm leading-relaxed">{exp.job_summary}</p>
             </div>
@@ -370,8 +374,11 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
           <h2 className={sectionTitleClasses}>Education</h2>
           {displayData.education.map((edu, index) => (
             <div key={index} className="mb-4">
+              <div className='flex justify-between'>
               <h3 className="font-semibold text-lg">{edu.institution}</h3>
-              <p className="text-gray-600 text-sm">{edu.passing_year} {edu.grade ? `(${edu.grade})` : ''}</p>
+              <div>{edu.passing_year}</div>
+              </div>
+              <p className="text-gray-600 text-sm">{edu.grade ? `Grade: (${edu.grade})` : ''}</p>
             </div>
           ))}
         </section>
