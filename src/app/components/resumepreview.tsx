@@ -99,10 +99,24 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
 
   switch (templateName) {
     case 'Modern Professional':
-      containerClasses = "bg-white p-8 text-gray-800 font-sans shadow-lg rounded-lg max-w-2xl mx-auto";
-      headerClasses = "text-center pb-4 mb-6 border-b-2 border-gray-300";
-      sectionTitleClasses = "text-xl font-bold mb-3 mt-6 text-gray-700 uppercase tracking-wider border-b border-gray-200 pb-2";
-      accentColor = "text-blue-700";
+      return(
+        <div className='flex flex-row'>
+
+            <div className='flex'>
+                <div className='bg-gray-700 w-[25rem] text-center mb-10'>
+                  <h1 className='text-5xl font-bold'>{displayData.full_name.toUpperCase()}</h1>
+                  <span className='inline-flex gap-2 mt-10'><IoIosHome />+91 {displayData.home}</span>
+                  <span className='inline-flex gap-2 mt-3'><FaPhoneAlt />{displayData.phone}</span>
+                  <span className='inline-flex gap-2 mt-3'><IoMdMail />{displayData.email}</span>
+                </div>
+                <div className=''>
+
+                </div>
+            </div>
+
+            <div></div>
+          </div>
+      );
       break;
     case 'Vibrant & Expressive (Gen Z)':
       return (
@@ -302,7 +316,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
         </div>
       );
     case 'Classic Corporate':
-      containerClasses = "bg-white p-8 text-gray-700 font-serif shadow-lg rounded-lg max-w-2xl mx-auto border border-gray-200";
+      containerClasses = "bg-white p-8 text-gray-700 font-sans shadow-lg rounded-lg max-w-2xl mx-auto border border-gray-200";
       headerClasses = "text-center pb-4 mb-6 border-b border-gray-400";
       sectionTitleClasses = "text-xl font-bold mb-3 mt-6 text-gray-800 uppercase tracking-wide";
       accentColor = "text-green-700"; 
@@ -328,7 +342,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
         <p className="text-gray-600">
           {displayData.home}
         </p>
-        <div className='flex justify-between'>
+        <div className='flex justify-between text-sm font-boldA'>
           <div><span>+91 </span>{displayData.phone}</div>
           <div>{displayData.email}</div>
         </div>
@@ -344,9 +358,9 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       {displayData.skills && displayData.skills.length > 0 && (
         <section className="mb-6">
           <h2 className={sectionTitleClasses}>Skills</h2>
-          <ul className="flex flex-wrap gap-2 text-sm text-center">
+          <ul className="flex flex-wrap gap-2 text-sm text-center items-center">
             {displayData.skills.map((skill, index) => (
-              <li key={index} className={`text-center px-3 py-1 rounded-full bg-gray-200 ${accentColor.replace('text-', 'bg-')}`}>
+              <li key={index} className={`text-center align-middle justify-center px-3 py-1 rounded-full bg-gray-200 ${accentColor.replace('text-', 'bg-')}`}>
                 {skill}
               </li>
             ))}
