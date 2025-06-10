@@ -1,0 +1,80 @@
+// Path: /middleware.ts (in your project's root)
+
+import { createServerClient } from '@supabase/ssr';
+import { NextResponse, type NextRequest } from 'next/server';
+
+export async function middleware(request: NextRequest) {
+  // Initialize Supabase client for server-side operations
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value));
+        },
+      },
+    }
+  );
+
+  let authenticatedUser = null;
+  let customSessionToken: string | null = null;
+
+  // Attempt to retrieve the custom session token from the Authorization header
+  const authHeader = request.headers.get('Authorization');
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    customSessionToken = authHeader.substring(7); // Extract the token after 'Bearer '
+    // console.log("Middleware (Root): Token found in Authorization header:", customSessionToken ? 'Yes' : 'No'); // Uncomment for debugging
+  } else {
+    // console.log("Middleware (Root): No Authorization header or Bearer token found."); // Uncomment for debugging
+  }
+
+  // If a custom session token is found, validate it against your custom 'users' table
+  if (customSessionToken) {
+    try {
+      const { data: user, error: fetchError } = await supabase
+        .from('users') // Your custom 'users' table
+        .select('*') // Select necessary user details
+        .eq('session_token', customSessionToken) // Assuming your custom table has a 'session_token' column
+        .single(); // Use single if you expect only one user per session token
+
+      if (fetchError) {
+        console.error("Middleware (Root): Error fetching user by session token:", fetchError.message);
+      } else if (user) {
+        authenticatedUser = user;
+        // console.log("Middleware (Root): Custom session validated for user:", user.email); // Uncomment for debugging
+      }
+    } catch (err) {
+      console.error("Middleware (Root): Unexpected error during custom session validation:", err);
+    }
+  }
+
+  // Define public routes that don't require authentication
+  const publicRoutes = ['/signin', '/signup', '/']; // Add any other routes that should be accessible without login
+  const isPublicRoute = publicRoutes.some(route =>
+    request.nextUrl.pathname.startsWith(route)
+  );
+
+  let response = NextResponse.next({ request }); // Default response: proceed
+
+  // Authentication Logic: Redirect if not authenticated and not a public route
+  if (!authenticatedUser && !isPublicRoute) {
+    // console.log(`Middleware (Root): Redirecting to /signin from ${request.nextUrl.pathname}`); // Uncomment for debugging
+    const url = request.nextUrl.clone();
+    url.pathname = '/signin';
+    return NextResponse.redirect(url);
+  }
+
+  // Authentication Logic: Redirect if authenticated and trying to access signin/signup
+  if (authenticatedUser && (request.nextUrl.pathname.startsWith('/signin') || request.nextUrl.pathname.startsWith('/signup'))) {
+    // console.log(`Middleware (Root): Redirecting to /private (dashboard) from ${request.nextUrl.pathname}`); // Uncomment for debugging
+    const url = request.nextUrl.clone();
+    url.pathname = '/private'; // Or your dashboard route, e.g., '/dashboard'
+    return NextResponse.redirect(url);
+  }
+
+  return response; // Allow the request to proceed
+}
