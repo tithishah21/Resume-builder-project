@@ -8,7 +8,7 @@ import * as Yup from 'yup';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
-import ResumePreview from '../components/resumepreview'; // Make sure this path is correct
+import ResumePreview from '../components/resumepreview'; 
 
 import { IoPeopleOutline } from "react-icons/io5";
 import { HiOutlineLightBulb } from "react-icons/hi";
@@ -229,6 +229,19 @@ function Page() {
 
   return (
     <>
+    {/* Floating elements for visual interest */}
+    <div className="fixed inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute top-20 left-10 w-20 h-20 bg-yellow-300 rounded-full opacity-20 animate-bounce"></div>
+            <div className="absolute top-40 right-20 w-16 h-16 bg-cyan-300 rounded-lg opacity-30 animate-pulse"></div>
+            <div className="absolute top-96 left-0 w-20 h-20 bg-pink-400 rounded-full opacity-20 animate-pulse"></div>
+            <div className="absolute bottom-32 left-1/4 w-12 h-12 bg-green-300 rounded-full opacity-25 animate-ping"></div>
+            <div className="absolute top-1/3 right-1/3 w-8 h-8 bg-pink-300 rotate-45 opacity-20 animate-spin"></div>
+            <div className="absolute top-72 left-56 w-20 h-20 bg-lime-400 rounded-full opacity-20 animate-bounce"></div>
+            <div className="absolute top-[30rem] right-80 w-16 h-16 bg-cyan-300 rounded-lg opacity-30 animate-pulse"></div>
+            <div className="absolute top-1.5 left-3 w-20 h-20 bg-pink-200 rounded-full opacity-20 animate-pulse"></div>
+            <div className="absolute bottom-8 left-60 w-12 h-12 bg-blue-300 rounded-full opacity-25 animate-ping"></div>
+            <div className="absolute top-1/3 right-1/3 w-8 h-8 bg-pink-300 rotate-45 opacity-20 animate-spin"></div>
+          </div>
       <Header2 />
 
       <Formik<FormValues>
