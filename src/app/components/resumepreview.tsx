@@ -43,125 +43,61 @@ interface ResumePreviewProps {
 }
 
 const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName }) => {
-  // Sample data for demonstration
-  const sampleData: FormValues = {
-    full_name: "Alex Jordan",
-    phone: "555-123-4567", // Simplified for display
-    email: "alex.jordan@email.com",
-    home: "San Francisco, CA",
-    summary: "Creative and tech-savvy digital native with a passion for innovative design and cutting-edge technology. Experienced in creating viral content and building engaging user experiences.",
-    skills: ["React", "TypeScript", "Figma", "UI/UX Design", "Digital Marketing", "Project Management"], // Added more skills for realistic display
-    education: [
-      {
-        institution: "Stanford University",
-        passing_year: "2024",
-        grade: "3.8 GPA"
-      }
-    ],
-    languages: [
-      { language: "English", proficiency_level: "Native" },
-      { language: "Spanish", proficiency_level: "Fluent" }
-    ],
-    experience: [
-      {
-        company_name: "TechFlow Startup",
-        key_role: "Frontend Developer Intern",
-        start_date: "June 2023",
-        end_date: "Present",
-        job_summary: "Developed and maintained responsive web applications, contributing to a 45% increase in user engagement. Collaborated with design teams to translate wireframes into high-fidelity UI."
-      },
-      {
-        company_name: "Creative Solutions Agency",
-        key_role: "Graphic Design Assistant",
-        start_date: "Jan 2022",
-        end_date: "May 2023",
-        job_summary: "Assisted lead designers in creating visual content for various marketing campaigns. Contributed to brand guideline development and managed client assets."
-      }
-    ],
-    project: [
-      {
-        project_title: "EcoTracker Mobile App",
-        project_description: "Led the development of a React Native application to track personal carbon footprints, featuring data visualization and eco-friendly tips. Achieved 1st place in the 'HackTheClimate' hackathon (2023)."
-      },
-      {
-        project_title: "Portfolio Website Redesign",
-        project_description: "Redesigned and re-developed personal portfolio using Next.js and Tailwind CSS, focusing on a responsive and visually appealing user experience. Improved load times by 30%."
-      }
-    ],
-    achievement: [
-      {
-        achievement_title: "Dean's List Honoree",
-        achievement_description: "Recognized for academic excellence in multiple semesters at Stanford University (2021-2024)."
-      },
-      {
-        achievement_title: "Community Outreach Award",
-        achievement_description: "Awarded for organizing and leading a successful local community technology workshop series (2023)."
-      }
-    ],
-    extra: "Passionate about sustainable technology, mental health advocacy, and fostering inclusive digital communities. Volunteer web developer for local non-profit organizations. Eager to contribute creativity and technical skills to impactful projects."
-  };
 
-  const displayData = formData && Object.keys(formData).length > 0 ? formData : sampleData;
+  const displayData = formData;
 
-  if (!displayData) {
+  if (!displayData || Object.keys(displayData).length === 0) {
     return <div className="text-white text-center">No resume data to display.</div>;
   }
 
-  // Common styling variables (can be overridden by template cases)
-  // These are now ONLY defaults if no case matches, or for shared utility classes.
-  // Specific template styles will be defined directly within their return blocks.
   let containerClasses = "p-8 text-black shadow-lg rounded-lg";
   let headerClasses = "pb-4 mb-6 border-b";
   let sectionTitleClasses = "text-xl font-bold mb-3 mt-6";
-  let accentColor = "text-blue-600"; // Default accent color
-
+  let accentColor = "text-blue-600"; 
 
   switch (templateName) {
     case 'Modern Professional':
       return(
-        // Main container for the Modern Professional template
-        <div className='flex flex-row bg-white min-h-[1050px] max-w-4xl mx-auto shadow-2xl rounded-lg overflow-hidden'> {/* Added max-w, mx-auto, shadow, rounded, overflow */}
-
-            {/* Left Column - Dark Background */}
-            <div className='flex flex-col bg-gray-800 text-white w-1/3 min-w-[200px] py-10 px-6'> {/* Adjusted width to 1/3, added min-width */}
+        <div className='flex flex-row bg-white min-h-[1050px] max-w-4xl mx-auto shadow-2xl rounded-lg overflow-hidden'>
+            <div className='flex flex-col bg-gray-800 text-white w-1/3 min-w-[200px] py-10 px-6'>
               
-              {/* Name */}
+              {/* Name (Modern Professional Template) */}
               <div className='text-center mb-8'>
                 <h1 className='text-4xl font-extrabold mb-1'>{displayData.full_name.toUpperCase()}</h1>
-                <p className='text-gray-400 text-sm'>Graphic Designer</p> {/* Example static role for this template */}
+                <p className='text-gray-400 text-sm'>Graphic Designer</p> 
               </div>
               
-              {/* Contact Info */}
-              <div className='text-left flex flex-col px-4 text-gray-300 mb-16 space-y-4'> {/* Increased px, added space-y */}
+              {/* Contact Info (Modern Professional Template)*/}
+              <div className='text-left flex flex-col px-4 text-gray-300 mb-16 space-y-4'> 
                 <div className='inline-flex items-center gap-3'>
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800"> {/* White circle */}
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800">
                         <IoIosHome size={20}/>
                     </div>
                     {displayData.home}
                 </div>
                 <div className='inline-flex items-center gap-3'>
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800"> {/* White circle */}
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800">
                         <FaPhoneAlt size={16}/>
                     </div>
                     {displayData.phone}
                 </div>
                 <div className='inline-flex items-center gap-3'>
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800"> {/* White circle */}
-                        <IoMail size={16}/> {/* Set a size for consistency */}
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800">
+                        <IoMail size={16}/>
                     </div>
                     {displayData.email}
                 </div>
               </div>
 
-              {/* Skills */}
+              {/* Skills (Modern Professional Template)*/}
               {displayData.skills && displayData.skills.length > 0 && (
-                <section className="mb-8"> {/* Increased mb */}
-                  <h2 className="text-2xl font-bold text-gray-200 mb-4 border-b border-gray-700 pb-2">Skills</h2> {/* Styled heading */}
+                <section className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-200 mb-4 border-b border-gray-700 pb-2">Skills</h2> 
                   <ul className="flex flex-wrap gap-2">
                     {displayData.skills.map((skill, index) => (
                       <li
                         key={index}
-                        className="text-gray-200 px-3 py-1 rounded text-sm bg-gray-700 hover:bg-gray-600 transition-colors" // Adjusted styling for skills
+                        className="text-gray-200 px-3 py-1 rounded text-sm bg-gray-700 hover:bg-gray-600 transition-colors" 
                       >
                         {skill}
                       </li>
@@ -170,13 +106,13 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
                 </section>
               )}
 
-              {/* Languages and their proficiency level */}
+              {/* Languages and their proficiency level (Modern Professional Template)*/}
               {displayData.languages && displayData.languages.length > 0 && (
-                <section className="mb-8 mt-5"> {/* Increased mb */}
-                  <h2 className="text-2xl font-bold text-gray-200 mb-4 border-b border-gray-700 pb-2">Languages</h2> {/* Styled heading */}
-                  <ul className="space-y-2"> {/* Removed list-disc, list-inside, px-11 from ul */}
+                <section className="mb-8 mt-5"> 
+                  <h2 className="text-2xl font-bold text-gray-200 mb-4 border-b border-gray-700 pb-2">Languages</h2> 
+                  <ul className="space-y-2"> 
                     {displayData.languages.map((lang, index) => (
-                      <li key={index} className="text-gray-300 text-sm"> {/* Simplified li style */}
+                      <li key={index} className="text-gray-300 text-sm">
                         <span className="font-semibold">{lang.language}</span>: {lang.proficiency_level}
                       </li>
                     ))}
@@ -185,21 +121,20 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               )}
             </div>
 
-            {/* Right Column - Lighter Background */}
-            <div className='flex flex-col flex-1 bg-white text-gray-800 py-10 px-8'> {/* Used flex-1, added px */}
+            <div className='flex flex-col flex-1 bg-white text-gray-800 py-10 px-8'> 
               
-              {/* Professional Summary */}
-              <section className="mb-8"> {/* Increased mb */}
-                <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Professional Summary</h2> {/* Styled heading */}
-                <p className="text-gray-700 text-base leading-relaxed">{displayData.summary}</p> {/* Adjusted text size */}
+              {/* Professional Summary (Modern Professional Template)*/}
+              <section className="mb-8"> 
+                <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Professional Summary</h2> 
+                <p className="text-gray-700 text-base leading-relaxed">{displayData.summary}</p>
               </section>
 
-              {/* Experience */}
+              {/* Experience (Modern Professional Template)*/}
               {displayData.experience && displayData.experience.length > 0 && (
-                <section className="mb-8"> {/* Increased mb */}
-                  <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Experience</h2> {/* Styled heading */}
+                <section className="mb-8"> 
+                  <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Experience</h2> 
                   {displayData.experience.map((exp, index) => (
-                    <div key={index} className="mb-6 last:mb-0"> {/* Added last:mb-0 */}
+                    <div key={index} className="mb-6 last:mb-0"> 
                       <h3 className="font-semibold text-lg text-gray-900">{exp.key_role} <span className="font-bold text-gray-600">@ {exp.company_name}</span></h3>
                       <p className="text-gray-500 text-sm mb-2">{exp.start_date} - {exp.end_date}</p>
                       <p className="text-gray-700 text-sm leading-relaxed">{exp.job_summary}</p>
@@ -208,28 +143,28 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
                 </section>
               )}
 
-              {/* Education */}
+              {/* Education (Modern Professional Template)*/}
               {displayData.education && displayData.education.length > 0 && (
-                <section className="mb-8"> {/* Increased mb */}
-                  <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Education</h2> {/* Styled heading */}
+                <section className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Education</h2> 
                   {displayData.education.map((edu, index) => (
-                    <div key={index} className="mb-4 last:mb-0"> {/* Added last:mb-0 */}
-                      <div className='flex justify-between items-baseline'> {/* Align items */}
+                    <div key={index} className="mb-4 last:mb-0"> 
+                      <div className='flex justify-between items-baseline'> 
                         <h3 className="font-semibold text-lg text-gray-900">{edu.institution}</h3>
-                        <p className="text-gray-500 text-sm">{edu.passing_year}</p> {/* Moved year to right */}
+                        <p className="text-gray-500 text-sm">{edu.passing_year}</p> 
                       </div>
-                      <p className="text-gray-600 text-sm">{edu.grade ? `Grade: ${edu.grade}` : ''}</p> {/* Removed parentheses */}
+                      <p className="text-gray-600 text-sm">{edu.grade ? `Grade: ${edu.grade}` : ''}</p> 
                     </div>
                   ))}
                 </section>
               )}
 
-              {/* Projects - ADDED HERE, below Education */}
+              {/* Projects (Modern Professional Template)*/}
               {displayData.project && displayData.project.length > 0 && (
-                <section className="mb-8"> {/* Increased mb */}
+                <section className="mb-8"> 
                   <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Projects</h2> {/* Styled heading */}
                   {displayData.project.map((proj, index) => (
-                    <div key={index} className="mb-6 last:mb-0"> {/* Added last:mb-0 */}
+                    <div key={index} className="mb-6 last:mb-0"> 
                       <h3 className="font-semibold text-lg text-gray-900 mb-1">{proj.project_title}</h3>
                       <p className="text-gray-700 text-sm leading-relaxed">{proj.project_description}</p>
                     </div>
@@ -237,12 +172,12 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
                 </section>
               )}
 
-              {/* Achievements - ADDED HERE, below Projects */}
+              {/* Achievements (Modern Professional Template)*/}
               {displayData.achievement && displayData.achievement.length > 0 && (
-                <section className="mb-8"> {/* Increased mb */}
+                <section className="mb-8"> 
                   <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Achievements</h2> {/* Styled heading */}
                   {displayData.achievement.map((ach, index) => (
-                    <div key={index} className="mb-6 last:mb-0"> {/* Added last:mb-0 */}
+                    <div key={index} className="mb-6 last:mb-0"> 
                       <h3 className="font-semibold text-lg text-gray-900 mb-1">{ach.achievement_title}</h3>
                       <p className="text-gray-700 text-sm leading-relaxed">{ach.achievement_description}</p>
                     </div>
@@ -250,7 +185,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
                 </section>
               )}
 
-              {/* Extra Information */}
+              {/* Extra Information (Modern Professional Template)*/}
               {displayData.extra && (
                 <section>
                   <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Additional Information</h2> {/* Styled heading */}
@@ -263,7 +198,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       case 'Vibrant & Expressive (Gen Z)':
         return (
           <div className="bg-[#f9e5e1] min-h-[1050px] max-w-4xl mx-auto shadow-2xl rounded-lg overflow-hidden px-6 py-10 text-[#4a4a4a] font-sans">
-            {/* Header */}
+            {/* Header (Vibrant & Expressive (Gen Z) Template)*/}
             <div className="bg-[#d9747c] text-white p-8 rounded-t-3xl flex flex-col items-center">
               <h1 className="text-4xl font-bold uppercase">{displayData.full_name}</h1>
               
@@ -274,17 +209,17 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               </div>
             </div>
 
-            {/* Biography + Social */}
+            {/* Professional Summary (Vibrant & Expressive (Gen Z) Template) */}
             <div className="bg-[#fff] px-8 py-6 grid grid-cols-1 md:grid-cols-2 gap-8 border-b border-gray-300">
               
-                <h2 className="text-xl font-semibold text-[#d9747c] mb-2">Biography</h2>
+                <h2 className="text-xl font-semibold text-[#d9747c] mb-2">About Me</h2>
                 <p className="text-sm leading-relaxed">{displayData.summary}</p>
               
             </div>
 
-            {/* Education + Experience */}
+            
             <div className="bg-[#fefaf7] px-8 py-6 grid grid-cols-1 md:grid-cols-2 gap-6 border-b border-gray-300">
-              {/* Education */}
+              {/* Education (Vibrant & Expressive (Gen Z) Template) */}
               <div>
                 <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Education</h2>
                 {displayData.education.map((edu, index) => (
@@ -295,7 +230,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
                 ))}
               </div>
 
-              {/* Experience */}
+              {/* Experience (Vibrant & Expressive (Gen Z) Template)*/}
               <div>
                 <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Experience</h2>
                 {displayData.experience.map((exp, index) => (
@@ -309,9 +244,9 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               </div>
             </div>
 
-            {/* Languages + Skills */}
+     
             <div className="bg-[#fff] px-8 py-6 grid grid-cols-1 md:grid-cols-2 gap-8 border-b border-gray-300">
-              {/* Languages */}
+              {/* Languages (Vibrant & Expressive (Gen Z) Template)*/}
               <div>
                 <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Language Skills</h2>
                 <div className="flex flex-wrap gap-4">
@@ -323,7 +258,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
                 </div>
               </div>
 
-              {/* Skills */}
+              {/* Skills (Vibrant & Expressive (Gen Z) Template)*/}
               <div>
                 <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Skills</h2>
                 <div className="flex flex-wrap gap-3">
@@ -336,7 +271,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               </div>
             </div>
 
-            {/* Projects */}
+            {/* Projects (Vibrant & Expressive (Gen Z) Template)*/}
             {displayData.project?.length > 0 && (
               <div className="bg-[#fefaf7] px-8 py-6 border-b border-gray-300">
                 <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Projects</h2>
@@ -349,7 +284,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               </div>
             )}
 
-            {/* Achievements */}
+            {/* Achievements (Vibrant & Expressive (Gen Z) Template)*/}
             {displayData.achievement?.length > 0 && (
               <div className="bg-[#fff] px-8 py-6 border-b border-gray-300">
                 <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Achievements</h2>
@@ -362,7 +297,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               </div>
             )}
 
-            {/* Extra */}
+            {/* Extra (Vibrant & Expressive (Gen Z) Template)*/}
             {displayData.extra && (
               <div className="bg-[#fefaf7] px-8 py-6 border-b border-gray-300">
                 <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Extras</h2>
@@ -376,11 +311,9 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
 
       
     case 'Classic Corporate':
-      // Problem: This case was missing a 'return' statement, causing the default to always render.
-      // Now, it will explicitly return its own JSX structure.
       return (
         <div className="bg-white p-8 font-sans text-gray-800 shadow-lg rounded-lg max-w-3xl mx-auto border border-gray-200">
-          {/* Header - Name, Contact Info */}
+          {/* Header - Name, Contact Info (Classic Corporate Template)*/}
           <header className="text-center pb-6 mb-6 border-b border-gray-300">
             <h1 className="text-4xl font-bold mb-2 text-gray-900">{displayData.full_name.toUpperCase()}</h1>
             <p className="text-gray-600 text-lg">{displayData.home}</p>
@@ -394,13 +327,13 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             </div>
           </header>
 
-          {/* Professional Summary */}
+          {/* Professional Summary (Classic Corporate Template)*/}
           <section className="mb-6">
             <h2 className="text-xl font-bold mb-3 mt-6 text-gray-800 uppercase tracking-wide border-b border-gray-200 pb-2">Professional Summary</h2>
             <p className="text-gray-700 text-base leading-relaxed">{displayData.summary}</p>
           </section>
 
-          {/* Experience */}
+          {/* Experience (Classic Corporate Template)*/}
           {displayData.experience && displayData.experience.length > 0 && (
             <section className="mb-6">
               <h2 className="text-xl font-bold mb-3 mt-6 text-gray-800 uppercase tracking-wide border-b border-gray-200 pb-2">Experience</h2>
@@ -414,7 +347,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             </section>
           )}
 
-          {/* Education */}
+          {/* Education (Classic Corporate Template)*/}
           {displayData.education && displayData.education.length > 0 && (
             <section className="mb-6">
               <h2 className="text-xl font-bold mb-3 mt-6 text-gray-800 uppercase tracking-wide border-b border-gray-200 pb-2">Education</h2>
@@ -430,7 +363,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             </section>
           )}
 
-          {/* Projects */}
+          {/* Projects (Classic Corporate Template)*/}
           {displayData.project && displayData.project.length > 0 && (
             <section className="mb-6">
               <h2 className="text-xl font-bold mb-3 mt-6 text-gray-800 uppercase tracking-wide border-b border-gray-200 pb-2">Projects</h2>
@@ -443,7 +376,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             </section>
           )}
 
-          {/* Achievements */}
+          {/* Achievements (Classic Corporate Template)*/}
           {displayData.achievement && displayData.achievement.length > 0 && (
             <section className="mb-6">
               <h2 className="text-xl font-bold mb-3 mt-6 text-gray-800 uppercase tracking-wide border-b border-gray-200 pb-2">Achievements</h2>
@@ -456,7 +389,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             </section>
           )}
 
-          {/* Skills */}
+          {/* Skills (Classic Corporate Template)*/}
           {displayData.skills && displayData.skills.length > 0 && (
             <section className="mb-6">
               <h2 className="text-xl font-bold mb-3 mt-6 text-gray-800 uppercase tracking-wide border-b border-gray-200 pb-2">Skills</h2>
@@ -470,7 +403,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             </section>
           )}
 
-          {/* Languages */}
+          {/* Languages (Classic Corporate Template)*/}
           {displayData.languages && displayData.languages.length > 0 && (
             <section className="mb-6">
               <h2 className="text-xl font-bold mb-3 mt-6 text-gray-800 uppercase tracking-wide border-b border-gray-200 pb-2">Languages</h2>
@@ -484,7 +417,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             </section>
           )}
 
-          {/* Extra Information */}
+          {/* Extra Information (Classic Corporate Template)*/}
           {displayData.extra && (
             <section>
               <h2 className="text-xl font-bold mb-3 mt-6 text-gray-800 uppercase tracking-wide border-b border-gray-200 pb-2">Additional Information</h2>
@@ -496,19 +429,19 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
     case 'Tech Minimalist':
       return(
         <div className="min-h-[1050px] bg-gradient-to-br from-gray-900 to-black p-6 font-mono text-cyan-400 overflow-hidden relative">
-          {/* Background grid/circuitry pattern */}
+         
           <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" style={{
             backgroundImage: 'repeating-linear-gradient(0deg, rgba(0,255,255,0.1) 0px, rgba(0,255,255,0.1) 1px, transparent 1px, transparent 20px), repeating-linear-gradient(90deg, rgba(0,255,255,0.1) 0px, rgba(0,255,255,0.1) 1px, transparent 1px, transparent 20px)',
             backgroundSize: '20px 20px'
           }}></div>
 
-          {/* Glowing border effect */}
+          
           <div className="absolute inset-0 z-10 p-2 pointer-events-none">
             <div className="border-2 border-cyan-500 rounded-lg h-full w-full opacity-30 animate-pulse"></div>
           </div>
 
           <div className="relative z-20 max-w-4xl mx-auto bg-gray-800 bg-opacity-90 rounded-xl shadow-lg p-8">
-            {/* Header - Name, Contact Info */}
+            {/* Header - Name, Contact Info (Tech Minimalist Template)*/}
             <header className="text-center mb-8 pb-4 border-b border-cyan-600">
               <h1 className="text-5xl font-bold mb-2 text-lime-400 tracking-wider animate-fade-in-down">
                 {displayData.full_name.toUpperCase()}
@@ -527,7 +460,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               </div>
             </header>
 
-            {/* Professional Summary */}
+            {/* Professional Summary (Tech Minimalist Template)*/}
             <section className="mb-8">
               <h2 className="text-2xl font-bold mb-4 text-cyan-400 relative inline-block group"> {/* Added group for hover */}
                 <span className="relative">
@@ -540,7 +473,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               </p>
             </section>
 
-            {/* Skills */}
+            {/* Skills (Tech Minimalist Template)*/}
             {displayData.skills && displayData.skills.length > 0 && (
               <section className="mb-8">
                 <h2 className="text-2xl font-bold mb-4 text-cyan-400 relative inline-block group"> {/* Added group for hover */}
@@ -562,7 +495,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               </section>
             )}
 
-            {/* Experience */}
+            {/* Experience (Tech Minimalist Template)*/}
             {displayData.experience && displayData.experience.length > 0 && (
               <section className="mb-8">
                 <h2 className="text-2xl font-bold mb-4 text-cyan-400 relative inline-block group"> {/* Added group for hover */}
@@ -584,7 +517,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               </section>
             )}
 
-            {/* Education */}
+            {/* Education (Tech Minimalist Template)*/}
             {displayData.education && displayData.education.length > 0 && (
               <section className="mb-8">
                 <h2 className="text-2xl font-bold mb-4 text-cyan-400 relative inline-block group"> {/* Added group for hover */}
@@ -607,7 +540,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               </section>
             )}
 
-            {/* Projects */}
+            {/* Projects (Tech Minimalist Template)*/}
             {displayData.project && displayData.project.length > 0 && (
               <section className="mb-8">
                 <h2 className="text-2xl font-bold mb-4 text-cyan-400 relative inline-block group"> {/* Added group for hover */}
@@ -627,7 +560,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               </section>
             )}
 
-            {/* Achievements */}
+            {/* Achievements (Tech Minimalist Template)*/}
             {displayData.achievement && displayData.achievement.length > 0 && (
               <section className="mb-8">
                 <h2 className="text-2xl font-bold mb-4 text-cyan-400 relative inline-block group"> {/* Added group for hover */}
@@ -647,7 +580,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               </section>
             )}
 
-            {/* Languages */}
+            {/* Languages (Tech Minimalist Template)*/}
             {displayData.languages && displayData.languages.length > 0 && (
               <section className="mb-8">
                 <h2 className="text-2xl font-bold mb-4 text-cyan-400 relative inline-block group"> {/* Added group for hover */}
@@ -667,7 +600,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               </section>
             )}
 
-            {/* Extra Information */}
+            {/* Extra Information (Tech Minimalist Template)*/}
             {displayData.extra && (
               <section className="mb-8">
                 <h2 className="text-2xl font-bold mb-4 text-cyan-400 relative inline-block group"> {/* Added group for hover */}
@@ -682,7 +615,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               </section>
             )}
 
-            {/* Footer */}
+            {/* Footer (Tech Minimalist Template)*/}
             <footer className="text-center mt-12 text-gray-500 text-sm">
               <p>&lt;/END TRANSMISSION&gt;</p>
               <p className="mt-2 text-cyan-500">Built with <span className="text-red-500">❤️</span> and Code</p>
@@ -691,10 +624,9 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
         </div>
       );
     default:
-      // This default case acts as a fallback if templateName is null or unmatched
       return (
         <div className="bg-white p-8 text-gray-800 font-sans shadow-lg rounded-lg max-w-2xl mx-auto">
-          {/* Header - Name, Contact Info */}
+          {/* Header - Name, Contact Info (Default Template)*/}
           <header className="text-center pb-4 mb-6 border-b-2 border-gray-300">
             <h1 className="text-4xl font-extrabold mb-2">{displayData.full_name.toUpperCase()}</h1>
             <p className="text-gray-600">
@@ -706,13 +638,13 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             </div>
           </header>
 
-          {/* Professional Summary */}
+          {/* Professional Summary (Default Template)*/}
           <section className="mb-6">
             <h2 className="text-xl font-bold mb-3 mt-6 text-gray-700 uppercase tracking-wider border-b border-gray-200 pb-2">Professional Summary</h2>
             <p className="text-gray-700 text-sm leading-relaxed">{displayData.summary}</p>
           </section>
 
-          {/* Skills */}
+          {/* Skills (Default Template)*/}
           {displayData.skills && displayData.skills.length > 0 && (
             <section className="mb-6">
               <h2 className="text-xl font-bold mb-3 mt-6 text-gray-700 uppercase tracking-wider border-b border-gray-200 pb-2">Skills</h2>
@@ -726,7 +658,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             </section>
           )}
 
-          {/* Experience */}
+          {/* Experience (Default Template)*/}
           {displayData.experience && displayData.experience.length > 0 && (
             <section className="mb-6">
               <h2 className="text-xl font-bold mb-3 mt-6 text-gray-700 uppercase tracking-wider border-b border-gray-200 pb-2">Experience</h2>
@@ -740,7 +672,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             </section>
           )}
 
-          {/* Education */}
+          {/* Education (Default Template)*/}
           {displayData.education && displayData.education.length > 0 && (
             <section className="mb-6">
               <h2 className={sectionTitleClasses}>Education</h2>
