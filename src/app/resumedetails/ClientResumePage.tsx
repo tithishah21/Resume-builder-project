@@ -59,23 +59,31 @@ interface FormValues {
   extra: string;
 }
 
-// Helper type for Formik FieldArray errors
+
 type FieldArrayErrors<T> = FormikErrors<T> | FormikErrors<T[]>;
 
 function Page() {
   const [skillInput, setSkillInput] = useState('');
-  const [skills, setSkills] = useState<string[]>([]); // This state manages the skills input
+  const [skills, setSkills] = useState<string[]>([]); 
   const [userId, setUserId] = useState<string | null>(null);
   const [loadingUser, setLoadingUser] = useState(true);
 
   const searchParams = useSearchParams();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
-  const [showPreview, setShowPreview] = useState(false); // Controls visibility of the resume preview
-  const [resumeData, setResumeData] = useState<FormValues | null>(null); // Stores the form data for preview
+  const [showPreview, setShowPreview] = useState(false); 
+  const [resumeData, setResumeData] = useState<FormValues | null>(null);
+
+  const [currentStep, setCurrentStep] = useState(1);
 
   const supabase = createClient();
+  const totalSteps = 8;
+  const calculateProgress = () => {
+    const stepProgress = (currentStep / totalSteps) * 100;
+    return Math.round(stepProgress);
+  };
+  
+  const progressPercentage = calculateProgress();
 
-  // Updated useEffect for user ID and template retrieval
   useEffect(() => {
     const getUserIdFromLocalStorage = () => {
       const storedUserString = localStorage.getItem('user');
@@ -133,7 +141,6 @@ function Page() {
 
   // --- PDF Download Function ---
   const handleDownloadPdf = async () => {
-    // Ensure the resume preview is visible before trying to capture it
     if (!showPreview || !resumeData) {
         alert("Please generate the resume preview first before downloading.");
         return;
@@ -141,22 +148,22 @@ function Page() {
 
     const input = document.getElementById('resume-content');
     if (input) {
-        const scale = 2; // Increase this for higher quality, but be mindful of performance
+        const scale = 2; 
 
         try {
             const canvas = await html2canvas(input, {
                 scale: scale,
-                useCORS: true, // Important if you have external images or fonts
-                logging: true, // Enable logging for debugging
-                windowWidth: input.scrollWidth, // Can help capture full width if overflow is an issue
-                windowHeight: input.scrollHeight // Can help capture full height
+                useCORS: true,
+                logging: true, 
+                windowWidth: input.scrollWidth, 
+                windowHeight: input.scrollHeight 
             });
 
             const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4'); // 'p' for portrait, 'mm' for units, 'a4' for size
+            const pdf = new jsPDF('p', 'mm', 'a4');
 
-            const imgWidth = 210; // A4 width in mm
-            const pageHeight = 297; // A4 height in mm
+            const imgWidth = 210; 
+            const pageHeight = 297; 
             const imgHeight = canvas.height * imgWidth / canvas.width;
             let heightLeft = imgHeight;
             let position = 0;
@@ -171,7 +178,6 @@ function Page() {
                 heightLeft -= pageHeight;
             }
 
-            // Use formData.full_name for the filename if available, otherwise a default
             pdf.save(`${resumeData.full_name || 'My_Resume'}-${selectedTemplate || 'template'}.pdf`);
         } catch (error) {
             console.error("Error generating PDF:", error);
@@ -229,9 +235,9 @@ function Page() {
 
   return (
     <>
-    {/* Floating elements for visual interest */}
+    {/* Floating elements*/}
     <div className="fixed inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute top-20 left-10 w-20 h-20 bg-yellow-300 rounded-full opacity-20 animate-pulse"></div>
+            <div className="absolute top-40 left-10 w-20 h-20 bg-yellow-300 rounded-full opacity-20 animate-pulse"></div>
             <div className="absolute top-40 right-20 w-12 h-12 bg-cyan-300 rounded-lg opacity-30 animate-spin"></div>
             <div className="absolute bottom-12 left-24 w-10 h-10 bg-pink-400 rounded-full opacity-20 animate-pulse"></div>
             <div className="absolute bottom-32 right-32 w-16 h-16 bg-orange-500 rounded-full opacity-25 animate-pulse"></div>
@@ -258,7 +264,7 @@ function Page() {
           extra: '',
         }}
         validationSchema={validationSchema}
-        onSubmit={async (values, { setSubmitting /* Removed resetForm */ }) => {
+        onSubmit={async (values, { setSubmitting  }) => {
           if (!userId) {
             alert('User not logged in or user ID not found in local storage. Please log in.');
             setSubmitting(false);
@@ -296,11 +302,25 @@ function Page() {
           }
         }}
       >
-        {({ values, errors, touched, isSubmitting /* Removed handleChange, handleBlur */ }) => (
+        {({ values, errors, touched, isSubmitting }) => (
           <Form>
-            <div className='w-full min-h-screen bg-gray-950 text-white px-8 py-12'>
+            <div className='w-full min-h-screen bg-gray-950 text-white px-0 py-0'>
+
+            {/*Progress Bar */}
+            <div className="mb-10 top-20 left-0 right-0 z-50 bg-gray-800 h-8 flex items-center justify-start overflow-hidden">
+                <div
+                    className="h-full bg-gradient-to-r from-[#00ffe0] to-[#0077ff] transition-all duration-500 ease-out flex items-center justify-center "
+                    style={{ width: `${progressPercentage}%` }}
+                >
+                    <span className="text-black text-sm font-semibold whitespace-nowrap">
+                        {progressPercentage}% Completed
+                    </span>
+                </div>
+            </div>
+
               {/* Personal Information */}
-              <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
+              {currentStep == 1 && (
+                <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><IoPeopleOutline /></p>
                   <p className='text-3xl font-bold'>Personal Information</p>
@@ -359,9 +379,13 @@ function Page() {
                 />
                 {touched.summary && errors.summary && <div className="text-red-500 text-sm mt-1">{errors.summary}</div>}
               </div>
+              )}
 
-              {/* Skills (Still managed by local state) */}
-              <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
+              
+
+              {/* Skills (managed by local state) */}
+              {currentStep == 2 && (
+                <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><HiOutlineLightBulb /></p>
                   <p className='text-3xl font-bold'>Skills</p>
@@ -401,9 +425,12 @@ function Page() {
                   </button>
                 </div>
               </div>
+              )}
+              
 
               {/* Education */}
-              <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
+              {currentStep == 3 && (
+                <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><FaGraduationCap /></p>
                   <p className='text-3xl font-bold'>Education</p>
@@ -483,9 +510,12 @@ function Page() {
                   )}
                 </FieldArray>
               </div>
+              )}
+              
 
               {/* Languages */}
-              <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
+              {currentStep == 4 && (
+                <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><IoLanguage /></p>
                   <p className='text-3xl font-bold'>Languages known</p>
@@ -556,9 +586,12 @@ function Page() {
                   )}
                 </FieldArray>
               </div>
+              )}
+              
 
               {/* Experience */}
-              <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
+              {currentStep == 5 && (
+                <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><BsBagDashFill /></p>
                   <p className='text-3xl font-bold'>Experience</p>
@@ -682,9 +715,12 @@ function Page() {
                   )}
                 </FieldArray>
               </div>
+              )}
+              
 
               {/* Projects */}
-              <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
+              {currentStep == 6 && (
+                <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><FaProjectDiagram /></p>
                   <p className='text-3xl font-bold'>Projects</p>
@@ -753,9 +789,12 @@ function Page() {
                   )}
                 </FieldArray>
               </div>
+              )}
+              
 
               {/* Achievements */}
-              <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
+              {currentStep == 7 && (
+                <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><FaTrophy /></p>
                   <p className='text-3xl font-bold'>Achievements</p>
@@ -824,9 +863,12 @@ function Page() {
                   )}
                 </FieldArray>
               </div>
+              )}
+              
 
               {/* Extra Information */}
-              <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
+              {currentStep == 8 && (
+                <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
                 <span className='inline-flex gap-2 my-5'>
                   <p className='text-cyan-400 text-3xl font-bold'><BsFillBookmarkPlusFill /></p>
                   <p className='text-3xl font-bold'>Extra Information (Optional)</p>
@@ -842,17 +884,40 @@ function Page() {
                 />
                 {touched.extra && errors.extra && <div className="text-red-500 text-sm mt-1">{errors.extra}</div>}
               </div>
+              )}
 
-              {/* Submit Button */}
-              <div className='flex justify-center mt-10'>
-                <button
-                  type="submit"
-                  className='px-8 py-4 bg-green-600 hover:bg-green-500 text-white text-xl font-bold rounded-lg transition-all duration-300'
-                  disabled={isSubmitting || loadingUser}
-                >
-                  {isSubmitting ? 'Generating...' : 'Generate Resume'}
-                </button>
-              </div>
+               {/* Navigation Buttons */}
+                <div className="flex justify-center gap-4 mt-8">
+                {currentStep > 1 && (
+                    <button
+                    type="button"
+                    onClick={() => setCurrentStep(prev => prev - 1)}
+                    className="mb-5 px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg text-lg font-semibold"
+                    >
+                    Previous
+                    </button>
+                )}
+
+                {currentStep < 8 && ( 
+                    <button
+                    type="button"
+                    onClick={() => setCurrentStep(prev => prev + 1)}
+                    className="mb-5 px-6 py-3 bg-cyan-700 hover:bg-cyan-600 text-white rounded-lg text-lg font-semibold"
+                    >
+                    Next
+                    </button>
+                )}
+
+                {currentStep === 8 && ( 
+                    <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className='mb-5 px-6 py-3 bg-green-700 hover:bg-green-600 text-white rounded-lg text-lg font-semibold disabled:opacity-50'
+                    >
+                    {isSubmitting ? 'Submitting...' : 'Generate Resume'}
+                    </button>
+                )}
+                </div>
             </div>
           </Form>
         )}
@@ -861,14 +926,12 @@ function Page() {
       {/* Resume Preview Section */}
       {showPreview && resumeData && (
         <div className="mt-12 py-10 bg-gray-950 flex flex-col items-center justify-center">
-          {/* Apply the ID to the container that holds the actual resume content */}
-          {/* This ID is what html2canvas will target */}
+
           <div id="resume-content">
               <h2 className="text-4xl font-bold text-white mb-8">Your Resume Preview</h2>
               <ResumePreview formData={resumeData} templateName={selectedTemplate} />
           </div>
 
-          {/* Buttons related to the preview should be INSIDE this conditional block */}
           <div className="flex gap-4 mt-8">
               <button
                 onClick={handleDownloadPdf}

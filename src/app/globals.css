@@ -21,3 +21,19 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
 }
+/* Scrollbar track */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Scrollbar thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+  background:rgb(0, 140, 255); 
+  
+  border-radius: 9px;
+}
+
+/* Scrollbar track background */
+::-webkit-scrollbar-track {
+  background: #1a1a1a; /* Dark background */
+}
