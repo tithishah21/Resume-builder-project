@@ -1,14 +1,15 @@
 import React from 'react';
 import { FaPhoneAlt } from "react-icons/fa";
-import { IoMdMail } from "react-icons/io";
+import { IoMail } from "react-icons/io5";
 import { IoIosHome } from "react-icons/io";
+
 interface FormValues {
   full_name: string;
   phone: string;
   email: string;
   home: string;
   summary: string;
-  skills: string[]; 
+  skills: string[];
   education: {
     institution: string;
     passing_year: string;
@@ -45,11 +46,11 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
   // Sample data for demonstration
   const sampleData: FormValues = {
     full_name: "Alex Jordan",
-    phone: "+1 (555) 123-4567",
+    phone: "555-123-4567", // Simplified for display
     email: "alex.jordan@email.com",
     home: "San Francisco, CA",
     summary: "Creative and tech-savvy digital native with a passion for innovative design and cutting-edge technology. Experienced in creating viral content and building engaging user experiences.",
-    skills: ["React", "TypeScript", "Figma", "TikTok Marketing", "UI/UX Design", "Social Media Strategy"],
+    skills: ["React", "TypeScript", "Figma", "UI/UX Design", "Digital Marketing", "Project Management"], // Added more skills for realistic display
     education: [
       {
         institution: "Stanford University",
@@ -67,22 +68,37 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
         key_role: "Frontend Developer Intern",
         start_date: "June 2023",
         end_date: "Present",
-        job_summary: "Built responsive web applications reaching 100K+ users. Implemented modern UI/UX designs that increased user engagement by 45%."
+        job_summary: "Developed and maintained responsive web applications, contributing to a 45% increase in user engagement. Collaborated with design teams to translate wireframes into high-fidelity UI."
+      },
+      {
+        company_name: "Creative Solutions Agency",
+        key_role: "Graphic Design Assistant",
+        start_date: "Jan 2022",
+        end_date: "May 2023",
+        job_summary: "Assisted lead designers in creating visual content for various marketing campaigns. Contributed to brand guideline development and managed client assets."
       }
     ],
     project: [
       {
-        project_title: "EcoTracker App",
-        project_description: "Developed a sustainability tracking app using React Native. Won 1st place at HackTheClimate hackathon."
+        project_title: "EcoTracker Mobile App",
+        project_description: "Led the development of a React Native application to track personal carbon footprints, featuring data visualization and eco-friendly tips. Achieved 1st place in the 'HackTheClimate' hackathon (2023)."
+      },
+      {
+        project_title: "Portfolio Website Redesign",
+        project_description: "Redesigned and re-developed personal portfolio using Next.js and Tailwind CSS, focusing on a responsive and visually appealing user experience. Improved load times by 30%."
       }
     ],
     achievement: [
       {
-        achievement_title: "Forbes 30 Under 30 Nominee",
-        achievement_description: "Nominated for technology category for innovative work in sustainable tech solutions."
+        achievement_title: "Dean's List Honoree",
+        achievement_description: "Recognized for academic excellence in multiple semesters at Stanford University (2021-2024)."
+      },
+      {
+        achievement_title: "Community Outreach Award",
+        achievement_description: "Awarded for organizing and leading a successful local community technology workshop series (2023)."
       }
     ],
-    extra: "Passionate about sustainable technology, mental health advocacy, and creating inclusive digital spaces."
+    extra: "Passionate about sustainable technology, mental health advocacy, and fostering inclusive digital communities. Volunteer web developer for local non-profit organizations. Eager to contribute creativity and technical skills to impactful projects."
   };
 
   const displayData = formData && Object.keys(formData).length > 0 ? formData : sampleData;
@@ -91,53 +107,151 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
     return <div className="text-white text-center">No resume data to display.</div>;
   }
 
-  //Template-specific styling 
+  // Common styling variables (can be overridden by template cases)
   let containerClasses = "p-8 text-black shadow-lg rounded-lg";
   let headerClasses = "pb-4 mb-6 border-b";
   let sectionTitleClasses = "text-xl font-bold mb-3 mt-6";
-  let accentColor = "text-blue-600";
+  let accentColor = "text-blue-600"; // Default accent color
+
+  // Logic for skillsWithLevels (if you were using percentage bars in a template)
+  // Currently, the Modern Professional template uses simple list items for skills.
+  // This const would only be needed if a template had skill bars.
+  // const skillsWithLevels = displayData.skills?.map((skill: string) => {
+  //   let level = 80;
+  //   if (skill.toLowerCase().includes('react')) level = 90;
+  //   return { name: skill, level: level };
+  // }) || [];
+
 
   switch (templateName) {
     case 'Modern Professional':
       return(
-        <div className='flex flex-row'>
+        // Main container for the Modern Professional template
+        <div className='flex flex-row bg-white min-h-[1050px] max-w-4xl mx-auto shadow-2xl rounded-lg overflow-hidden'> {/* Added max-w, mx-auto, shadow, rounded, overflow */}
 
-            <div className='flex flex-col'>
-                <div className='bg-gray-800 w-[25rem] text-center flex flex-col py-10'>
-                  <h1 className='text-5xl font-bold'>{displayData.full_name.toUpperCase()}</h1>
-                  <div className='text-left flex flex-col pl-5'>
-                    <div className='inline-flex gap-3 mt-10 '><IoIosHome size={25}/>{displayData.home}</div>
-                    <div className='inline-flex gap-3 mt-3 '><FaPhoneAlt size={20}/>+91 {displayData.phone}</div>
-                    <div className='inline-flex gap-3 mt-3'><IoMdMail size={20}/>{displayData.email}</div>
-                  </div>
-                </div>
-                <div className="bg-gray-400 w-full max-w-md mx-auto text-center flex flex-col py-10 px-4">
-                {displayData.skills && displayData.skills.length > 0 && (
-                  <section className="mb-6">
-                    <h2 className="text-2xl font-bold text-black mb-4">Skills</h2>
-                    <ul className="space-y-2 text-sm">
-                      {displayData.skills.map((skill, index) => (
-                        <li
-                          key={index}
-                          className={`text-black mx-auto px-4 py-1 rounded-full bg-gray-200 min-w-[8rem] max-w-[14rem] truncate ${accentColor.replace(
-                            'text-',
-                            'bg-'
-                          )}`}
-                        >
-                          {skill}
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-                )}
+            {/* Left Column - Dark Background */}
+            <div className='flex flex-col bg-gray-800 text-white w-1/3 min-w-[200px] py-10 px-6'> {/* Adjusted width to 1/3, added min-width */}
+              
+              {/* Name */}
+              <div className='text-center mb-8'>
+                <h1 className='text-4xl font-extrabold mb-1'>{displayData.full_name.toUpperCase()}</h1>
+                
+              </div>
+              
+              {/* Contact Info */}
+              <div className='text-left flex flex-col px-4 text-gray-300 mb-16 space-y-4'> {/* Increased px, added space-y */}
+                <div className='inline-flex items-center gap-3'><IoIosHome size={35}/>{displayData.home}</div> {/* Adjusted icon size */}
+                <div className='inline-flex items-center gap-3'><FaPhoneAlt size={15}/>+91 {displayData.phone}</div> {/* Adjusted icon size */}
+                <div className='inline-flex items-center gap-3'><IoMail />{displayData.email}</div> {/* Adjusted icon size */}
               </div>
 
+              {/* Skills */}
+              {displayData.skills && displayData.skills.length > 0 && (
+                <section className="mb-8"> {/* Increased mb */}
+                  <h2 className="text-2xl font-bold text-gray-200 mb-4 border-b border-gray-700 pb-2">Skills</h2> {/* Styled heading */}
+                  <ul className="flex flex-wrap gap-2">
+                    {displayData.skills.map((skill, index) => (
+                      <li
+                        key={index}
+                        className="text-gray-200 px-3 py-1 rounded text-sm bg-gray-700 hover:bg-gray-600 transition-colors" // Adjusted styling for skills
+                      >
+                        {skill}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
+              {/* Languages and their proficiency level */}
+              {displayData.languages && displayData.languages.length > 0 && (
+                <section className="mb-8 mt-5"> {/* Increased mb */}
+                  <h2 className="text-2xl font-bold text-gray-200 mb-4 border-b border-gray-700 pb-2">Languages</h2> {/* Styled heading */}
+                  <ul className="space-y-2"> {/* Removed list-disc, list-inside, px-11 from ul */}
+                    {displayData.languages.map((lang, index) => (
+                      <li key={index} className="text-gray-300 text-sm"> {/* Simplified li style */}
+                        <span className="font-semibold">{lang.language}</span>: {lang.proficiency_level}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
             </div>
 
-            <div></div>
+            {/* Right Column - Lighter Background */}
+            <div className='flex flex-col flex-1 bg-white text-gray-800 py-10 px-8'> {/* Used flex-1, added px */}
+              
+              {/* Professional Summary */}
+              <section className="mb-8"> {/* Increased mb */}
+                <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Professional Summary</h2> {/* Styled heading */}
+                <p className="text-gray-700 text-base leading-relaxed">{displayData.summary}</p> {/* Adjusted text size */}
+              </section>
+
+              {/* Experience */}
+              {displayData.experience && displayData.experience.length > 0 && (
+                <section className="mb-8"> {/* Increased mb */}
+                  <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Experience</h2> {/* Styled heading */}
+                  {displayData.experience.map((exp, index) => (
+                    <div key={index} className="mb-6 last:mb-0"> {/* Added last:mb-0 */}
+                      <h3 className="font-semibold text-lg text-gray-900">{exp.key_role} <span className="font-bold text-gray-600">@ {exp.company_name}</span></h3>
+                      <p className="text-gray-500 text-sm mb-2">{exp.start_date} - {exp.end_date}</p>
+                      <p className="text-gray-700 text-sm leading-relaxed">{exp.job_summary}</p>
+                    </div>
+                  ))}
+                </section>
+              )}
+
+              {/* Education */}
+              {displayData.education && displayData.education.length > 0 && (
+                <section className="mb-8"> {/* Increased mb */}
+                  <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Education</h2> {/* Styled heading */}
+                  {displayData.education.map((edu, index) => (
+                    <div key={index} className="mb-4 last:mb-0"> {/* Added last:mb-0 */}
+                      <div className='flex justify-between items-baseline'> {/* Align items */}
+                        <h3 className="font-semibold text-lg text-gray-900">{edu.institution}</h3>
+                        <p className="text-gray-500 text-sm">{edu.passing_year}</p> {/* Moved year to right */}
+                      </div>
+                      <p className="text-gray-600 text-sm">{edu.grade ? `Grade: ${edu.grade}` : ''}</p> {/* Removed parentheses */}
+                    </div>
+                  ))}
+                </section>
+              )}
+
+              {/* Projects - ADDED HERE, below Education */}
+              {displayData.project && displayData.project.length > 0 && (
+                <section className="mb-8"> {/* Increased mb */}
+                  <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Projects</h2> {/* Styled heading */}
+                  {displayData.project.map((proj, index) => (
+                    <div key={index} className="mb-6 last:mb-0"> {/* Added last:mb-0 */}
+                      <h3 className="font-semibold text-lg text-gray-900 mb-1">{proj.project_title}</h3>
+                      <p className="text-gray-700 text-sm leading-relaxed">{proj.project_description}</p>
+                    </div>
+                  ))}
+                </section>
+              )}
+
+              {/* Achievements - ADDED HERE, below Projects */}
+              {displayData.achievement && displayData.achievement.length > 0 && (
+                <section className="mb-8"> {/* Increased mb */}
+                  <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Achievements</h2> {/* Styled heading */}
+                  {displayData.achievement.map((ach, index) => (
+                    <div key={index} className="mb-6 last:mb-0"> {/* Added last:mb-0 */}
+                      <h3 className="font-semibold text-lg text-gray-900 mb-1">{ach.achievement_title}</h3>
+                      <p className="text-gray-700 text-sm leading-relaxed">{ach.achievement_description}</p>
+                    </div>
+                  ))}
+                </section>
+              )}
+
+              {/* Extra Information */}
+              {displayData.extra && (
+                <section>
+                  <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Additional Information</h2> {/* Styled heading */}
+                  <p className="text-gray-700 text-sm leading-relaxed">{displayData.extra}</p>
+                </section>
+              )}
+            </div>
           </div>
       );
-      break;
     case 'Vibrant & Expressive (Gen Z)':
       return (
         <div className="min-h-screen bg-[#dc73a7] p-4 font-sans">
@@ -165,7 +279,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
                 </span>
                 
                 <span className="flex items-center gap-2 bg-pink-100 px-4 py-2 rounded-full border-2 border-pink-300">
-                  <span><IoMdMail /></span>
+                  <span><IoMail /></span>
                    {displayData.email}
                 </span>
                 <span className="flex items-center gap-2 bg-orange-100 px-4 py-2 rounded-full border-2 border-orange-300">
@@ -194,6 +308,8 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
                   <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full"></div>
                 </h2>
                 <div className="flex flex-wrap gap-3">
+                  {/* Note: If you want skill bars, this mapping needs to be adjusted in the parent component
+                      to pass objects like { name: 'Skill Name', level: 90 } or define skillsWithLevels here. */}
                   {displayData.skills.map((skill, index) => (
                     <span
                       key={index}
@@ -339,7 +455,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       containerClasses = "bg-white p-8 text-gray-700 font-sans shadow-lg rounded-lg max-w-2xl mx-auto border border-gray-200";
       headerClasses = "text-center pb-4 mb-6 border-b border-gray-400";
       sectionTitleClasses = "text-xl font-bold mb-3 mt-6 text-gray-800 uppercase tracking-wide";
-      accentColor = "text-green-700"; 
+      accentColor = "text-green-700";
       break;
     case 'Tech Minimalist':
       containerClasses = "bg-gray-900 p-8 text-white font-mono shadow-2xl rounded-xl max-w-2xl mx-auto";
@@ -348,125 +464,126 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       accentColor = "text-lime-400";
       break;
     default:
+      // Default template structure (if no templateName matches)
       containerClasses = "bg-white p-8 text-gray-800 font-sans shadow-lg rounded-lg max-w-2xl mx-auto";
       headerClasses = "text-center pb-4 mb-6 border-b-2 border-gray-300";
       sectionTitleClasses = "text-xl font-bold mb-3 mt-6 text-gray-700 uppercase tracking-wider border-b border-gray-200 pb-2";
       accentColor = "text-blue-700";
-  }
 
-  return (
-    <div className={containerClasses}>
-      {/* Header - Name, Contact Info */}
-      <header className={headerClasses}>
-        <h1 className="text-4xl font-extrabold mb-2">{displayData.full_name.toUpperCase()}</h1>
-        <p className="text-gray-600">
-          {displayData.home}
-        </p>
-        <div className='flex justify-between text-sm font-boldA'>
-          <div><span>+91 </span>{displayData.phone}</div>
-          <div>{displayData.email}</div>
+      return (
+        <div className={containerClasses}>
+          {/* Header - Name, Contact Info */}
+          <header className={headerClasses}>
+            <h1 className="text-4xl font-extrabold mb-2">{displayData.full_name.toUpperCase()}</h1>
+            <p className="text-gray-600">
+              {displayData.home}
+            </p>
+            <div className='flex justify-between text-sm font-boldA'>
+              <div><span>+91 </span>{displayData.phone}</div>
+              <div>{displayData.email}</div>
+            </div>
+          </header>
+
+          {/* Professional Summary */}
+          <section className="mb-6">
+            <h2 className={sectionTitleClasses}>Professional Summary</h2>
+            <p className="text-gray-700 text-sm leading-relaxed">{displayData.summary}</p>
+          </section>
+
+          {/* Skills */}
+          {displayData.skills && displayData.skills.length > 0 && (
+            <section className="mb-6">
+              <h2 className={sectionTitleClasses}>Skills</h2>
+              <ul className="flex flex-wrap gap-2 text-sm text-center items-center">
+                {displayData.skills.map((skill, index) => (
+                  <li key={index} className={`text-center align-middle justify-center px-3 py-1 rounded-full bg-gray-200 ${accentColor.replace('text-', 'bg-')}`}>
+                    {skill}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {/* Experience */}
+          {displayData.experience && displayData.experience.length > 0 && (
+            <section className="mb-6">
+              <h2 className={sectionTitleClasses}>Experience</h2>
+              {displayData.experience.map((exp, index) => (
+                <div key={index} className="mb-4">
+                  <h3 className="font-semibold text-lg">{exp.key_role} @ {exp.company_name}</h3>
+                  <p className="text-gray-600 text-sm mb-1">{exp.start_date} - {exp.end_date}</p>
+                  <p className="text-gray-700 text-sm leading-relaxed">{exp.job_summary}</p>
+                </div>
+              ))}
+            </section>
+          )}
+
+          {/* Education */}
+          {displayData.education && displayData.education.length > 0 && (
+            <section className="mb-6">
+              <h2 className={sectionTitleClasses}>Education</h2>
+              {displayData.education.map((edu, index) => (
+                <div key={index} className="mb-4">
+                  <div className='flex justify-between'>
+                  <h3 className="font-semibold text-lg">{edu.institution}</h3>
+                  <div>{edu.passing_year}</div>
+                  </div>
+                  <p className="text-gray-600 text-sm">{edu.grade ? `Grade: (${edu.grade})` : ''}</p>
+                </div>
+              ))}
+            </section>
+          )}
+
+          {/* Projects (Default Template) */}
+          {displayData.project && displayData.project.length > 0 && (
+            <section className="mb-6">
+              <h2 className={sectionTitleClasses}>Projects</h2>
+              {displayData.project.map((proj, index) => (
+                <div key={index} className="mb-4">
+                  <h3 className="font-semibold text-lg">{proj.project_title}</h3>
+                  <p className="text-gray-700 text-sm leading-relaxed">{proj.project_description}</p>
+                </div>
+              ))}
+            </section>
+          )}
+
+          {/* Achievements (Default Template) */}
+          {displayData.achievement && displayData.achievement.length > 0 && (
+            <section className="mb-6">
+              <h2 className={sectionTitleClasses}>Achievements</h2>
+              {displayData.achievement.map((ach, index) => (
+                <div key={index} className="mb-4">
+                  <h3 className="font-semibold text-lg">{ach.achievement_title}</h3>
+                  <p className="text-gray-700 text-sm leading-relaxed">{ach.achievement_description}</p>
+                </div>
+              ))}
+            </section>
+          )}
+
+          {/* Languages (Default Template) */}
+          {displayData.languages && displayData.languages.length > 0 && (
+            <section className="mb-6">
+              <h2 className={sectionTitleClasses}>Languages</h2>
+              <ul className="list-disc pl-5 text-sm">
+                {displayData.languages.map((lang, index) => (
+                  <li key={index}>
+                    {lang.language} - <span className={accentColor}>{lang.proficiency_level}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {/* Extra Information (Default Template) */}
+          {displayData.extra && (
+            <section>
+              <h2 className={sectionTitleClasses}>Additional Information</h2>
+              <p className="text-gray-700 text-sm leading-relaxed">{displayData.extra}</p>
+            </section>
+          )}
         </div>
-      </header>
-
-      {/* Professional Summary */}
-      <section className="mb-6">
-        <h2 className={sectionTitleClasses}>Professional Summary</h2>
-        <p className="text-gray-700 text-sm leading-relaxed">{displayData.summary}</p>
-      </section>
-
-      {/* Skills */}
-      {displayData.skills && displayData.skills.length > 0 && (
-        <section className="mb-6">
-          <h2 className={sectionTitleClasses}>Skills</h2>
-          <ul className="flex flex-wrap gap-2 text-sm text-center items-center">
-            {displayData.skills.map((skill, index) => (
-              <li key={index} className={`text-center align-middle justify-center px-3 py-1 rounded-full bg-gray-200 ${accentColor.replace('text-', 'bg-')}`}>
-                {skill}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      {/* Experience */}
-      {displayData.experience && displayData.experience.length > 0 && (
-        <section className="mb-6">
-          <h2 className={sectionTitleClasses}>Experience</h2>
-          {displayData.experience.map((exp, index) => (
-            <div key={index} className="mb-4">
-              <h3 className="font-semibold text-lg">{exp.key_role} @ {exp.company_name}</h3>
-              <p className="text-gray-600 text-sm mb-1">{exp.start_date} - {exp.end_date}</p>
-              <p className="text-gray-700 text-sm leading-relaxed">{exp.job_summary}</p>
-            </div>
-          ))}
-        </section>
-      )}
-
-      {/* Education */}
-      {displayData.education && displayData.education.length > 0 && (
-        <section className="mb-6">
-          <h2 className={sectionTitleClasses}>Education</h2>
-          {displayData.education.map((edu, index) => (
-            <div key={index} className="mb-4">
-              <div className='flex justify-between'>
-              <h3 className="font-semibold text-lg">{edu.institution}</h3>
-              <div>{edu.passing_year}</div>
-              </div>
-              <p className="text-gray-600 text-sm">{edu.grade ? `Grade: (${edu.grade})` : ''}</p>
-            </div>
-          ))}
-        </section>
-      )}
-
-      {/* Projects */}
-      {displayData.project && displayData.project.length > 0 && (
-        <section className="mb-6">
-          <h2 className={sectionTitleClasses}>Projects</h2>
-          {displayData.project.map((proj, index) => (
-            <div key={index} className="mb-4">
-              <h3 className="font-semibold text-lg">{proj.project_title}</h3>
-              <p className="text-gray-700 text-sm leading-relaxed">{proj.project_description}</p>
-            </div>
-          ))}
-        </section>
-      )}
-
-      {/* Achievements */}
-      {displayData.achievement && displayData.achievement.length > 0 && (
-        <section className="mb-6">
-          <h2 className={sectionTitleClasses}>Achievements</h2>
-          {displayData.achievement.map((ach, index) => (
-            <div key={index} className="mb-4">
-              <h3 className="font-semibold text-lg">{ach.achievement_title}</h3>
-              <p className="text-gray-700 text-sm leading-relaxed">{ach.achievement_description}</p>
-            </div>
-          ))}
-        </section>
-      )}
-
-      {/* Languages */}
-      {displayData.languages && displayData.languages.length > 0 && (
-        <section className="mb-6">
-          <h2 className={sectionTitleClasses}>Languages</h2>
-          <ul className="list-disc pl-5 text-sm">
-            {displayData.languages.map((lang, index) => (
-              <li key={index}>
-                {lang.language} - <span className={accentColor}>{lang.proficiency_level}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      {/* Extra Information */}
-      {displayData.extra && (
-        <section>
-          <h2 className={sectionTitleClasses}>Additional Information</h2>
-          <p className="text-gray-700 text-sm leading-relaxed">{displayData.extra}</p>
-        </section>
-      )}
-    </div>
-  );
+      );
+  }
 };
 
 export default ResumePreview;
