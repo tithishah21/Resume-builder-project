@@ -925,7 +925,7 @@ function Page() {
 
       {/* Resume Preview Section */}
       {showPreview && resumeData && (
-        <div className="mt-12 py-10 bg-gray-950 flex flex-col items-center justify-center">
+        <div className="py-3 bg-gray-950 flex flex-col items-center justify-center">
 
           <div id="resume-content">
               <h2 className="text-4xl font-bold text-white mb-8">Your Resume Preview</h2>
