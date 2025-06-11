@@ -260,205 +260,121 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             </div>
           </div>
       );
-    case 'Vibrant & Expressive (Gen Z)':
-      return (
-        <div className="min-h-screen bg-[#dc73a7] p-4 font-sans">
-
-          <div className="relative  backdrop-blur-sm p-8 rounded-3xl shadow-2xl max-w-4xl mx-auto border-4 border-white/50">
-            {/* Decorative corner elements */}
-            <div className="absolute -top-2 -left-2 w-8 h-8 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full"></div>
-            <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full"></div>
-            <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-gradient-to-br from-green-500 to-teal-600 rounded-full"></div>
-            <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-full"></div>
-
+      case 'Vibrant & Expressive (Gen Z)':
+        return (
+          <div className="bg-[#f9e5e1] min-h-[1050px] max-w-4xl mx-auto shadow-2xl rounded-lg overflow-hidden px-6 py-10 text-[#4a4a4a] font-sans">
             {/* Header */}
-            <header className="text-center mb-8 relative">
-              <div className="inline-block relative">
-                <h1 className="text-5xl font-black mb-4">
-                  {displayData.full_name.toUpperCase()}
-                </h1>
-                
+            <div className="bg-[#d9747c] text-white p-8 rounded-t-3xl flex flex-col items-center">
+              <h1 className="text-4xl font-bold uppercase">{displayData.full_name}</h1>
+              
+              <div className="mt-4 text-sm space-y-1 text-center">
+                <p>+91 {displayData.phone}</p>
+                <p>{displayData.email}</p>
+                <p>{displayData.home}</p>
               </div>
-              <div className="flex flex-wrap justify-center gap-4 text-gray-700 font-medium">
-                
-                <span className="flex items-center gap-2 bg-purple-100 px-4 py-2 rounded-full border-2 border-purple-300">
-                <span><FaPhoneAlt /></span>
-                   {displayData.phone}
-                </span>
-                
-                <span className="flex items-center gap-2 bg-pink-100 px-4 py-2 rounded-full border-2 border-pink-300">
-                  <span><IoMail /></span>
-                   {displayData.email}
-                </span>
-                <span className="flex items-center gap-2 bg-orange-100 px-4 py-2 rounded-full border-2 border-orange-300">
-                  <span><IoIosHome /></span>
-                   {displayData.home}
-                </span>
+            </div>
+
+            {/* Biography + Social */}
+            <div className="bg-[#fff] px-8 py-6 grid grid-cols-1 md:grid-cols-2 gap-8 border-b border-gray-300">
+              
+                <h2 className="text-xl font-semibold text-[#d9747c] mb-2">Biography</h2>
+                <p className="text-sm leading-relaxed">{displayData.summary}</p>
+              
+            </div>
+
+            {/* Education + Experience */}
+            <div className="bg-[#fefaf7] px-8 py-6 grid grid-cols-1 md:grid-cols-2 gap-6 border-b border-gray-300">
+              {/* Education */}
+              <div>
+                <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Education</h2>
+                {displayData.education.map((edu, index) => (
+                  <div key={index} className="mb-4">
+                    <h3 className="font-bold">{edu.institution}</h3>
+                    <p className="text-sm text-[#777]">{edu.passing_year} • {edu.grade}</p>
+                  </div>
+                ))}
               </div>
-            </header>
 
-            {/* Professional Summary */}
-            <section className="mb-8">
-              <h2 className="text-3xl font-extrabold mb-4 text-purple-700 relative inline-block">
-                ✨ About Me
-                <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-pink-500 to-orange-500 rounded-full"></div>
-              </h2>
-              <p className="text-gray-800 text-lg leading-relaxed bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-2xl border-l-4 border-pink-500 shadow-lg">
-                {displayData.summary}
-              </p>
-            </section>
+              {/* Experience */}
+              <div>
+                <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Experience</h2>
+                {displayData.experience.map((exp, index) => (
+                  <div key={index} className="mb-4">
+                    <h3 className="font-bold">{exp.key_role}</h3>
+                    <p className="text-sm text-[#d9747c] font-semibold">{exp.company_name}</p>
+                    <p className="text-sm text-[#777] mb-1">{exp.start_date} → {exp.end_date}</p>
+                    <p className="text-sm">{exp.job_summary}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-            {/* Skills */}
-            {displayData.skills && displayData.skills.length > 0 && (
-              <section className="mb-8">
-                <h2 className="text-3xl font-extrabold mb-6 text-pink-700 relative inline-block">
-                  🚀 Skills & Superpowers
-                  <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full"></div>
-                </h2>
+            {/* Languages + Skills */}
+            <div className="bg-[#fff] px-8 py-6 grid grid-cols-1 md:grid-cols-2 gap-8 border-b border-gray-300">
+              {/* Languages */}
+              <div>
+                <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Language Skills</h2>
+                <div className="flex flex-wrap gap-4">
+                  {displayData.languages.map((lang, index) => (
+                    <span key={index} className="px-4 py-2 bg-[#f5dcdc] rounded-full text-sm font-semibold text-[#4a4a4a] border border-[#d9747c]">
+                      {lang.language} • <span className="text-[#d9747c] ml-1">{lang.proficiency_level}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Skills */}
+              <div>
+                <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Skills</h2>
                 <div className="flex flex-wrap gap-3">
-                  {/* Note: If you want skill bars, this mapping needs to be adjusted in the parent component
-                      to pass objects like { name: 'Skill Name', level: 90 } or define skillsWithLevels here. */}
                   {displayData.skills.map((skill, index) => (
-                    <span
-                      key={index}
-                      className={`px-4 py-2 rounded-full text-white font-bold text-sm transform hover:scale-110 transition-all duration-300 cursor-pointer shadow-lg ${
-                        index % 6 === 0 ? 'bg-gradient-to-r from-purple-500 to-pink-500' :
-                        index % 6 === 1 ? 'bg-gradient-to-r from-pink-500 to-orange-500' :
-                        index % 6 === 2 ? 'bg-gradient-to-r from-orange-500 to-yellow-500' :
-                        index % 6 === 3 ? 'bg-gradient-to-r from-green-500 to-teal-500' :
-                        index % 6 === 4 ? 'bg-gradient-to-r from-teal-500 to-cyan-500' :
-                        'bg-gradient-to-r from-cyan-500 to-blue-500'
-                      }`}
-                    >
+                    <span key={index} className="px-3 py-1 bg-[#f5dcdc] rounded-lg text-sm text-[#4a4a4a] border border-[#d9747c]">
                       {skill}
                     </span>
                   ))}
                 </div>
-              </section>
-            )}
-
-            {/* Experience */}
-            {displayData.experience && displayData.experience.length > 0 && (
-              <section className="mb-8">
-                <h2 className="text-3xl font-extrabold mb-6 text-orange-700 relative inline-block">
-                  💼 Work Experience
-                  <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-red-500 rounded-full"></div>
-                </h2>
-                <div className="space-y-6">
-                  {displayData.experience.map((exp, index) => (
-                    <div key={index} className="bg-gradient-to-r from-orange-50 to-red-50 p-6 rounded-2xl border-l-4 border-orange-500 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                      <h3 className="text-xl font-bold text-gray-800 mb-2">{exp.key_role}</h3>
-                      <h4 className="text-lg font-semibold text-orange-600 mb-2">{exp.company_name}</h4>
-                      <p className="text-sm text-gray-600 mb-3 font-mono bg-white/50 px-3 py-1 rounded-full inline-block">
-                        {exp.start_date} → {exp.end_date}
-                      </p>
-                      <p className="text-gray-700 leading-relaxed">{exp.job_summary}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* Education */}
-            {displayData.education && displayData.education.length > 0 && (
-              <section className="mb-8">
-                <h2 className="text-3xl font-extrabold mb-6 text-teal-700 relative inline-block">
-                  🎓 Education
-                  <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-teal-500 to-green-500 rounded-full"></div>
-                </h2>
-                <div className="space-y-4">
-                  {displayData.education.map((edu, index) => (
-                    <div key={index} className="bg-gradient-to-r from-teal-50 to-green-50 p-6 rounded-2xl border-l-4 border-teal-500 shadow-lg">
-                      <h3 className="text-xl font-bold text-gray-800">{edu.institution}</h3>
-                      <p className="text-teal-600 font-semibold">
-                        {edu.passing_year} {edu.grade && `• ${edu.grade}`}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
+              </div>
+            </div>
 
             {/* Projects */}
-            {displayData.project && displayData.project.length > 0 && (
-              <section className="mb-8">
-                <h2 className="text-3xl font-extrabold mb-6 text-cyan-700 relative inline-block">
-                  🛠️ Cool Projects
-                  <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full"></div>
-                </h2>
-                <div className="space-y-6">
-                  {displayData.project.map((proj, index) => (
-                    <div key={index} className="bg-gradient-to-r from-cyan-50 to-blue-50 p-6 rounded-2xl border-l-4 border-cyan-500 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                      <h3 className="text-xl font-bold text-gray-800 mb-3">{proj.project_title}</h3>
-                      <p className="text-gray-700 leading-relaxed">{proj.project_description}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
+            {displayData.project?.length > 0 && (
+              <div className="bg-[#fefaf7] px-8 py-6 border-b border-gray-300">
+                <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Projects</h2>
+                {displayData.project.map((proj, index) => (
+                  <div key={index} className="mb-4">
+                    <h3 className="font-bold">{proj.project_title}</h3>
+                    <p className="text-sm">{proj.project_description}</p>
+                  </div>
+                ))}
+              </div>
             )}
 
             {/* Achievements */}
-            {displayData.achievement && displayData.achievement.length > 0 && (
-              <section className="mb-8">
-                <h2 className="text-3xl font-extrabold mb-6 text-yellow-700 relative inline-block">
-                  🏆 Achievements & Wins
-                  <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full"></div>
-                </h2>
-                <div className="space-y-6">
-                  {displayData.achievement.map((ach, index) => (
-                    <div key={index} className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-2xl border-l-4 border-yellow-500 shadow-lg">
-                      <h3 className="text-xl font-bold text-gray-800 mb-3">{ach.achievement_title}</h3>
-                      <p className="text-gray-700 leading-relaxed">{ach.achievement_description}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* Languages */}
-            {displayData.languages && displayData.languages.length > 0 && (
-              <section className="mb-8">
-                <h2 className="text-3xl font-extrabold mb-6 text-green-700 relative inline-block">
-                  🌍 Languages
-                  <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-teal-500 rounded-full"></div>
-                </h2>
-                <div className="flex flex-wrap gap-4">
-                  {displayData.languages.map((lang, index) => (
-                    <div key={index} className="bg-gradient-to-r from-green-100 to-teal-100 px-6 py-3 rounded-full border-2 border-green-300 shadow-lg">
-                      <span className="font-bold text-gray-800">{lang.language}</span>
-                      <span className="text-green-600 ml-2">• {lang.proficiency_level}</span>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* Extra Information */}
-            {displayData.extra && (
-              <section className="mb-8">
-                <h2 className="text-3xl font-extrabold mb-6 text-indigo-700 relative inline-block">
-                  ✨ More About Me
-                  <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"></div>
-                </h2>
-                <p className="text-gray-800 text-lg leading-relaxed bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-2xl border-l-4 border-indigo-500 shadow-lg">
-                  {displayData.extra}
-                </p>
-              </section>
-            )}
-
-            {/* Footer decorative element */}
-            <div className="text-center mt-8">
-              <div className="inline-flex items-center gap-2 text-2xl">
-                <span className="animate-bounce">🌟</span>
-                <span className="font-bold text-transparent bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text">
-                  Thanks for checking out my resume!
-                </span>
-                <span className="animate-bounce">🌟</span>
+            {displayData.achievement?.length > 0 && (
+              <div className="bg-[#fff] px-8 py-6 border-b border-gray-300">
+                <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Achievements</h2>
+                {displayData.achievement.map((achieve, index) => (
+                  <div key={index} className="mb-4">
+                    <h3 className="font-bold">{achieve.achievement_title}</h3>
+                    <p className="text-sm">{achieve.achievement_description}</p>
+                  </div>
+                ))}
               </div>
-            </div>
+            )}
+
+            {/* Extra */}
+            {displayData.extra && (
+              <div className="bg-[#fefaf7] px-8 py-6 border-b border-gray-300">
+                <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Extras</h2>
+                <p className="text-sm">{displayData.extra}</p>
+              </div>
+            )}
+
+            
           </div>
-        </div>
-      );
+        );
+
+      
     case 'Classic Corporate':
       // Problem: This case was missing a 'return' statement, causing the default to always render.
       // Now, it will explicitly return its own JSX structure.
