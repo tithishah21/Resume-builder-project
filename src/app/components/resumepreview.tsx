@@ -3,7 +3,6 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 import { IoIosHome } from "react-icons/io";
 
-
 interface FormValues {
   full_name: string;
   phone: string;
@@ -68,21 +67,21 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               </div>
               
               {/* Contact Info (Modern Professional Template)*/}
-              <div className='text-left flex flex-col text-gray-300 mb-16 space-y-4'> 
-                <div className='inline-flex items-center gap-3 px-3'>
+              <div className='text-left flex flex-col px-4 text-gray-300 mb-16 space-y-4'> 
+                <div className='inline-flex items-center gap-3'>
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800">
                         <IoIosHome size={20}/>
                     </div>
                     {displayData.home}
                 </div>
-                <div className='inline-flex items-center gap-3 px-3'>
+                <div className='inline-flex items-center gap-3'>
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800">
                         <FaPhoneAlt size={16}/>
                     </div>
                     {displayData.phone}
                 </div>
-                <div className='inline-flex items-center gap-3 px-1'>
-                    <div className="flex items-center justify-center w-10 h-8 rounded-full bg-white text-gray-800">
+                <div className='inline-flex items-center gap-3'>
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800">
                         <IoMail size={16}/>
                     </div>
                     {displayData.email}
@@ -609,7 +608,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
                     <span className="absolute left-0 bottom-0 w-full h-1 bg-lime-500 opacity-50 z-0 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
                   </span>
                 </h2>
-                <p className="text-gray-300 text-base leading-relaxed border-l-2 border-lime-400 pl-4 py-2 bg-gray-700 bg-opacity-50 rounded-md ">
+                <p className="text-gray-300 text-base leading-relaxed border-l-2 border-lime-400 pl-4 py-2 bg-gray-700 bg-opacity-50 rounded-md">
                   {displayData.extra}
                 </p>
               </section>
