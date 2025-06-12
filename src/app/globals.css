@@ -1,3 +1,5 @@
+/* src/app/globals.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -16,6 +18,109 @@
   }
 }
 
+@media print {
+  /* Ensure background colors and images are printed */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Define the main resume container for print */
+  /* This class needs to be added to the outermost div of your resume templates */
+  .resume-print-area {
+    width: 210mm; /* A4 width */
+    /* max-width: 210mm; */ /* Not strictly necessary with width */
+    min-height: 297mm; /* A4 height */
+    /* Let content dictate height, but define if you want fixed pages.
+       Using min-height can sometimes force extra blank pages if content is short.
+       Consider using 'height: auto !important;' if min-height causes issues. */
+    height: auto !important; /* Allow content to dictate height */
+
+    box-shadow: none !important; /* Remove shadows */
+    border: none !important; /* Remove borders */
+    margin: 0 !important; /* Remove default margins */
+    padding: 0 !important; /* Remove default padding from the outer container */
+    overflow: visible !important; /* Ensure content is not cut off */
+    
+    /* Crucial for two-column layouts: allow the main columns/wrapper to break */
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+  }
+
+  /* Override fixed min-heights from screen styles in print */
+  /* This targets the min-h-[1050px] directly from your ResumePreview.tsx */
+  .min-h-\[1050px\] {
+    min-height: auto !important;
+    height: auto !important;
+  }
+
+  /* General HTML/BODY settings for print */
+  html, body {
+    height: auto !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Prevent headings from being orphaned (appearing at the bottom of a page without content) */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    /* Also prevent them from being the very first thing on a new page if the previous content was very short */
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+  }
+
+  /*
+   * Crucial Fix: Apply page-break-inside: avoid to the *individual logical units*
+   * within your sections. This aims to keep an entire experience entry,
+   * education entry, project, or achievement block together.
+   * Do NOT apply to 'section' itself, as that forces new pages for each section.
+   */
+
+  /* For individual experience, project, achievement divs (often have mb-6 last:mb-0) */
+  .mb-6.last\:mb-0 {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* For individual education divs (often have mb-4 last:mb-0) */
+  .mb-4.last\:mb-0 {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* For individual list items (e.g., skills, languages) */
+  li {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* For paragraphs: prevent single lines from being left behind/orphaned/widowed.
+     Do NOT use page-break-inside: avoid on 'p' unless paragraphs are always very short,
+     as long paragraphs *must* be allowed to break. */
+  p {
+    orphans: 3 !important;
+    widows: 3 !important;
+  }
+
+  /* Ensure the main two-column layout's inner columns can break across pages if needed.
+     This is critical for templates like 'Modern Professional' to flow correctly. */
+  .flex-col, .flex-1 {
+    page-break-inside: auto !important; /* Allow columns to break across pages */
+    break-inside: auto !important;
+  }
+
+  /* Hide elements that are part of your application UI but not the resume content itself */
+  /* You will need to verify these selectors based on your actual surrounding components */
+  .flex.justify-center.gap-4.mt-8, /* Example: your navigation buttons below the resume */
+  .fixed.top-20.right-4, /* Example: any fixed floating buttons/controls */
+  .text-white.text-center.mb-10.top-20 /* Example: a progress bar or status text */
+   {
+    display: none !important;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -28,8 +133,8 @@ body {
 
 /* Scrollbar thumb (the draggable part) */
 ::-webkit-scrollbar-thumb {
-  background:rgb(0, 140, 255); 
-  
+  background:rgb(0, 140, 255);
+
   border-radius: 9px;
 }
 

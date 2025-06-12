@@ -3,6 +3,8 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 import { IoIosHome } from "react-icons/io";
 
+
+
 interface FormValues {
   full_name: string;
   phone: string;
@@ -57,7 +59,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
   switch (templateName) {
     case 'Modern Professional':
       return(
-        <div className='flex flex-row bg-white min-h-[1050px] max-w-4xl mx-auto shadow-2xl rounded-lg overflow-hidden'>
+        <div className='flex flex-row bg-white min-h-[1050px] max-w-4xl mx-auto shadow-2xl rounded-lg overflow-hidden resume-print-area'>
             <div className='flex flex-col bg-gray-800 text-white w-1/3 min-w-[200px] py-10 px-6'>
               
               {/* Name (Modern Professional Template) */}
@@ -67,21 +69,21 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               </div>
               
               {/* Contact Info (Modern Professional Template)*/}
-              <div className='text-left flex flex-col px-4 text-gray-300 mb-16 space-y-4'> 
-                <div className='inline-flex items-center gap-3'>
+              <div className='text-left flex flex-col text-gray-300 mb-16 space-y-4'> 
+                <div className='inline-flex items-center gap-3 px-3'>
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800">
                         <IoIosHome size={20}/>
                     </div>
                     {displayData.home}
                 </div>
-                <div className='inline-flex items-center gap-3'>
+                <div className='inline-flex items-center gap-3 px-3'>
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800">
                         <FaPhoneAlt size={16}/>
                     </div>
                     {displayData.phone}
                 </div>
-                <div className='inline-flex items-center gap-3'>
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800">
+                <div className='inline-flex items-center gap-3 px-1'>
+                    <div className="flex items-center justify-center w-10 h-8 rounded-full bg-white text-gray-800">
                         <IoMail size={16}/>
                     </div>
                     {displayData.email}
@@ -196,7 +198,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       );
       case 'Vibrant & Expressive (Gen Z)':
         return (
-          <div className="bg-[#f9e5e1] min-h-[1050px] max-w-4xl mx-auto shadow-2xl rounded-lg overflow-hidden px-6 py-10 text-[#4a4a4a] font-sans">
+          <div className="bg-[#f9e5e1] min-h-[1050px] max-w-4xl mx-auto shadow-2xl rounded-lg overflow-hidden px-6 py-10 text-[#4a4a4a] font-sans resume-print-area">
             {/* Header (Vibrant & Expressive (Gen Z) Template)*/}
             <div className="bg-[#d9747c] text-white p-8 rounded-t-3xl flex flex-col items-center">
               <h1 className="text-4xl font-bold uppercase">{displayData.full_name}</h1>
@@ -311,7 +313,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       
     case 'Classic Corporate':
       return (
-        <div className="bg-white p-8 font-sans text-gray-800 shadow-lg rounded-lg max-w-3xl mx-auto border border-gray-200">
+        <div className="bg-white p-8 font-sans text-gray-800 shadow-lg rounded-lg max-w-3xl mx-auto border border-gray-200 resume-print-area">
           {/* Header - Name, Contact Info (Classic Corporate Template)*/}
           <header className="text-center pb-6 mb-6 border-b border-gray-300">
             <h1 className="text-4xl font-bold mb-2 text-gray-900">{displayData.full_name.toUpperCase()}</h1>
@@ -427,7 +429,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       );
     case 'Tech Minimalist':
       return(
-        <div className="min-h-[1050px] bg-gradient-to-br from-gray-900 to-black p-6 font-mono text-cyan-400 overflow-hidden relative">
+        <div className="min-h-[1050px] bg-gradient-to-br from-gray-900 to-black p-6 font-mono text-cyan-400 overflow-hidden relative resume-print-area">
          
           <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" style={{
             backgroundImage: 'repeating-linear-gradient(0deg, rgba(0,255,255,0.1) 0px, rgba(0,255,255,0.1) 1px, transparent 1px, transparent 20px), repeating-linear-gradient(90deg, rgba(0,255,255,0.1) 0px, rgba(0,255,255,0.1) 1px, transparent 1px, transparent 20px)',
@@ -608,7 +610,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
                     <span className="absolute left-0 bottom-0 w-full h-1 bg-lime-500 opacity-50 z-0 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
                   </span>
                 </h2>
-                <p className="text-gray-300 text-base leading-relaxed border-l-2 border-lime-400 pl-4 py-2 bg-gray-700 bg-opacity-50 rounded-md">
+                <p className="text-gray-300 text-base leading-relaxed border-l-2 border-lime-400 pl-4 py-2 bg-gray-700 bg-opacity-50 rounded-md ">
                   {displayData.extra}
                 </p>
               </section>
@@ -624,7 +626,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       );
     default:
       return (
-        <div className="bg-white p-8 text-gray-800 font-sans shadow-lg rounded-lg max-w-2xl mx-auto">
+        <div className="bg-white p-8 text-gray-800 font-sans shadow-lg rounded-lg max-w-2xl mx-auto resume-print-area">
           {/* Header - Name, Contact Info (Default Template)*/}
           <header className="text-center pb-4 mb-6 border-b-2 border-gray-300">
             <h1 className="text-4xl font-extrabold mb-2">{displayData.full_name.toUpperCase()}</h1>
