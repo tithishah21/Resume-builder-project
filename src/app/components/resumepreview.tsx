@@ -50,10 +50,9 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
     return <div className="text-white text-center">No resume data to display.</div>;
   }
 
-  let containerClasses = "p-8 text-black shadow-lg rounded-lg";
-  let headerClasses = "pb-4 mb-6 border-b";
-  let sectionTitleClasses = "text-xl font-bold mb-3 mt-6";
-  let accentColor = "text-blue-600"; 
+  
+  const sectionTitleClasses = "text-xl font-bold mb-3 mt-6";
+
 
   switch (templateName) {
     case 'Modern Professional':
