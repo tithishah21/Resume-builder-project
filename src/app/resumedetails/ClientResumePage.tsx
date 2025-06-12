@@ -66,7 +66,7 @@ function Page() {
   const [skillInput, setSkillInput] = useState('');
   const [skills, setSkills] = useState<string[]>([]); 
   const [userId, setUserId] = useState<string | null>(null);
-  const [loadingUser, setLoadingUser] = useState(true);
+  // const [loadingUser, setLoadingUser] = useState(true);
 
   const searchParams = useSearchParams();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
@@ -110,7 +110,7 @@ function Page() {
         console.warn('User data not found in localStorage. User might not be logged in.');
         setUserId(null);
       }
-      setLoadingUser(false);
+      
     };
 
     const getTemplateFromUrl = () => {
