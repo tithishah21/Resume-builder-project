@@ -7,6 +7,7 @@ import Footer from '../components/footer';
 import RotatingText from '../components/rotating_text';
 import { FaPlus } from "react-icons/fa6";
 import { FiEdit } from "react-icons/fi";
+import { createClient } from '../../../utils/supabase/client';
 
 interface User {
   name?: string;
@@ -19,9 +20,9 @@ export default function PrivatePage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
     const userData = localStorage.getItem('user');
-    
     if (!userData) {
       router.push('/signin');
       return;
@@ -40,6 +41,35 @@ export default function PrivatePage() {
     setLoading(false);
   }, [router]);
 
+  const handleEditResume = async () => {
+    const userData = localStorage.getItem('user');
+  
+    if (!userData) {
+      router.push('/signin');
+      return;
+    }
+  
+    const parsedUser = JSON.parse(userData);
+    const supabase = createClient();
+  
+    const { data, error } = await supabase
+      .from('resumes')
+      .select('*')
+      .eq('email', parsedUser.email)
+      .single();
+  
+    if (error || !data) {
+      console.log("No resume found. Redirecting to create page...");
+      router.push('/templates');
+      return;
+    }
+  
+    // Save the resume data in localStorage or state to prefill
+    localStorage.setItem('resumeData', JSON.stringify(data));
+  
+    router.push('/resumedetails');
+  };
+  
   const handleLogout = () => {
     localStorage.removeItem('user');
     router.push('/');
@@ -119,7 +149,8 @@ export default function PrivatePage() {
               </div>
               <div className="text-3xl font-semibold mt-10 mb-5 leading-tight text-center">Edit Your Resume</div>
               <div className="text-xl text-center mb-5">Update and improve your existing resume with our powerful editor!</div>
-              <button className="w-[27.5rem] py-3 outline text-purple-100 hover:bg-purple-500/10 border-y-1 border-x-1 font-semibold rounded-lg mt-5">
+              <button onClick={handleEditResume}
+              className="w-[27.5rem] py-3 outline text-purple-100 hover:bg-purple-500/10 border-y-1 border-x-1 font-semibold rounded-lg mt-5">
                 Continue Editing
               </button>
             </div>
