@@ -58,12 +58,12 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
     case 'Modern Professional':
       return(
         <div className='flex flex-row bg-white min-h-[1050px] max-w-4xl mx-auto shadow-2xl rounded-lg overflow-hidden'>
-            <div className='flex flex-col bg-gray-800 text-white w-1/3 min-w-[200px] py-10 px-6'>
+            <div className='flex flex-col bg-gray-800 text-white w-1/3 min-w-[325px] py-10 px-6'>
               
               {/* Name (Modern Professional Template) */}
               <div className='text-center mb-8'>
                 <h1 className='text-4xl font-extrabold mb-1'>{displayData.full_name.toUpperCase()}</h1>
-                <p className='text-gray-400 text-sm'>Graphic Designer</p> 
+                {/* <p className='text-gray-400 text-sm'>Graphic Designer</p>  */}
               </div>
               
               {/* Contact Info (Modern Professional Template)*/}
@@ -82,7 +82,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
                 </div>
                 <div className='inline-flex items-center gap-3'>
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800">
-                        <IoMail size={16}/>
+                        <IoMail size={20}/>
                     </div>
                     {displayData.email}
                 </div>
