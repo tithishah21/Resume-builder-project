@@ -83,9 +83,13 @@ function Page() {
         }
 
         alert('Account created successfully! You can now sign in.');
+        localStorage.removeItem('resumeData');
+        localStorage.removeItem('skills');
+        localStorage.removeItem('userId');
         setFullName('');
         setEmail('');
         setPassword('');
+
         router.push('/signin');
       } catch (err) {
         console.error('Unexpected error during signup:', err);

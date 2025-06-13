@@ -64,6 +64,9 @@ export default function PrivatePage() {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
+    localStorage.removeItem('resumeData');
+    localStorage.removeItem('skills');
+    localStorage.removeItem('userId');
     router.push('/');
   };
 

@@ -939,7 +939,7 @@ function Page() {
           </Form>
         )}
       </Formik>
-      ):(  <p>No resume data found ;)</p> )):(
+      ):(  <p>No resume data found </p> )):(
         
       <div className="py-3 bg-gray-950 flex flex-col items-center justify-center min-h-screen pt-3"> 
       {/*Resume Preview */}
