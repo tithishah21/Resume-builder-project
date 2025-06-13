@@ -96,50 +96,56 @@ function Page() {
           if (storedUser && storedUser.id) {
             setUserId(storedUser.id);
             console.log("User ID retrieved from localStorage:", storedUser.id);
+            return storedUser.id;
           } else {
-            console.warn('User object found in localStorage, but ID is missing or invalid. Clearing local storage.');
+            console.warn('User object found, but ID is missing. Clearing it.');
             localStorage.removeItem('user');
-            setUserId(null);
           }
         } catch (e) {
           console.error('Error parsing user data from localStorage:', e);
           localStorage.removeItem('user');
-          setUserId(null);
         }
       } else {
-        console.warn('User data not found in localStorage. User might not be logged in.');
-        setUserId(null);
+        console.warn('User not logged in. No user data found.');
       }
-      
+      return null;
     };
-
-    const storedResume = localStorage.getItem('resumeData');
-    if (storedResume) {
-      try {
-        const parsedResume: FormValues = JSON.parse(storedResume);
-        setResumeData(parsedResume);
-        setSkills(parsedResume.skills || []);
-        console.log("Loaded resume data from localStorage.");
-      } catch (e) {
-        console.error("Error parsing resume data:", e);
-        localStorage.removeItem('resumeData');
+  
+    const loadResumeData = (uid: string | null) => {
+      const storedResume = localStorage.getItem('resumeData');
+      if (storedResume) {
+        try {
+          const parsedResume = JSON.parse(storedResume);
+          if (parsedResume?.userId === uid) {
+            setResumeData(parsedResume);
+            setSkills(parsedResume.skills || []);
+            console.log("Loaded resume data from localStorage for the current user.");
+          } else {
+            console.log("Resume data found but belongs to a different user. Skipping load.");
+          }
+        } catch (e) {
+          console.error("Error parsing resume data:", e);
+          localStorage.removeItem('resumeData');
+        }
       }
     };
-
+  
     const getTemplateFromUrl = () => {
       const template = searchParams.get('template');
       if (template) {
         setSelectedTemplate(template);
         console.log('Selected Template from URL:', template);
       } else {
-        console.warn('No template selected via URL query parameter. Consider setting a default or redirecting.');
+        console.warn('No template selected via URL. Consider setting a default.');
       }
     };
-
-    getUserIdFromLocalStorage();
+  
+    const uid = getUserIdFromLocalStorage(); // retrieve user ID
+    setUserId(uid);
+    loadResumeData(uid);
     getTemplateFromUrl();
-
   }, [searchParams]);
+  
 
   const addSkill = () => {
     const trimmed = skillInput.trim();
@@ -278,24 +284,37 @@ function Page() {
           setSubmitting(false);
           return;
         }
+      
         setSubmitting(true);
-
-        const formDataToSubmit: FormValues = {
+      
+        const formDataToSubmit: FormValues & { userId: string } = {
           ...values,
           skills: skills,
+          userId: userId, // ✅ Add this line to tag with userId
         };
-
+      
+        // ✅ Save to localStorage with userId
+        try {
+          localStorage.setItem('resumeData', JSON.stringify(formDataToSubmit));
+          console.log("Resume data saved to localStorage with userId.");
+        } catch (e) {
+          console.error("Failed to save resume to localStorage:", e);
+          alert("Failed to save resume locally.");
+        }
+      
+        // ✅ Set preview and resume state
         setResumeData(formDataToSubmit);
         setShowPreview(true);
-
+      
         console.log("Submitting Data to Supabase:", formDataToSubmit);
-
+      
+        // ✅ Send to Supabase
         try {
           const { data, error } = await supabase
             .from('resumes')
-            .insert([{ user_id: userId, ...formDataToSubmit }])
+            .insert([{ user_id: userId, ...values, skills }])
             .select();
-
+      
           if (error) {
             console.error('Error inserting resume data:', error);
             alert(`Error saving resume: ${error.message}`);
@@ -310,6 +329,7 @@ function Page() {
           setSubmitting(false);
         }
       }}
+      
     >
       {({ values, errors, touched, isSubmitting }) => (
         <Form>

@@ -59,16 +59,16 @@ export default function PrivatePage() {
       return;
     }
     localStorage.setItem('resumeData', JSON.stringify(data));
+
     router.push('/resumedetails');
   };
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    localStorage.removeItem('resumeData');
-    localStorage.removeItem('skills');
-    localStorage.removeItem('userId');
     router.push('/');
   };
+
+  
 
   if (loading) {
     return (
