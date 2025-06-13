@@ -24,7 +24,6 @@ import Header2 from '../components/header2';
 import Footer from '../components/footer';
 
 import { createClient } from '../../../utils/supabase/client';
-import { useFormikContext } from 'formik';
 
 interface FormValues {
   full_name: string;
@@ -111,8 +110,9 @@ function Page() {
         console.warn('User data not found in localStorage. User might not be logged in.');
         setUserId(null);
       }
+      
     };
-  
+
     const getTemplateFromUrl = () => {
       const template = searchParams.get('template');
       if (template) {
@@ -122,46 +122,11 @@ function Page() {
         console.warn('No template selected via URL query parameter. Consider setting a default or redirecting.');
       }
     };
-  
-    const loadResumeDataFromLocalStorage = () => {
-      const storedResume = localStorage.getItem('resumeData');
-      if (storedResume) {
-        try {
-          const parsedResume = JSON.parse(storedResume);
-          setResumeData(parsedResume);
-  
-          // Prefill formik with resume data
-          formik.setValues({
-            full_name: parsedResume.full_name || '',
-            phone: parsedResume.phone || '',
-            email: parsedResume.email || '',
-            home: parsedResume.home || '',
-            summary: parsedResume.summary || '',
-            education: parsedResume.education || [{ institution: '', passing_year: '', grade: '' }],
-            languages: parsedResume.languages || [{ language: '', proficiency_level: '' }],
-            experience: parsedResume.experience || [],
-            project: parsedResume.project || [],
-            achievement: parsedResume.achievement || [],
-            extra: parsedResume.extra || '',
-          });
-  
-          // Set skills list separately (assuming skills is a string[])
-          if (Array.isArray(parsedResume.skills)) {
-            setSkills(parsedResume.skills);
-          }
-  
-          console.log("Resume data loaded from localStorage.");
-        } catch (e) {
-          console.error("Error parsing resumeData from localStorage:", e);
-        }
-      }
-    };
-  
+
     getUserIdFromLocalStorage();
     getTemplateFromUrl();
-    loadResumeDataFromLocalStorage();
+
   }, [searchParams]);
-  
 
   const addSkill = () => {
     const trimmed = skillInput.trim();
