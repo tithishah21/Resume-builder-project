@@ -43,23 +43,20 @@ export default function PrivatePage() {
 
   const handleEditResume = async () => {
     const userData = localStorage.getItem('user');
-  
     if (!userData) {
       router.push('/signin');
       return;
     }
-  
     const parsedUser = JSON.parse(userData);
     const supabase = createClient();
-  
     const { data, error } = await supabase
       .from('resumes')
       .select('*')
       .eq('email', parsedUser.email)
       .single();
-  
     if (error || !data) {
       console.log("No resume found. Redirecting to create page...");
+      alert("No resume found! Edit your resume by first creating resume");
       router.push('/templates');
       return;
     }
@@ -69,7 +66,7 @@ export default function PrivatePage() {
   
     router.push('/resumedetails');
   };
-  
+
   const handleLogout = () => {
     localStorage.removeItem('user');
     router.push('/');
@@ -103,7 +100,7 @@ export default function PrivatePage() {
         </div>
       </div>
 
-      <div className="h-[75vw] bg-gray-950 text-white p-8">
+      <div className="h-[68vw] bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 text-white p-8">
         <div className="w-auto">
           <div className="flex items-center space-x-2 text-5xl font-bold mt-3 mb-4">
             <span className="text-white">Build</span>
@@ -128,12 +125,12 @@ export default function PrivatePage() {
 
           <div className="flex flex-row justify-evenly mt-7 mx-20">
             {/* Create Resume Card */}
-            <div className="w-[35vw] h-[33vw] bg-gradient-to-br from-blue-200/100 to-cyan-900/100 border-blue-500/30 p-8 cursor-pointer hover:from-blue-900/70 hover:to-cyan-900/70 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 rounded-xl justify-center">
-              <div className="text-5xl mt-8 w-24 h-24 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300">
+            <div className="w-[35vw] h-[33vw] bg-gradient-to-br from-blue-200/100 to-cyan-950/100 border-blue-500/30 p-8 cursor-pointer hover:from-blue-900/70 hover:to-cyan-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl justify-center">
+              <div className="text-5xl mt-4 w-24 h-24 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300">
                 <FaPlus />
               </div>
-              <div className="text-3xl font-semibold mt-10 mb-5 leading-tight text-center">Create New Resume</div>
-              <div className="text-xl text-center mb-5">Start fresh with our professional templates designed to get you noticed!</div>
+              <div className="text-5xl font-extrabold mt-3 mb-5 tracking-tight leading-tight text-center">Create New Resume</div>
+              <div className="text-lg text-center mb-5">Launch your journey with confidence!</div>
               <button 
                 onClick={() => router.push('/templates')}
                 className="w-[27.5rem] py-3 bg-gradient-to-r from-blue-700 to-cyan-500 hover:from-blue-800 hover:to-cyan-600 text-white font-semibold rounded-lg mt-5"
@@ -143,12 +140,12 @@ export default function PrivatePage() {
             </div>
 
             {/* Edit Resume Card */}
-            <div className="w-[35vw] h-[33vw] bg-gradient-to-br from-purple-200/100 to-pink-900/100 border-purple-500/30 p-8 cursor-pointer hover:from-purple-900/70 hover:to-pink-900/70 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/25 rounded-xl justify-center">
-              <div className="text-5xl mt-8 w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-400 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300">
+            <div className="w-[35vw] h-[33vw] bg-gradient-to-br from-purple-200/100 to-pink-900/100 border-purple-500/30 p-8 cursor-pointer hover:from-purple-900/70 hover:to-pink-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl justify-center">
+              <div className="text-5xl mt-4 w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-400 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300">
                 <FiEdit />
               </div>
-              <div className="text-3xl font-semibold mt-10 mb-5 leading-tight text-center">Edit Your Resume</div>
-              <div className="text-xl text-center mb-5">Update and improve your existing resume with our powerful editor!</div>
+              <div className="text-5xl font-extrabold mt-3 mb-5 tracking-tight leading-tight text-center">Edit Your <br/>Resume </div>
+              <div className="text-lg text-center mb-5 ">Update your existing resume with our powerful editor!</div>
               <button onClick={handleEditResume}
               className="w-[27.5rem] py-3 outline text-purple-100 hover:bg-purple-500/10 border-y-1 border-x-1 font-semibold rounded-lg mt-5">
                 Continue Editing
