@@ -113,6 +113,19 @@ function Page() {
       
     };
 
+    const storedResume = localStorage.getItem('resumeData');
+    if (storedResume) {
+      try {
+        const parsedResume: FormValues = JSON.parse(storedResume);
+        setResumeData(parsedResume);
+        setSkills(parsedResume.skills || []);
+        console.log("Loaded resume data from localStorage.");
+      } catch (e) {
+        console.error("Error parsing resume data:", e);
+        localStorage.removeItem('resumeData');
+      }
+    };
+
     const getTemplateFromUrl = () => {
       const template = searchParams.get('template');
       if (template) {
@@ -252,63 +265,55 @@ function Page() {
       <Header2 />
 
       {!showPreview ? (
-      <Formik<FormValues>
-        initialValues={{
-          full_name: '',
-          phone: '',
-          email: '',
-          home: '',
-          summary: '',
-          skills: [],
-          education: [{ institution: '', passing_year: '', grade: '' }],
-          languages: [{ language: '', proficiency_level: '' }],
-          experience: [{ company_name: '', key_role: '', start_date: '', end_date: '', job_summary: '' }],
-          project: [{ project_title: '', project_description: '' }],
-          achievement: [{ achievement_title: '', achievement_description: '' }],
-          extra: '',
-        }}
-        validationSchema={validationSchema}
-        onSubmit={async (values, { setSubmitting  }) => {
-          if (!userId) {
-            alert('User not logged in or user ID not found in local storage. Please log in.');
-            setSubmitting(false);
-            return;
+  resumeData ? (
+    <Formik<FormValues>
+      initialValues={{
+        ...resumeData,
+        skills: skills, // use current skills state
+      }}
+      validationSchema={validationSchema}
+      onSubmit={async (values, { setSubmitting }) => {
+        if (!userId) {
+          alert('User not logged in or user ID not found in local storage. Please log in.');
+          setSubmitting(false);
+          return;
+        }
+        setSubmitting(true);
+
+        const formDataToSubmit: FormValues = {
+          ...values,
+          skills: skills,
+        };
+
+        setResumeData(formDataToSubmit);
+        setShowPreview(true);
+
+        console.log("Submitting Data to Supabase:", formDataToSubmit);
+
+        try {
+          const { data, error } = await supabase
+            .from('resumes')
+            .insert([{ user_id: userId, ...formDataToSubmit }])
+            .select();
+
+          if (error) {
+            console.error('Error inserting resume data:', error);
+            alert(`Error saving resume: ${error.message}`);
+          } else {
+            console.log('Resume data inserted successfully:', data);
+            alert('Resume saved successfully! Scroll down to see the preview.');
           }
-          setSubmitting(true);
+        } catch (err) {
+          console.error('Unexpected error during submission:', err);
+          alert('An unexpected error occurred.');
+        } finally {
+          setSubmitting(false);
+        }
+      }}
+    >
+      {({ values, errors, touched, isSubmitting }) => (
+        <Form>
 
-          const formDataToSubmit: FormValues = {
-            ...values,
-            skills: skills,
-          };
-
-          setResumeData(formDataToSubmit);
-          setShowPreview(true);
-
-          console.log("Submitting Data to Supabase:", formDataToSubmit);
-
-          try {
-            const { data, error } = await supabase
-              .from('resumes')
-              .insert([{ user_id: userId, ...formDataToSubmit }])
-              .select();
-
-            if (error) {
-              console.error('Error inserting resume data:', error);
-              alert(`Error saving resume: ${error.message}`);
-            } else {
-              console.log('Resume data inserted successfully:', data);
-              alert('Resume saved successfully! Scroll down to see the preview.');
-            }
-          } catch (err) {
-            console.error('Unexpected error during submission:', err);
-            alert('An unexpected error occurred.');
-          } finally {
-            setSubmitting(false);
-          }
-        }}
-      >
-        {({ values, errors, touched, isSubmitting }) => (
-          <Form>
             <div className='w-full min-h-screen bg-gray-950 text-white px-0 py-0'>
 
             {/*Progress Bar */}
@@ -934,7 +939,7 @@ function Page() {
           </Form>
         )}
       </Formik>
-      ):( 
+      ):(  <p>No resume data found ;)</p> )):(
         
       <div className="py-3 bg-gray-950 flex flex-col items-center justify-center min-h-screen pt-3"> 
       {/*Resume Preview */}

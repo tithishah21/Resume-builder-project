@@ -1,8 +1,6 @@
 "use client";
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-// import Header from '../components/header';
-// import DecryptedText from '../components/decrypted_text';
 import Footer from '../components/footer';
 import RotatingText from '../components/rotating_text';
 import { FaPlus } from "react-icons/fa6";
@@ -60,10 +58,7 @@ export default function PrivatePage() {
       router.push('/templates');
       return;
     }
-  
-    // Save the resume data in localStorage or state to prefill
     localStorage.setItem('resumeData', JSON.stringify(data));
-  
     router.push('/resumedetails');
   };
 
@@ -71,8 +66,6 @@ export default function PrivatePage() {
     localStorage.removeItem('user');
     router.push('/');
   };
-
-  
 
   if (loading) {
     return (
