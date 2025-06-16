@@ -56,9 +56,7 @@ const ResumeCreationFlow = () => {
     <section id="creation-flow" className="relative py-20 px-4 sm:px-6 lg:px-8 bg-gray-950 overflow-hidden">
       {/* Background elements: Subtle abstract shapes/lines (SVG) */}
       {/* These SVG paths are animated via CSS keyframes defined in globals.css */}
-      <div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
-        
-      </div>
+      
 
       {/* Main content wrapped in a div with higher z-index to sit above background */}
       <div className="relative z-10 max-w-7xl mx-auto">
@@ -71,7 +69,7 @@ const ResumeCreationFlow = () => {
             Follow our step-by-step professional guidance to create a polished resume in minutes, not hours.
           </p>
           <button
-            onClick={() => router.push('/templates')} // Navigates to the resume details/form page
+            onClick={() => router.push('/resumedetails')} // Navigates to the resume details/form page
             className="mt-10 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold text-xl rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out"
           >
             Create Your Resume Now
@@ -81,13 +79,13 @@ const ResumeCreationFlow = () => {
         {/* Social Proof Banner (Inspired by your image_87c6c5.jpg top banner) */}
         <div className="bg-blue-100 bg-opacity-10 rounded-lg p-5 mb-16 flex items-center justify-center space-x-3 shadow-md border border-blue-500/30 text-center">
           <FaRegHandPointRight className="text-blue-400 text-2xl animate-pulse" /> {/* Animated icon */}
-          <p className="text-xl text-white font-semibold">
+          <p className="text-base sm:text-lg text-white font-semibold"> {/* Adjusted text size for responsiveness */}
             <span className="text-cyan-300">92% of our users</span> rate their experience positively!
-            <span className="block text-lg text-gray-400 mt-1">*Based on internal user surveys and success stories.</span>
+            <span className="block text-xs sm:text-sm text-gray-400 mt-1">*Based on internal user surveys and success stories.</span> {/* Adjusted text size */}
           </p>
         </div>
 
-        {/* How It Works - Step-by-Step Guide */}
+        {/* How It Works - Step-by-Step Guide (ENHANCED) */}
         <h3 className="text-3xl sm:text-4xl font-extrabold text-center text-white mb-12 mt-20">
           Your Resume, In Just <span className="text-cyan-400">4 Simple Steps</span>
         </h3>
@@ -95,13 +93,27 @@ const ResumeCreationFlow = () => {
           {steps.map((step, index) => (
             <div
               key={index}
-              className="bg-gray-800 bg-opacity-70 backdrop-blur-sm rounded-xl shadow-lg p-8 flex flex-col items-center text-center border border-gray-700 hover:border-blue-500 transition-all duration-300"
+              // Added relative for step number positioning, group for hover, and improved hover effects
+              className="relative bg-gray-800 bg-opacity-70 backdrop-blur-sm rounded-xl shadow-lg p-8 flex flex-col items-center text-center border border-gray-700
+                         group transform hover:scale-105 hover:border-blue-500 transition-all duration-300 overflow-hidden"
             >
-              <div className="text-5xl mb-6 p-4 bg-gray-700 rounded-full border-2 border-cyan-400 text-cyan-400">
+              {/* Step Number Badge */}
+              <div className="absolute top-0 right-0 -mr-3 -mt-2 w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-400 text-white font-bold text-3xl rounded-full flex items-center justify-center shadow-md border-2 border-gray-900 z-10">
+                {index + 1}
+              </div>
+
+              {/* Icon Container with Gradient Background */}
+              <div className="text-5xl mb-6 p-4 rounded-full border-2 border-transparent bg-gradient-to-br from-cyan-600 to-blue-600 text-white shadow-xl
+                          group-hover:from-blue-500 group-hover:to-cyan-500 transition-all duration-300">
                 {step.icon} {/* Render the icon */}
               </div>
+
               <h4 className="text-2xl font-semibold text-white mb-4">{step.title}</h4>
               <p className="text-lg text-gray-300">{step.description}</p>
+
+              {/* Subtle Shine Effect on Hover */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-10 transition-opacity duration-300
+                          transform -rotate-45 scale-150 group-hover:scale-100 group-hover:translate-x-full group-hover:translate-y-full animate-shine"></div>
             </div>
           ))}
         </div>
@@ -126,7 +138,7 @@ const ResumeCreationFlow = () => {
         {/* Final Call to Action */}
         <div className="text-center mt-20">
           <button
-            onClick={() => router.push('/signup')} // Navigates to the resume details/form page
+            onClick={() => router.push('/resumedetails')} // Navigates to the resume details/form page
             className="px-10 py-5 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-bold text-2xl rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out"
           >
             Get Started - Build Your Future!
