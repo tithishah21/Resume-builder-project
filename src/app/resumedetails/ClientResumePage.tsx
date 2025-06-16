@@ -1,30 +1,31 @@
 'use client';
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-// Removed FormikTouched from here
 import { Formik, Form, Field, FieldArray, FormikErrors } from 'formik';
 import * as Yup from 'yup';
 
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
-import ResumePreview from '../components/resumepreview'; 
+import ResumePreview from '../components/resumepreview';
 
+// Import icons
 import { IoPeopleOutline } from "react-icons/io5";
 import { HiOutlineLightBulb } from "react-icons/hi";
 import { FaGraduationCap } from "react-icons/fa6";
 import { IoLanguage } from "react-icons/io5";
 import { BsBagDashFill } from "react-icons/bs";
 import { BsFillBookmarkPlusFill } from "react-icons/bs";
-
 import { FaProjectDiagram } from "react-icons/fa";
 import { FaTrophy } from "react-icons/fa6";
 
-import Header2 from '../components/header2';
+import Header2 from '../components/header2'; // Assuming Header2 is your dashboard header
 import Footer from '../components/footer';
 
-import { createClient } from '../../../utils/supabase/client';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'; // Use the auth-helpers client
 
+// Define the structure of your form values, including template_name
 interface FormValues {
   full_name: string;
   phone: string;
@@ -57,25 +58,44 @@ interface FormValues {
     achievement_description: string;
   }[];
   extra: string;
+  template_name: string; // Added template_name
 }
 
+// Initial empty form values - used when no existing resume is found
+const defaultInitialValues: FormValues = {
+  full_name: '',
+  phone: '',
+  email: '',
+  home: '',
+  summary: '',
+  skills: [],
+  education: [{ institution: '', passing_year: '', grade: '' }],
+  languages: [{ language: '', proficiency_level: '' }],
+  experience: [{ company_name: '', key_role: '', start_date: '', end_date: '', job_summary: '' }],
+  project: [{ project_title: '', project_description: '' }],
+  achievement: [{ achievement_title: '', achievement_description: '' }],
+  extra: '',
+  template_name: 'Modern Professional', // Default template for new resumes
+};
 
+// Helper type for FormikErrors with FieldArray
 type FieldArrayErrors<T> = FormikErrors<T> | FormikErrors<T[]>;
 
-function Page() {
+function ResumeDetailsPage() {
   const [skillInput, setSkillInput] = useState('');
-  const [skills, setSkills] = useState<string[]>([]); 
+  const [skills, setSkills] = useState<string[]>([]); // This will now be synced with Formik values on load/submit
   const [userId, setUserId] = useState<string | null>(null);
-  // const [loadingUser, setLoadingUser] = useState(true);
+  const [loadingResumeData, setLoadingResumeData] = useState(true); // New loading state for data fetch
 
   const searchParams = useSearchParams();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
-  const [showPreview, setShowPreview] = useState(false); 
-  const [resumeData, setResumeData] = useState<FormValues | null>(null);
+  const [showPreview, setShowPreview] = useState(false);
+  const [resumeDataForPreview, setResumeDataForPreview] = useState<FormValues | null>(null); // Data for the preview component
 
   const [currentStep, setCurrentStep] = useState(0);
 
-  const supabase = createClient();
+  const supabase = createClientComponentClient(); // Use the auth-helpers client
+
   const totalSteps = 8;
   const calculateProgress = () => {
     if(showPreview){
@@ -87,70 +107,89 @@ function Page() {
   
   const progressPercentage = calculateProgress();
 
+  // State to hold Formik's initial values, dynamically updated after fetching
+  const [formikInitialValues, setFormikInitialValues] = useState<FormValues>(defaultInitialValues);
+
+  // --- useEffect to Load User & Resume Data ---
   useEffect(() => {
-    const getUserIdFromLocalStorage = () => {
-      const storedUserString = localStorage.getItem('user');
-      if (storedUserString) {
-        try {
-          const storedUser = JSON.parse(storedUserString);
-          if (storedUser && storedUser.id) {
-            setUserId(storedUser.id);
-            console.log("User ID retrieved from localStorage:", storedUser.id);
-            return storedUser.id;
-          } else {
-            console.warn('User object found, but ID is missing. Clearing it.');
-            localStorage.removeItem('user');
-          }
-        } catch (e) {
-          console.error('Error parsing user data from localStorage:', e);
-          localStorage.removeItem('user');
-        }
+    async function loadInitialData() {
+      setLoadingResumeData(true); // Start loading
+
+      // 1. Get current authenticated user
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) {
+        console.warn('No authenticated user found. Redirecting to sign-in.');
+        // Optionally redirect to sign-in if no user is found
+        // router.push('/signin');
+        setUserId(null);
+        setLoadingResumeData(false);
+        return;
+      }
+      setUserId(user.id);
+
+      // 2. Fetch existing resume data from Supabase
+      const { data: resumeFromSupabase, error: fetchError } = await supabase
+        .from('resumes')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 is 'No rows found'
+        console.error('Error fetching resume from Supabase:', fetchError.message);
+        // If there's an actual error, proceed with default values but log it
+        setFormikInitialValues(defaultInitialValues);
+        setResumeDataForPreview(defaultInitialValues); // Set for preview in case user immediately goes there
+        setSkills(defaultInitialValues.skills);
+      } else if (resumeFromSupabase) {
+        // Resume found: use it to initialize the form
+        console.log('Existing resume loaded from Supabase:', resumeFromSupabase);
+        const loadedData: FormValues = {
+          full_name: resumeFromSupabase.full_name || '',
+          phone: resumeFromSupabase.phone || '',
+          email: resumeFromSupabase.email || '',
+          home: resumeFromSupabase.home || '',
+          summary: resumeFromSupabase.summary || '',
+          skills: (resumeFromSupabase.skills || []) as string[],
+          education: (resumeFromSupabase.education || []) as FormValues['education'],
+          languages: (resumeFromSupabase.languages || []) as FormValues['languages'],
+          experience: (resumeFromSupabase.experience || []) as FormValues['experience'],
+          project: (resumeFromSupabase.project || []) as FormValues['project'],
+          achievement: (resumeFromSupabase.achievement || []) as FormValues['achievement'],
+          extra: resumeFromSupabase.extra || '',
+          template_name: resumeFromSupabase.template_name || 'Modern Professional', // Default if missing
+        };
+        setFormikInitialValues(loadedData);
+        setResumeDataForPreview(loadedData); // Also set for immediate preview display
+        setSkills(loadedData.skills); // Sync local skills state
       } else {
-        console.warn('User not logged in. No user data found.');
+        // No resume found: initialize with default empty values
+        console.log('No existing resume found for user. Starting with empty form.');
+        setFormikInitialValues(defaultInitialValues);
+        setResumeDataForPreview(defaultInitialValues);
+        setSkills(defaultInitialValues.skills);
       }
-      return null;
-    };
-  
-    const loadResumeData = (uid: string | null) => {
-      const storedResume = localStorage.getItem('resumeData');
-      if (storedResume) {
-        try {
-          const parsedResume = JSON.parse(storedResume);
-          if (parsedResume?.userId === uid) {
-            setResumeData(parsedResume);
-            setSkills(parsedResume.skills || []);
-            console.log("Loaded resume data from localStorage for the current user.");
-          } else {
-            console.log("Resume data found but belongs to a different user. Skipping load.");
-          }
-        } catch (e) {
-          console.error("Error parsing resume data:", e);
-          localStorage.removeItem('resumeData');
-        }
-      }
-    };
-  
-    const getTemplateFromUrl = () => {
+
+      // 3. Get template from URL (if any)
       const template = searchParams.get('template');
       if (template) {
         setSelectedTemplate(template);
-        console.log('Selected Template from URL:', template);
       } else {
-        console.warn('No template selected via URL. Consider setting a default.');
+        // If no template in URL, use the one from loaded data or default
+        setSelectedTemplate(resumeFromSupabase?.template_name || defaultInitialValues.template_name);
       }
-    };
-  
-    const uid = getUserIdFromLocalStorage(); // retrieve user ID
-    setUserId(uid);
-    loadResumeData(uid);
-    getTemplateFromUrl();
-  }, [searchParams]);
-  
+
+      setLoadingResumeData(false); // End loading
+    }
+
+    loadInitialData();
+  }, [searchParams, supabase]); // Re-run if searchParams or supabase client changes
 
   const addSkill = () => {
     const trimmed = skillInput.trim();
+    // Update Formik's internal state directly for skills
     if (trimmed && !skills.includes(trimmed)) {
       setSkills([...skills, trimmed]);
+      // Formik will pick this up when the form is submitted
     }
     setSkillInput('');
   };
@@ -159,57 +198,60 @@ function Page() {
     const updated = [...skills];
     updated.splice(index, 1);
     setSkills(updated);
+    // Formik will pick this up when the form is submitted
   };
 
-  // --- PDF Download Function ---
+  // --- PDF Download Function (unchanged for now, as per user request) ---
   const handleDownloadPdf = async () => {
-    if (!showPreview || !resumeData) {
-        alert("Please generate the resume preview first before downloading.");
-        return;
+    if (!showPreview || !resumeDataForPreview) {
+      alert("Please generate the resume preview first before downloading.");
+      return;
     }
 
     const input = document.getElementById('resume-content');
     if (input) {
-        const scale = 2; 
+      const scale = 2;
 
-        try {
-            const canvas = await html2canvas(input, {
-                scale: scale,
-                useCORS: true,
-                logging: true, 
-                windowWidth: input.scrollWidth, 
-                windowHeight: input.scrollHeight 
-            });
+      try {
+        const canvas = await html2canvas(input, {
+          scale: scale,
+          useCORS: true,
+          logging: true,
+          windowWidth: input.scrollWidth,
+          windowHeight: input.scrollHeight
+        });
 
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
 
-            const imgWidth = 210; 
-            const pageHeight = 100; 
-            const imgHeight = canvas.height * imgWidth / canvas.width;
-            let heightLeft = imgHeight;
-            let position = 0;
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const imgHeight = canvas.height * pdfWidth / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 0;
 
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
+        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+        heightLeft -= pdfHeight; // Use pdfHeight for moving down one page
 
-            while (heightLeft >= 0) {
-                position = heightLeft - imgHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-            }
-
-            pdf.save(`${resumeData.full_name || 'My_Resume'}-${selectedTemplate || 'template'}.pdf`);
-        } catch (error) {
-            console.error("Error generating PDF:", error);
-            alert("Failed to generate PDF. Please try again.");
+        while (heightLeft > 0) { // Condition changed to > 0 to ensure remaining content is added
+          position = - (imgHeight - heightLeft); // Calculate new position to show remaining part
+          pdf.addPage();
+          pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+          heightLeft -= pdfHeight;
         }
+
+
+        pdf.save(`${resumeDataForPreview.full_name || 'My_Resume'}-${selectedTemplate || 'template'}.pdf`);
+      } catch (error) {
+        console.error("Error generating PDF:", error);
+        alert("Failed to generate PDF. Please try again.");
+      }
     } else {
-        console.error("Could not find element with ID 'resume-content'.");
-        alert("Resume content not found for PDF generation.");
+      console.error("Could not find element with ID 'resume-content'.");
+      alert("Resume content not found for PDF generation.");
     }
   };
+
 
   // --- Yup Validation Schema ---
   const validationSchema = Yup.object().shape({
@@ -253,7 +295,94 @@ function Page() {
       })
     ),
     extra: Yup.string(),
+    template_name: Yup.string().required('*Template is required'), // Validation for template_name
   });
+
+
+  // --- Form Submission Handler ---
+  const handleFormSubmit = async (values: FormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
+    if (!userId) {
+      alert('User not logged in. Please log in again.');
+      setSubmitting(false);
+      return;
+    }
+    setSubmitting(true);
+
+    // Prepare data, including skills from local state and user ID
+    const dataToSave: FormValues = {
+      ...values,
+      skills: skills, // Ensure skills from local state are included
+    };
+
+    // Set resume data for preview
+    setResumeDataForPreview(dataToSave);
+    setShowPreview(true); // Show the preview after submission
+
+    console.log("Attempting to save/update data to Supabase:", dataToSave);
+
+    try {
+      // Check if a resume already exists for this user
+      const { data: existingResume, error: checkError } = await supabase
+        .from('resumes')
+        .select('id')
+        .eq('user_id', userId)
+        .single();
+
+      if (checkError && checkError.code !== 'PGRST116') {
+        // Handle actual error during check
+        console.error('Error checking for existing resume:', checkError.message);
+        alert(`Error checking resume status: ${checkError.message}`);
+        return;
+      }
+
+      if (existingResume) {
+        // Resume exists, perform an UPDATE operation
+        console.log('Updating existing resume...');
+        const { error: updateError } = await supabase
+          .from('resumes')
+          .update(dataToSave) // Update with all form values
+          .eq('user_id', userId);
+
+        if (updateError) {
+          console.error('Supabase update error:', updateError.message);
+          alert(`Error updating resume: ${updateError.message}`);
+        } else {
+          console.log('Resume updated successfully!');
+          alert('Resume updated successfully! Scroll down to see the preview.');
+        }
+      } else {
+        // No resume exists, perform an INSERT operation
+        console.log('Inserting new resume...');
+        const { error: insertError } = await supabase
+          .from('resumes')
+          .insert([{ user_id: userId, ...dataToSave }])
+          .select();
+
+        if (insertError) {
+          console.error('Supabase insert error:', insertError.message);
+          alert(`Error saving new resume: ${insertError.message}`);
+        } else {
+          console.log('New resume saved successfully:', insertError);
+          alert('Resume saved successfully! Scroll down to see the preview.');
+        }
+      }
+    } catch (err) {
+      console.error('Unexpected error during submission:', err);
+      alert('An unexpected error occurred during saving.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // Show loading indicator while fetching initial resume data
+  if (loadingResumeData) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-950 text-white">
+        <p className="text-xl">Loading resume data...</p>
+      </div>
+    );
+  }
+
 
   return (
     <>
@@ -271,70 +400,15 @@ function Page() {
       <Header2 />
 
       {!showPreview ? (
-  resumeData ? (
-    <Formik<FormValues>
-      initialValues={{
-        ...resumeData,
-        skills: skills, // use current skills state
-      }}
-      validationSchema={validationSchema}
-      onSubmit={async (values, { setSubmitting }) => {
-        if (!userId) {
-          alert('User not logged in or user ID not found in local storage. Please log in.');
-          setSubmitting(false);
-          return;
-        }
-      
-        setSubmitting(true);
-      
-        const formDataToSubmit: FormValues & { userId: string } = {
-          ...values,
-          skills: skills,
-          userId: userId, // ✅ Add this line to tag with userId
-        };
-      
-        // ✅ Save to localStorage with userId
-        try {
-          localStorage.setItem('resumeData', JSON.stringify(formDataToSubmit));
-          console.log("Resume data saved to localStorage with userId.");
-        } catch (e) {
-          console.error("Failed to save resume to localStorage:", e);
-          alert("Failed to save resume locally.");
-        }
-      
-        // ✅ Set preview and resume state
-        setResumeData(formDataToSubmit);
-        setShowPreview(true);
-      
-        console.log("Submitting Data to Supabase:", formDataToSubmit);
-      
-        // ✅ Send to Supabase
-        try {
-          const { data, error } = await supabase
-            .from('resumes')
-            .insert([{ user_id: userId, ...values, skills }])
-            .select();
-      
-          if (error) {
-            console.error('Error inserting resume data:', error);
-            alert(`Error saving resume: ${error.message}`);
-          } else {
-            console.log('Resume data inserted successfully:', data);
-            alert('Resume saved successfully! Scroll down to see the preview.');
-          }
-        } catch (err) {
-          console.error('Unexpected error during submission:', err);
-          alert('An unexpected error occurred.');
-        } finally {
-          setSubmitting(false);
-        }
-      }}
-      
-    >
-      {({ values, errors, touched, isSubmitting }) => (
-        <Form>
-
-            <div className='w-full min-h-screen bg-gray-950 text-white px-0 py-0'>
+        <Formik<FormValues>
+          initialValues={formikInitialValues} // Use the dynamically loaded initial values
+          enableReinitialize={true} // Crucial for pre-filling fetched data
+          validationSchema={validationSchema}
+          onSubmit={handleFormSubmit} // Use the combined submit handler
+        >
+          {({ values, errors, touched, isSubmitting, setFieldValue }) => (
+            <Form>
+              <div className='w-full min-h-screen bg-gray-950 text-white px-0 py-0'>
 
             {/*Progress Bar */}
             <div className="mb-10 top-20 left-0 right-0 z-50 bg-gray-800 h-8 flex items-center justify-start overflow-hidden">
@@ -959,35 +1033,35 @@ function Page() {
           </Form>
         )}
       </Formik>
-      ):(  <p>No resume data found </p> )):(
+      ):(
         
-      <div className="py-3 bg-gray-950 flex flex-col items-center justify-center min-h-screen pt-3"> 
-      {/*Resume Preview */}
+        <div className="py-3 bg-gray-950 flex flex-col items-center justify-center min-h-screen pt-3">
+        {/* Resume Preview */}
         <h2 className="text-4xl font-bold text-white mb-8">Your Resume Preview</h2>
-        <div id="resume-content"> 
-            {resumeData && selectedTemplate ? (
-                <ResumePreview formData={resumeData} templateName={selectedTemplate} />
-            ) : (
-                <p className="text-white">Loading preview... If nothing appears, please go back and try again.</p>
-            )}
+        <div id="resume-content">
+          {resumeDataForPreview && selectedTemplate ? (
+            <ResumePreview formData={resumeDataForPreview} templateName={selectedTemplate} />
+          ) : (
+            <p className="text-white">Loading preview... If nothing appears, please go back and try again.</p>
+          )}
         </div>
 
         <div className="flex gap-4 mt-8 pb-3">
-            <button
-              onClick={handleDownloadPdf}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-lg font-semibold"
-            >
-              Download PDF
-            </button>
-            <button
-              onClick={() => {
-                setShowPreview(false);
-                setCurrentStep(7); 
-              }} 
-              className="px-6 py-3 bg-red-600 hover:bg-red-500 text-white rounded-lg text-lg font-semibold"
-            >
-              Go Back to Edit
-            </button>
+          <button
+            onClick={handleDownloadPdf}
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-lg font-semibold"
+          >
+            Download PDF
+          </button>
+          <button
+            onClick={() => {
+              setShowPreview(false);
+              setCurrentStep(7); // Go back to the last step (Extra Information)
+            }}
+            className="px-6 py-3 bg-red-600 hover:bg-red-500 text-white rounded-lg text-lg font-semibold"
+          >
+            Go Back to Edit
+          </button>
         </div>
       </div>
     )}
@@ -997,4 +1071,4 @@ function Page() {
 );
 }
 
-export default Page;
+export default ResumeDetailsPage;
