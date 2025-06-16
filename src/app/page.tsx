@@ -19,7 +19,7 @@ export default function Home() {
       <Header />
 
       {/* Landing Section (Hero) */}
-      <section className="bg-gradient-to-br from-blue-900/20 via-gray-950 to-cyan-900/20 h-[180vw] lg:h-[48vw] w-full px-10 z-10 flex items-center justify-center">
+      <section id='hero-section' className="bg-gradient-to-br from-blue-900/20 via-gray-950 to-cyan-900/20 h-[180vw] lg:h-[48vw] w-full px-10 z-10 flex items-center justify-center">
         <div className="flex flex-col lg:flex-row gap-10 max-w-9xl w-full">
           <div className="mt-28 lg:mt-0 flex-1 flex flex-col justify-center items-center lg:items-start text-center lg:text-left">
             <div className="font-extrabold text-5xl sm:text-7xl lg:text-[5.6rem] leading-tight text-white">Build Your</div>

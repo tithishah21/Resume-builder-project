@@ -1,20 +1,41 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import GooeyNav from "./gooeynavbar";
-import { Link as ScrollLink } from "react-scroll";
+import GooeyNav from "./gooeynavbar"; // Assuming this is your custom GooeyNav component
+import { Link as ScrollLink } from "react-scroll"; // Renamed to avoid conflict with next/link if you were using it
 import { Menu, X } from "lucide-react";
+
+// Define the navigation item type
+interface NavItem {
+  label: string;
+  type: "scroll" | "route";
+  href: string;
+  targetId?: string;
+  path?: string;
+}
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
 
-  const items = [
-    { label: "Home", to: "/" },
-    { label: "Features", to: "#features" },
-    { label: "Templates", to: "templates" },
-    { label: "About Me", to: "#about" },
+  // Define navigation items with their type (scroll or route)
+  // GooeyNav will only receive 'label' and 'href'
+  const navItems: NavItem[] = [
+    { label: "Home", type: "scroll", href: "/", targetId: "hero-section" },
+    { label: "Features", type: "scroll", targetId: "features-section", href: "#features-section" },
+    { label: "Steps", type: "scroll", targetId: "creation-flow", href: "#creation-flow" },
+    { label: "Templates", type: "route", path: "/templates", href: "/templates" }, // Full path for external page
   ];
+
+  // Helper function for handling clicks on navigation items for mobile menu and logo
+  const handleNavItemClick = (item: NavItem) => {
+    setMenuOpen(false); // Close mobile menu on click
+
+    if (item.type === "route" && item.path) {
+      router.push(item.path); // Navigate to a different page
+    }
+    // For scroll links, react-scroll's Link component handles it automatically
+  };
 
   return (
     <div className="sticky top-0 z-50 bg-black" id="header">
@@ -27,7 +48,17 @@ function Header() {
           </button>
 
           {/* Center: Logo */}
-          <h1 className="text-xl font-semibold text-white mx-2">ResumeBuilder Pro</h1>
+          {/* Make logo clickable to home/top of page using ScrollLink */}
+          <ScrollLink
+            to="hero-section" // Remove String() wrapper - react-scroll accepts string directly
+            smooth={true}
+            duration={500}
+            offset={-70} // Adjust offset if your header height changes
+            className="text-xl font-semibold text-white mx-2 cursor-pointer"
+            onClick={() => setMenuOpen(false)} // Close menu on logo click
+          >
+            ResumeBuilder Pro
+          </ScrollLink>
 
           {/* Right: Sign Up */}
           <button
@@ -41,16 +72,28 @@ function Header() {
         {/* Desktop View */}
         <div className="hidden lg:flex w-full justify-between items-center">
           {/* Logo */}
-          <h1 className="text-2xl lg:text-3xl font-semibold text-white">
+          {/* Make logo clickable to home/top of page using ScrollLink */}
+          <ScrollLink
+            to="hero-section" // Remove String() wrapper - react-scroll accepts string directly
+            smooth={true}
+            duration={500}
+            offset={-70} // Adjust offset if your header height changes
+            className="text-2xl lg:text-3xl font-semibold text-white cursor-pointer"
+            onClick={() => setMenuOpen(false)} // Close menu (though not visible on desktop)
+          >
             ResumeBuilder Pro
-          </h1>
+          </ScrollLink>
 
           {/* GooeyNav */}
           <div style={{ position: "relative" }}>
             <GooeyNav
-              items={items.map((item) => ({
+              items={navItems.map((item) => ({
                 label: item.label,
-                href: `${item.to}`,
+                href: item.href, // GooeyNav will use this href for navigation
+                // IMPORTANT: Removed onClick from GooeyNav item mapping as it seems not supported
+                // GooeyNav will navigate based on the href provided.
+                // For 'Templates' (route type), it will navigate directly to /templates.
+                // For scroll types, it will navigate to the #hash.
               }))}
               particleCount={10}
               particleDistances={[60, 10]}
@@ -83,23 +126,33 @@ function Header() {
       {/* Mobile Menu Dropdown */}
       {menuOpen && (
         <div className="lg:hidden bg-gray-800 border-t border-slate-700 px-6 pb-4 space-y-4">
-          {items.map((item) => (
-            <ScrollLink
-              key={item.label}
-              to={item.to}
-              smooth={true}
-              duration={500}
-              offset={-70}
-              className="block text-cyan-400 font-medium hover:text-white cursor-pointer"
-              onClick={() => setMenuOpen(false)}
-            >
-              {item.label}
-            </ScrollLink>
-          ))}
+          {navItems.map((item) =>
+            item.type === "scroll" ? (
+              <ScrollLink
+                key={item.label}
+                to={item.targetId || ""} // Provide fallback empty string if targetId is undefined
+                smooth={true}
+                duration={500}
+                offset={-70} // Adjust offset if your header height changes
+                className="block text-cyan-400 font-medium hover:text-white cursor-pointer py-2" // Added py-2 for better touch target
+                onClick={() => handleNavItemClick(item)} // Pass item to close menu
+              >
+                {item.label}
+              </ScrollLink>
+            ) : (
+              <button // Use a regular button for route navigation in mobile menu
+                key={item.label}
+                onClick={() => handleNavItemClick(item)} // Handle direct route navigation
+                className="w-full text-left block text-cyan-400 font-medium hover:text-white cursor-pointer py-2" // Added py-2 for better touch target
+              >
+                {item.label}
+              </button>
+            )
+          )}
           <button
             onClick={() => {
               router.push("/signin");
-              setMenuOpen(false);
+              setMenuOpen(false); // Close menu after navigation
             }}
             className="w-full text-left border border-cyan-400 text-cyan-400 hover:bg-slate-700 px-4 py-2 rounded-lg font-semibold transition-all"
           >
