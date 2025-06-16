@@ -103,7 +103,7 @@ export default function PrivatePage() {
             <span className="text-white">Build</span>
             <RotatingText
               texts={['Impactful', 'Creative', 'Professional', 'Stunning', 'Smart']}
-              mainClassName="bg-gradient-to-r from-cyan-500 to-purple-500 text-black px-3 py-1 rounded-lg"
+              mainClassName="bg-gradient-to-r from-blue-800 to-purple-600 text-black px-3 py-1 rounded-lg"
               staggerFrom="last"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
@@ -127,7 +127,7 @@ export default function PrivatePage() {
                 <FaPlus />
               </div>
               <div className="text-5xl font-extrabold mt-3 mb-5 tracking-tight leading-tight text-center">Create New Resume</div>
-              <div className="text-lg text-center mb-5">Launch your journey with confidence!</div>
+              <div className="text-lg text-center mb-5">Launch your journey with confidence! Create resumes with 4 different templates!</div>
               <button 
                 onClick={() => router.push('/templates')}
                 className="w-[20.5rem] py-3 bg-gradient-to-r from-blue-700 to-cyan-500 hover:from-blue-800 hover:to-cyan-600 text-white font-semibold rounded-lg mt-5"
@@ -150,7 +150,7 @@ export default function PrivatePage() {
             </div>
             
             {/* AI prep card */}
-            <div className="w-[28vw] h-[33vw] bg-gradient-to-br from-lime-200/100 to-green-900/100 border-purple-500/30 p-8 cursor-pointer hover:from-purple-900/70 hover:to-pink-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl justify-center">
+            <div className="w-[28vw] h-[33vw] bg-gradient-to-br from-lime-200/100 to-green-900/100 border-green-500/30 p-8 cursor-pointer hover:from-lime-900/70 hover:to-emerald-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl justify-center">
               <div className="text-5xl mt-4 w-24 h-24 bg-gradient-to-r from-green-300 to-green-900 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300">
                 <FaRobot />
               </div>
