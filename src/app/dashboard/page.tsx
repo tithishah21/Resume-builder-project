@@ -6,6 +6,7 @@ import RotatingText from '../components/rotating_text';
 import { FaPlus } from "react-icons/fa6";
 import { FiEdit } from "react-icons/fi";
 import { createClient } from '../../../utils/supabase/client';
+import { FaRobot } from 'react-icons/fa';
 
 interface User {
   name?: string;
@@ -102,7 +103,7 @@ export default function PrivatePage() {
             <span className="text-white">Build</span>
             <RotatingText
               texts={['Impactful', 'Creative', 'Professional', 'Stunning', 'Smart']}
-              mainClassName="bg-cyan-300 text-black px-3 py-1 rounded-lg"
+              mainClassName="bg-gradient-to-r from-cyan-500 to-purple-500 text-black px-3 py-1 rounded-lg"
               staggerFrom="last"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
@@ -119,9 +120,9 @@ export default function PrivatePage() {
             Ready to take your career to the next level? Let&apos;s build something amazing.
           </div>
 
-          <div className="flex flex-row justify-evenly mt-7 mx-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 justify-center">
             {/* Create Resume Card */}
-            <div className="w-[35vw] h-[33vw] bg-gradient-to-br from-blue-200/100 to-cyan-950/100 border-blue-500/30 p-8 cursor-pointer hover:from-blue-900/70 hover:to-cyan-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl justify-center">
+            <div className="w-[28vw] h-[33vw] bg-gradient-to-br from-blue-200/100 to-cyan-950/100 border-blue-500/30 p-8 cursor-pointer hover:from-blue-900/70 hover:to-cyan-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl justify-center">
               <div className="text-5xl mt-4 w-24 h-24 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300">
                 <FaPlus />
               </div>
@@ -129,22 +130,35 @@ export default function PrivatePage() {
               <div className="text-lg text-center mb-5">Launch your journey with confidence!</div>
               <button 
                 onClick={() => router.push('/templates')}
-                className="w-[27.5rem] py-3 bg-gradient-to-r from-blue-700 to-cyan-500 hover:from-blue-800 hover:to-cyan-600 text-white font-semibold rounded-lg mt-5"
+                className="w-[20.5rem] py-3 bg-gradient-to-r from-blue-700 to-cyan-500 hover:from-blue-800 hover:to-cyan-600 text-white font-semibold rounded-lg mt-5"
               >
                 Get Started
               </button>
             </div>
 
             {/* Edit Resume Card */}
-            <div className="w-[35vw] h-[33vw] bg-gradient-to-br from-purple-200/100 to-pink-900/100 border-purple-500/30 p-8 cursor-pointer hover:from-purple-900/70 hover:to-pink-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl justify-center">
+            <div className="w-[28vw] h-[33vw] bg-gradient-to-br from-purple-200/100 to-pink-900/100 border-purple-500/30 p-8 cursor-pointer hover:from-purple-900/70 hover:to-pink-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl justify-center">
               <div className="text-5xl mt-4 w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-400 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300">
                 <FiEdit />
               </div>
               <div className="text-5xl font-extrabold mt-3 mb-5 tracking-tight leading-tight text-center">Edit Your <br/>Resume </div>
               <div className="text-lg text-center mb-5 ">Update your existing resume with our powerful editor!</div>
               <button onClick={handleEditResume}
-              className="w-[27.5rem] py-3 outline text-purple-100 hover:bg-purple-500/10 border-y-1 border-x-1 font-semibold rounded-lg mt-5">
+              className="w-[20.5rem] py-3 outline text-purple-100 hover:bg-purple-500/10 border-y-1 border-x-1 font-semibold rounded-lg mt-5">
                 Continue Editing
+              </button>
+            </div>
+            
+            {/* AI prep card */}
+            <div className="w-[28vw] h-[33vw] bg-gradient-to-br from-lime-200/100 to-green-900/100 border-purple-500/30 p-8 cursor-pointer hover:from-purple-900/70 hover:to-pink-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl justify-center">
+              <div className="text-5xl mt-4 w-24 h-24 bg-gradient-to-r from-green-300 to-green-900 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300">
+                <FaRobot />
+              </div>
+              <div className="text-5xl font-extrabold mt-3 mb-5 tracking-tight leading-tight text-center">Interview Prep<br /> with AI</div>
+              <div className="text-lg text-center mb-5 ">Practice your interview skills with AI-powered questions!</div>
+              
+              <button className="w-[20.5rem] py-3 bg-gradient-to-r from-green-700 to-emerald-500 hover:from-green-800 hover:to-emerald-600 font-semibold rounded-lg mt-5">
+               Start Practicing
               </button>
             </div>
           </div>
