@@ -86,7 +86,13 @@ function Page() {
   };
   
   const progressPercentage = calculateProgress();
-
+  useEffect(() => {
+    // Clear skill input when leaving step 1
+    if (currentStep !== 1) {
+      setSkillInput('');
+    }
+  }, [currentStep]);
+  
   useEffect(() => {
     const getUserIdFromLocalStorage = () => {
       const storedUserString = localStorage.getItem('user');
