@@ -21,11 +21,26 @@ function Header() {
   // Define navigation items with their type (scroll or route)
   // GooeyNav will only receive 'label' and 'href'
   const navItems: NavItem[] = [
-    { label: "Home", type: "scroll", href: "/", targetId: "hero-section" },
+    { label: "Home", type: "scroll", href: "#hero-section", targetId: "hero-section" },
     { label: "Features", type: "scroll", targetId: "features-section", href: "#features-section" },
     { label: "Steps", type: "scroll", targetId: "creation-flow", href: "#creation-flow" },
     { label: "Templates", type: "route", path: "/templates", href: "/templates" }, // Full path for external page
   ];
+
+  // Helper function for smooth scrolling
+  const smoothScrollTo = (targetId: string) => {
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+      const headerOffset = 70; // Adjust based on your header height
+      const elementPosition = targetElement.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   // Helper function for handling clicks on navigation items for mobile menu and logo
   const handleNavItemClick = (item: NavItem) => {
@@ -33,8 +48,9 @@ function Header() {
 
     if (item.type === "route" && item.path) {
       router.push(item.path); // Navigate to a different page
+    } else if (item.type === "scroll" && item.targetId) {
+      smoothScrollTo(item.targetId); // Use custom smooth scroll
     }
-    // For scroll links, react-scroll's Link component handles it automatically
   };
 
   return (
@@ -89,11 +105,8 @@ function Header() {
             <GooeyNav
               items={navItems.map((item) => ({
                 label: item.label,
-                href: item.href, // GooeyNav will use this href for navigation
-                // IMPORTANT: Removed onClick from GooeyNav item mapping as it seems not supported
-                // GooeyNav will navigate based on the href provided.
-                // For 'Templates' (route type), it will navigate directly to /templates.
-                // For scroll types, it will navigate to the #hash.
+                href: item.href,
+                onClick: () => handleNavItemClick(item), // Pass the onClick handler
               }))}
               particleCount={10}
               particleDistances={[60, 10]}

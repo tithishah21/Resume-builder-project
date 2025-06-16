@@ -3,6 +3,7 @@ import React, { useRef, useEffect, useState } from "react";
 interface GooeyNavItem {
   label: string;
   href: string;
+  onClick?: () => void; // Add optional onClick handler
 }
 
 export interface GooeyNavProps {
@@ -31,7 +32,9 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
   const filterRef = useRef<HTMLSpanElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const [activeIndex, setActiveIndex] = useState<number>(initialActiveIndex);
+  
   const noise = (n = 1) => n / 2 - Math.random() * n;
+  
   const getXY = (
     distance: number,
     pointIndex: number,
@@ -41,6 +44,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
       ((360 + noise(8)) / totalPoints) * pointIndex * (Math.PI / 180);
     return [distance * Math.cos(angle), distance * Math.sin(angle)];
   };
+  
   const createParticle = (
     i: number,
     t: number,
@@ -57,6 +61,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
       rotate: rotate > 0 ? (rotate + r / 20) * 10 : (rotate - r / 20) * 10,
     };
   };
+  
   const makeParticles = (element: HTMLElement) => {
     const d: [number, number] = particleDistances;
     const r = particleR;
@@ -92,6 +97,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
       }, 30);
     }
   };
+  
   const updateEffectPosition = (element: HTMLElement) => {
     if (!containerRef.current || !filterRef.current || !textRef.current) return;
     const containerRect = containerRef.current.getBoundingClientRect();
@@ -106,10 +112,48 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
     Object.assign(textRef.current.style, styles);
     textRef.current.innerText = element.innerText;
   };
-  const handleClick = (e: React.MouseEvent<HTMLLIElement>, index: number) => {
-    const liEl = e.currentTarget;
-    if (activeIndex === index) return;
+  
+  // Handle navigation with smooth scrolling
+  const handleNavigation = (item: GooeyNavItem, index: number) => {
+    // Handle the visual effects first
     setActiveIndex(index);
+    
+    // Then handle the navigation
+    if (item.onClick) {
+      // Use custom onClick handler if provided (for smooth scrolling)
+      item.onClick();
+    } else if (item.href.startsWith('#')) {
+      // Handle hash links with smooth scrolling
+      const targetId = item.href.substring(1);
+      const targetElement = document.getElementById(targetId);
+      
+      if (targetElement) {
+        const headerOffset = 70; // Adjust based on your header height
+        const elementPosition = targetElement.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    } else {
+      // Handle regular navigation
+      window.location.href = item.href;
+    }
+  };
+  
+  const handleClick = (e: React.MouseEvent<HTMLLIElement>, index: number) => {
+    e.preventDefault(); // Prevent default anchor behavior
+    const liEl = e.currentTarget;
+    const item = items[index];
+    
+    if (activeIndex === index) {
+      // If clicking on already active item, still trigger navigation
+      handleNavigation(item, index);
+      return;
+    }
+    
     updateEffectPosition(liEl);
     if (filterRef.current) {
       const particles = filterRef.current.querySelectorAll(".particle");
@@ -123,7 +167,11 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
     if (filterRef.current) {
       makeParticles(filterRef.current);
     }
+    
+    // Handle navigation after visual effects
+    handleNavigation(item, index);
   };
+  
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLAnchorElement>,
     index: number
@@ -133,12 +181,24 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
       const liEl = e.currentTarget.parentElement;
       if (liEl) {
         handleClick(
-          { currentTarget: liEl } as React.MouseEvent<HTMLLIElement>,
+          { currentTarget: liEl, preventDefault: () => {} } as React.MouseEvent<HTMLLIElement>,
           index
         );
       }
     }
   };
+  
+  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, index: number) => {
+    e.preventDefault(); // Prevent default anchor navigation
+    const liEl = e.currentTarget.parentElement;
+    if (liEl) {
+      handleClick(
+        { currentTarget: liEl, preventDefault: () => {} } as React.MouseEvent<HTMLLIElement>,
+        index
+      );
+    }
+  };
+  
   useEffect(() => {
     if (!navRef.current || !containerRef.current) return;
     const activeLi = navRef.current.querySelectorAll("li")[
@@ -205,7 +265,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
             border-radius: 9999px;
           }
           .effect.active::after {
-            animation:  0.3s ease both;
+            animation: pill 0.3s ease both;
           }
           @keyframes pill {
             to {
@@ -324,6 +384,7 @@ const GooeyNav: React.FC<GooeyNavProps> = ({
               >
                 <a
                   href={item.href}
+                  onClick={(e) => handleAnchorClick(e, index)}
                   onKeyDown={(e) => handleKeyDown(e, index)}
                   className="outline-none"
                 >
