@@ -134,6 +134,198 @@ function Page() {
 
   }, [searchParams]);
 
+  const suggestedSkills = [
+    // 🧑‍💻 Tech & Development
+    'HTML',
+    'CSS',
+    'SASS',
+    'JavaScript',
+    'TypeScript',
+    'React',
+    'Next.js',
+    'Vue.js',
+    'Angular',
+    'Tailwind CSS',
+    'Bootstrap',
+    'Node.js',
+    'Express.js',
+    'Python',
+    'Java',
+    'C',
+    'C++',
+    'C#',
+    '.NET',
+    'PHP',
+    'Ruby',
+    'Go',
+    'Rust',
+    'Django',
+    'Flask',
+    'Spring Boot',
+    'SQL',
+    'MySQL',
+    'PostgreSQL',
+    'MongoDB',
+    'Firebase',
+    'GraphQL',
+    'Supabase',
+    'Docker',
+    'Kubernetes',
+    'AWS',
+    'Azure',
+    'GCP',
+    'Git',
+    'GitHub',
+    'CI/CD',
+    'Linux',
+    'REST API',
+    'WebSockets',
+    'OAuth',
+    'Jest',
+    'Cypress',
+    'Playwright',
+    'Agile',
+    'Scrum',
+    'JIRA',
+  
+    // 🎨 Design & Creative
+    'UI/UX',
+    'Figma',
+    'Adobe XD',
+    'Adobe Photoshop',
+    'Adobe Illustrator',
+    'Canva',
+    'Sketch',
+    'Wireframing',
+    'Prototyping',
+    'User Research',
+    'Typography',
+    'Branding',
+    'Graphic Design',
+    'Motion Graphics',
+  
+    // 📊 Marketing & Sales
+    'SEO',
+    'Content Marketing',
+    'Email Marketing',
+    'Social Media Marketing',
+    'Google Analytics',
+    'Google Ads',
+    'Meta Ads',
+    'Copywriting',
+    'Lead Generation',
+    'CRM',
+    'HubSpot',
+    'Salesforce',
+    'Digital Marketing',
+    'Market Research',
+    'Affiliate Marketing',
+    'Brand Strategy',
+  
+    // 💼 Business & Management
+    'Project Management',
+    'Team Leadership',
+    'Operations Management',
+    'Strategic Planning',
+    'Business Development',
+    'Financial Analysis',
+    'Budgeting',
+    'KPI Tracking',
+    'OKRs',
+    'Risk Management',
+    'Consulting',
+    'Negotiation',
+    'Stakeholder Management',
+  
+    // 💰 Finance & Accounting
+    'Accounting',
+    'Bookkeeping',
+    'Financial Modeling',
+    'Excel',
+    'QuickBooks',
+    'Tally',
+    'SAP',
+    'Auditing',
+    'Taxation',
+    'Forecasting',
+    'Investment Analysis',
+    'Equity Research',
+    'Cryptocurrency',
+  
+    // ⚙️ Engineering & Manufacturing
+    'AutoCAD',
+    'SolidWorks',
+    'MATLAB',
+    'Simulink',
+    'PLC Programming',
+    '3D Modeling',
+    'Mechanical Design',
+    'Electrical Systems',
+    'Circuit Design',
+    'Embedded Systems',
+    'CAD',
+    'CAM',
+    'Robotics',
+  
+    // 🧠 AI/ML & Data Science
+    'Machine Learning',
+    'Deep Learning',
+    'Computer Vision',
+    'Natural Language Processing',
+    'Pandas',
+    'NumPy',
+    'TensorFlow',
+    'PyTorch',
+    'scikit-learn',
+    'Data Analysis',
+    'Data Visualization',
+    'Power BI',
+    'Tableau',
+    'Big Data',
+    'Hadoop',
+    'Spark',
+    'Data Cleaning',
+  
+    // 🧑‍⚕️ Healthcare
+    'Patient Care',
+    'Clinical Research',
+    'Medical Terminology',
+    'EMR Systems',
+    'Nursing',
+    'Phlebotomy',
+    'Pharmacology',
+    'Diagnosis',
+    'Public Health',
+    'Nutrition',
+    'Physiotherapy',
+  
+    // 📚 Education & Training
+    'Curriculum Design',
+    'Lesson Planning',
+    'Classroom Management',
+    'Online Teaching',
+    'E-learning Tools',
+    'Educational Psychology',
+    'Student Counseling',
+    'Public Speaking',
+    'Workshop Facilitation',
+  
+    // 🧑‍🎨 Soft Skills
+    'Communication',
+    'Problem Solving',
+    'Critical Thinking',
+    'Creativity',
+    'Adaptability',
+    'Time Management',
+    'Teamwork',
+    'Empathy',
+    'Leadership',
+    'Decision Making',
+    'Emotional Intelligence',
+    'Conflict Resolution',
+  ];
+  
+  
   const addSkill = () => {
     const trimmed = skillInput.trim();
     if (trimmed && !skills.includes(trimmed)) {
@@ -141,13 +333,12 @@ function Page() {
     }
     setSkillInput('');
   };
-
+  
   const removeSkill = (index: number) => {
     const updated = [...skills];
     updated.splice(index, 1);
     setSkills(updated);
   };
-
   // --- PDF Download Function ---
   const handleDownloadPdf = async () => {
     if (!showPreview || !resumeData) {
@@ -400,50 +591,78 @@ function Page() {
               )}
 
               
+{/*Skills */}
+        {currentStep == 1 && (
+          <div className="rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10">
+            <span className="inline-flex gap-2 my-5">
+              <p className="text-cyan-400 text-3xl font-bold">
+                <HiOutlineLightBulb />
+              </p>
+              <p className="text-3xl font-bold">Skills</p>
+            </span>
 
-              {/* Skills (managed by local state) */}
-              {currentStep == 1 && (
-                <div className='rounded-xl container mx-auto h-auto w-[70vw] px-6 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
-                <span className='inline-flex gap-2 my-5'>
-                  <p className='text-cyan-400 text-3xl font-bold'><HiOutlineLightBulb /></p>
-                  <p className='text-3xl font-bold'>Skills</p>
-                </span>
-                <div className='flex flex-wrap gap-3 mb-4'>
-                  {skills.map((skill, index) => (
-                    <span
-                      key={index}
-                      className="bg-cyan-800 font-bold text-white px-4 py-1 rounded-full flex items-center gap-2 text-sm"
-                    >
-                      {skill}
-                      <button
-                        type="button"
-                        onClick={() => removeSkill(index)}
-                        className="text-white hover:text-red-400"
-                      >
-                        ✕
-                      </button>
-                    </span>
-                  ))}
-                </div>
-                <div className='flex gap-3'>
-                  <input
-                    type="text"
-                    value={skillInput}
-                    onChange={(e) => setSkillInput(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && addSkill()}
-                    placeholder="Type a skill and click on 'Add' button"
-                    className='placeholder:text-base flex-1 px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:outline-none focus:border-cyan-400 focus:ring-cyan-400/20'
-                  />
+            <div className="flex flex-wrap gap-3 mb-4">
+              {skills.map((skill, index) => (
+                <span
+                  key={index}
+                  className="bg-cyan-800 font-bold text-white px-4 py-1 rounded-full flex items-center gap-2 text-sm"
+                >
+                  {skill}
                   <button
                     type="button"
-                    onClick={addSkill}
-                    className='px-5 py-3 bg-cyan-700 hover:bg-cyan-600 text-white rounded-lg text-lg font-semibold'
+                    onClick={() => removeSkill(index)}
+                    className="text-white hover:text-red-400"
                   >
-                    Add
+                    ✕
                   </button>
-                </div>
-              </div>
+                </span>
+              ))}
+            </div>
+
+            <div className="relative w-full flex gap-3">
+              <input
+                type="text"
+                value={skillInput}
+                onChange={(e) => setSkillInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && addSkill()}
+                placeholder="Type a skill and click on 'Add' button"
+                className="placeholder:text-base flex-1 px-5 text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:outline-none focus:border-cyan-400 focus:ring-cyan-400/20"
+              />
+              <button
+                type="button"
+                onClick={addSkill}
+                className="px-5 py-3 bg-cyan-700 hover:bg-cyan-600 text-white rounded-lg text-lg font-semibold"
+              >
+                Add
+              </button>
+
+              {/* Suggestions Dropdown */}
+              {skillInput.trim() !== "" && (
+                <ul className="absolute top-[110%] left-0 z-10 w-full bg-gray-800 border border-gray-700 rounded-md mt-1 max-h-60 overflow-y-auto shadow-lg">
+                  {suggestedSkills
+                    .filter(
+                      (skill) =>
+                        skill.toLowerCase().includes(skillInput.toLowerCase()) &&
+                        !skills.includes(skill)
+                    )
+                    .map((filteredSkill, idx) => (
+                      <li
+                        key={idx}
+                        onClick={() => {
+                          setSkills([...skills, filteredSkill]);
+                          setSkillInput("");
+                        }}
+                        className="px-5 py-2 text-white hover:bg-cyan-700 cursor-pointer"
+                      >
+                        {filteredSkill}
+                      </li>
+                    ))}
+                </ul>
               )}
+            </div>
+          </div>
+        )}
+
               
 
               {/* Education */}
