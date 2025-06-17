@@ -53,6 +53,7 @@ export default function SignInPage() {
         setEmailError('Invalid email or password. Please try again.');
         return;
       }
+      
 
       if (typeof window !== 'undefined') {
         localStorage.setItem(
@@ -77,7 +78,7 @@ export default function SignInPage() {
   return (
     <div>
       <div className="h-screen flex justify-center items-center bg-gray-950 text-white">
-        <div className="rounded-xl container mx-auto h-[50vw] w-[40vw] px-6 py-16 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col">
+        <div className="rounded-xl container mx-auto w-full max-w-lg px-6 sm:px-10 py-10 sm:py-16 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col">
           <h1 className="font-extrabold text-4xl text-center">Welcome Back</h1>
           <p className="text-gray-400 mt-5 text-xl text-center">
             Sign in to your account to continue
@@ -89,7 +90,7 @@ export default function SignInPage() {
             <input
               type="email"
               placeholder="Enter your email"
-              className="mt-3 py-2 px-3 w-[32rem] rounded-lg bg-gray-800 border border-gray-600 placeholder:text-white placeholder:font-medium"
+              className="mt-3 py-2 px-3 w-full rounded-lg bg-gray-800 border border-gray-600 placeholder:text-white placeholder:font-medium"
               value={email}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setEmail(e.target.value)
@@ -113,7 +114,7 @@ export default function SignInPage() {
             <input
               type="password"
               placeholder="Enter your password"
-              className="mt-3 py-2 px-3 w-[32rem] rounded-lg bg-gray-800 border border-gray-600 placeholder:text-white placeholder:font-medium"
+              className="mt-3 py-2 px-3 w-full rounded-lg bg-gray-800 border border-gray-600 placeholder:text-white placeholder:font-medium"
               value={password}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setPassword(e.target.value)
@@ -140,7 +141,7 @@ export default function SignInPage() {
           <button
             onClick={handleSignIn}
             disabled={isLoading}
-            className="mt-14 w-[32rem] py-3 text-lg rounded-lg bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 shadow-md hover:shadow-blue-400 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-14 w-full py-3 text-lg rounded-lg bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 shadow-md hover:shadow-blue-400 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? 'Signing In...' : 'Sign In'}
           </button>

@@ -82,6 +82,7 @@ function Page() {
           return;
         }
 
+        
         alert('Account created successfully! You can now sign in.');
         localStorage.removeItem('resumeData');
         localStorage.removeItem('skills');
@@ -102,10 +103,10 @@ function Page() {
 
   return (
     <div>
-      <div className="h-screen flex justify-center items-center bg-gray-950 text-white">
+      <div className="min-h-screen flex justify-center lg:pt-12 lg:pb-12 bg-gray-950 text-white">
         <form
           onSubmit={handleSubmit}
-          className="rounded-xl container mx-auto h-[53vw] w-[40vw] px-6 py-16 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col"
+          className="lg:rounded-xl container mx-auto w-full max-w-lg px-6 sm:px-10 py-10 sm:py-16 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col"
         >
           <div className="font-extrabold text-4xl mx-auto">Create Account</div>
           <div className="text-gray-400 mt-5 text-xl mx-auto">
@@ -126,7 +127,7 @@ function Page() {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               disabled={isLoading}
-              className="mt-3 py-2 px-3 w-[32rem] rounded-lg bg-gray-800 border border-gray-600 placeholder:text-white placeholder:font-medium disabled:opacity-50"
+              className="mt-3 py-2 px-3 w-full rounded-lg bg-gray-800 border border-gray-600 placeholder:text-white placeholder:font-medium disabled:opacity-50"
             />
             {fullNameError && <div className="text-red-400 mt-1 text-sm">{fullNameError}</div>}
           </div>
@@ -139,7 +140,7 @@ function Page() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isLoading}
-              className="mt-3 py-2 px-3 w-[32rem] rounded-lg bg-gray-800 border border-gray-600 placeholder:text-white placeholder:font-medium disabled:opacity-50"
+              className="mt-3 py-2 px-3 w-full rounded-lg bg-gray-800 border border-gray-600 placeholder:text-white placeholder:font-medium disabled:opacity-50"
             />
             {emailError && <div className="text-red-400 mt-1 text-sm">{emailError}</div>}
           </div>
@@ -152,7 +153,7 @@ function Page() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}
-              className="mt-3 py-2 px-3 w-[32rem] rounded-lg bg-gray-800 border border-gray-600 placeholder:text-white placeholder:font-medium disabled:opacity-50"
+              className="mt-3 py-2 px-3 w-full rounded-lg bg-gray-800 border border-gray-600 placeholder:text-white placeholder:font-medium disabled:opacity-50"
             />
             <div className="text-gray-400 text-sm mt-2">
               Password must be at least 8 characters with uppercase, lowercase, and numbers
@@ -163,7 +164,7 @@ function Page() {
           <button
             type="submit"
             disabled={isLoading}
-            className="mt-14 w-[32rem] py-3 text-lg rounded-lg bg-gradient-to-r from-blue-600 to-cyan-500 hover:bg-gradient-to-r hover:from-blue-700 hover:to-cyan-600 shadow-md hover:shadow-md hover:shadow-blue-400 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-14 w-full py-3 text-lg rounded-lg bg-gradient-to-r from-blue-600 to-cyan-500 hover:bg-gradient-to-r hover:from-blue-700 hover:to-cyan-600 shadow-md hover:shadow-md hover:shadow-blue-400 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? 'Creating Account...' : 'Create Account'}
           </button>
