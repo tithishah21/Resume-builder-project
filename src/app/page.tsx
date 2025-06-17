@@ -26,7 +26,7 @@ export default function Home() {
             <div className="font-extrabold text-5xl sm:text-7xl lg:text-[5.6rem] bg-gradient-to-r from-blue-700 to-cyan-400 bg-clip-text text-transparent mt-2 mb-4">
               Dream Resume
             </div>
-            <div className="mt-8 text-lg sm:text-2xl lg:text-[2rem] font-medium text-gray-300 max-w-2xl mb-4">
+            <div className="mt-8 text-lg sm:text-2xl lg:text-[1.5rem] font-medium text-gray-300 max-w-2xl mb-4">
               Build, edit, and export resumes effortlessly using
               
               professional &amp; sleek templates designed for you.
