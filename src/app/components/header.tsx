@@ -91,7 +91,7 @@ function Header() {
           {/* Right: Sign Up */}
           <button
             onClick={() => router.push("/signup")}
-            className="mx-[0.95rem] rounded-lg px-4 py-2 text-sm font-bold bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow hover:from-blue-700 hover:to-cyan-600 transition-all"
+            className="mx-8 rounded-lg px-4 py-2 text-sm font-bold bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow hover:from-blue-700 hover:to-cyan-600 transition-all"
           >
             Sign Up
           </button>

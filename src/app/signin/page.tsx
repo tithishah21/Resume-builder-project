@@ -77,8 +77,8 @@ export default function SignInPage() {
 
   return (
     <div>
-      <div className="h-screen flex justify-center items-center bg-gray-950 text-white">
-        <div className="rounded-xl container mx-auto w-full max-w-lg px-6 sm:px-10 py-10 sm:py-16 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col">
+      <div className="min-h-screen flex justify-center lg:pt-12 lg:pb-12 bg-gray-950 text-white">
+        <div className="lg:rounded-xl container mx-auto w-full max-w-lg px-6 sm:px-10 py-10 sm:py-16 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col">
           <h1 className="font-extrabold text-4xl text-center">Welcome Back</h1>
           <p className="text-gray-400 mt-5 text-xl text-center">
             Sign in to your account to continue

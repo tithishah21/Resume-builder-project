@@ -109,7 +109,7 @@ function Page() {
           className="lg:rounded-xl container mx-auto w-full max-w-lg px-6 sm:px-10 py-10 sm:py-16 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col"
         >
           <div className="font-extrabold text-4xl mx-auto">Create Account</div>
-          <div className="text-gray-400 mt-5 text-xl mx-auto">
+          <div className="text-gray-400 mt-5 text-xl mx-auto text-center">
             Join thousands of professionals building standout resumes
           </div>
 
