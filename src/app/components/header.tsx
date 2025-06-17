@@ -158,7 +158,7 @@ function Header() {
           ></div>
           {/* Dropdown */}
           <div
-            className="fixed top-20 left-0 right-0 z-50 w-full rounded-none sm:rounded-2xl shadow-2xl bg-gray-800 border border-slate-700 px-6 pb-4 pt-4 space-y-4 animate-slideDownFadeIn sm:left-1/2 sm:-translate-x-1/2 sm:w-[90vw] sm:max-w-sm sm:rounded-2xl"
+            className="fixed top-20 left-0 right-0 z-50 w-full rounded-none sm:rounded-2xl shadow-2xl bg-gray-800 border border-slate-700 px-6 pb-4 pt-4 space-y-4 animate-slideDownFadeIn sm:left-1/2 sm:-translate-x-1/2 sm:w-[90vw] sm:max-w-sm"
             style={{ minHeight: '220px' }}
           >
             {navItems.map((item, idx) =>
