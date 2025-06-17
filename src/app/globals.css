@@ -37,3 +37,19 @@ body {
 ::-webkit-scrollbar-track {
   background: #1a1a1a; /* Dark background */
 }
+@layer utilities {
+  @keyframes slideDownFadeIn {
+    0% { opacity: 0; transform: translateY(-20px) scale(0.98); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .animate-slideDownFadeIn {
+    animation: slideDownFadeIn 0.35s cubic-bezier(0.4,0,0.2,1) both;
+  }
+  @keyframes fadeInMenuItem {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fadeInMenuItem {
+    animation: fadeInMenuItem 0.4s cubic-bezier(0.4,0,0.2,1) both;
+  }
+}

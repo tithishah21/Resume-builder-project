@@ -58,20 +58,32 @@ function Header() {
       <div className="bg-gray-900 py-6 border-b border-slate-800 flex justify-between items-center px-4 lg:px-9">
         {/* Mobile: Hamburger + Logo + Sign Up */}
         <div className="lg:hidden flex items-center justify-start w-full">
-          {/* Left: Hamburger */}
-          <button onClick={() => setMenuOpen(!menuOpen)} className="text-cyan-400 font-extrabold">
-            {menuOpen ? <X size={32} /> : <Menu size={32} />}
+          {/* Left: Animated Hamburger */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="relative w-10 h-10 flex items-center justify-center focus:outline-none group"
+            aria-label="Toggle menu"
+          >
+            {/* Hamburger icon animation */}
+            <span className="absolute block w-7 h-0.5 bg-cyan-400 rounded transition-all duration-300 ease-in-out group-hover:bg-cyan-300"
+              style={{ top: menuOpen ? '20px' : '14px', transform: menuOpen ? 'rotate(45deg)' : 'none' }}
+            ></span>
+            <span className={`absolute block w-7 h-0.5 bg-cyan-400 rounded transition-all duration-300 ease-in-out group-hover:bg-cyan-300 ${menuOpen ? 'opacity-0' : ''}`}
+              style={{ top: '20px' }}
+            ></span>
+            <span className="absolute block w-7 h-0.5 bg-cyan-400 rounded transition-all duration-300 ease-in-out group-hover:bg-cyan-300"
+              style={{ top: menuOpen ? '20px' : '26px', transform: menuOpen ? 'rotate(-45deg)' : 'none' }}
+            ></span>
           </button>
 
           {/* Center: Logo */}
-          {/* Make logo clickable to home/top of page using ScrollLink */}
           <ScrollLink
-            to="hero-section" // Remove String() wrapper - react-scroll accepts string directly
+            to="hero-section"
             smooth={true}
             duration={500}
-            offset={-70} // Adjust offset if your header height changes
+            offset={-70}
             className="text-xl font-semibold text-white mx-2 cursor-pointer"
-            onClick={() => setMenuOpen(false)} // Close menu on logo click
+            onClick={() => setMenuOpen(false)}
           >
             ResumeBuilder Pro
           </ScrollLink>
@@ -79,7 +91,7 @@ function Header() {
           {/* Right: Sign Up */}
           <button
             onClick={() => router.push("/signup")}
-            className="mx-4 rounded-lg px-4 py-2 text-sm font-bold bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow hover:from-blue-700 hover:to-cyan-600 transition-all"
+            className="mx-[0.95rem] rounded-lg px-4 py-2 text-sm font-bold bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow hover:from-blue-700 hover:to-cyan-600 transition-all"
           >
             Sign Up
           </button>
@@ -136,45 +148,85 @@ function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
+      {/* Mobile Menu Dropdown + Overlay */}
       {menuOpen && (
-        <div className="lg:hidden bg-gray-800 border-t border-slate-700 px-6 pb-4 space-y-4">
-          {navItems.map((item) =>
-            item.type === "scroll" ? (
-              <ScrollLink
-                key={item.label}
-                to={item.targetId || ""} // Provide fallback empty string if targetId is undefined
-                smooth={true}
-                duration={500}
-                offset={-70} // Adjust offset if your header height changes
-                className="block text-cyan-400 font-medium hover:text-white cursor-pointer py-2" // Added py-2 for better touch target
-                onClick={() => handleNavItemClick(item)} // Pass item to close menu
-              >
-                {item.label}
-              </ScrollLink>
-            ) : (
-              <button // Use a regular button for route navigation in mobile menu
-                key={item.label}
-                onClick={() => handleNavItemClick(item)} // Handle direct route navigation
-                className="w-full text-left block text-cyan-400 font-medium hover:text-white cursor-pointer py-2" // Added py-2 for better touch target
-              >
-                {item.label}
-              </button>
-            )
-          )}
-          <button
-            onClick={() => {
-              router.push("/signin");
-              setMenuOpen(false); // Close menu after navigation
-            }}
-            className="w-full text-left border border-cyan-400 text-cyan-400 hover:bg-slate-700 px-4 py-2 rounded-lg font-semibold transition-all"
+        <>
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 z-40 bg-black bg-opacity-40 backdrop-blur-sm transition-opacity duration-300"
+            onClick={() => setMenuOpen(false)}
+          ></div>
+          {/* Dropdown */}
+          <div
+            className="fixed top-20 left-0 right-0 z-50 w-full rounded-none sm:rounded-2xl shadow-2xl bg-gray-800 border border-slate-700 px-6 pb-4 pt-4 space-y-4 animate-slideDownFadeIn sm:left-1/2 sm:-translate-x-1/2 sm:w-[90vw] sm:max-w-sm sm:rounded-2xl"
+            style={{ minHeight: '220px' }}
           >
-            Sign In
-          </button>
-        </div>
+            {navItems.map((item, idx) =>
+              item.type === "scroll" ? (
+                <React.Fragment key={item.label}>
+                  <ScrollLink
+                    to={item.targetId || ""}
+                    smooth={true}
+                    duration={500}
+                    offset={-70}
+                    className={`block text-cyan-400 font-medium hover:text-white cursor-pointer py-2 transition-all duration-300 opacity-0 animate-fadeInMenuItem`}
+                    style={{ animationDelay: `${0.1 + idx * 0.07}s` }}
+                    onClick={() => handleNavItemClick(item)}
+                  >
+                    {item.label}
+                  </ScrollLink>
+                  {idx < navItems.length - 1 && (
+                    <div className="border-b border-slate-600 w-full my-1" />
+                  )}
+                </React.Fragment>
+              ) : (
+                <React.Fragment key={item.label}>
+                  <button
+                    onClick={() => handleNavItemClick(item)}
+                    className={`w-full text-left block text-cyan-400 font-medium hover:text-white cursor-pointer py-2 transition-all duration-300 opacity-0 animate-fadeInMenuItem`}
+                    style={{ animationDelay: `${0.1 + idx * 0.07}s` }}
+                  >
+                    {item.label}
+                  </button>
+                  {idx < navItems.length - 1 && (
+                    <div className="border-b border-slate-600 w-full my-1" />
+                  )}
+                </React.Fragment>
+              )
+            )}
+            <button
+              onClick={() => {
+                router.push("/signin");
+                setMenuOpen(false);
+              }}
+              className="w-full text-left border border-cyan-400 text-cyan-400 hover:bg-slate-700 px-4 py-2 rounded-lg font-semibold transition-all opacity-0 animate-fadeInMenuItem"
+              style={{ animationDelay: `${0.1 + navItems.length * 0.07}s` }}
+            >
+              Sign In
+            </button>
+          </div>
+        </>
       )}
     </div>
   );
 }
+
+// Tailwind custom animations (add to your global CSS if not present)
+// @layer utilities {
+//   @keyframes slideDownFadeIn {
+//     0% { opacity: 0; transform: translateY(-20px) scale(0.98); }
+//     100% { opacity: 1; transform: translateY(0) scale(1); }
+//   }
+//   .animate-slideDownFadeIn {
+//     animation: slideDownFadeIn 0.35s cubic-bezier(0.4,0,0.2,1) both;
+//   }
+//   @keyframes fadeInMenuItem {
+//     0% { opacity: 0; transform: translateY(10px); }
+//     100% { opacity: 1; transform: translateY(0); }
+//   }
+//   .animate-fadeInMenuItem {
+//     animation: fadeInMenuItem 0.4s cubic-bezier(0.4,0,0.2,1) both;
+//   }
+// }
 
 export default Header;
