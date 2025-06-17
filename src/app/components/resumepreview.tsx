@@ -67,9 +67,9 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               </div>
               
               {/* Contact Info (Modern Professional Template)*/}
-              <div className='text-left flex flex-col px-4 text-gray-300 mb-16 space-y-4'> 
-                <div className='inline-flex items-center gap-3'>
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800">
+              <div className='text-left flex flex-col px-2 text-gray-300 mb-16 space-y-4'> 
+                <div className='inline-flex items-center gap-1'>
+                    <div className="flex items-center justify-center w-10 h-8 rounded-full bg-white text-gray-800">
                         <IoIosHome size={20}/>
                     </div>
                     {displayData.home}
@@ -200,6 +200,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             {/* Header (Vibrant & Expressive (Gen Z) Template)*/}
             <div className="bg-[#d9747c] text-white p-8 rounded-t-3xl flex flex-col items-center">
               <h1 className="text-4xl font-bold uppercase">{displayData.full_name}</h1>
+              {/* <p className='text-xs text-gray-300 '>Graphic Designer</p> */}
               
               <div className="mt-4 text-sm space-y-1 text-center">
                 <p>+91 {displayData.phone}</p>
@@ -210,7 +211,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
 
             {/* Professional Summary (Vibrant & Expressive (Gen Z) Template) */}
             <div className="bg-[#fff] px-8 py-6 grid grid-cols-1 md:grid-cols-2 gap-8 border-b border-gray-300">
-              
+                
                 <h2 className="text-xl font-semibold text-[#d9747c] mb-2">About Me</h2>
                 <p className="text-sm leading-relaxed">{displayData.summary}</p>
               
