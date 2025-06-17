@@ -78,7 +78,7 @@ const ResumeCreationFlow = () => {
               Follow our step-by-step professional guidance to create a polished resume in minutes, not hours.
             </p>
             <button
-              onClick={() => router.push('/resumedetails')}
+              onClick={() => router.push('/templates')}
               className="mt-10 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold text-xl rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out"
             >
               Create Your Resume Now
@@ -129,7 +129,7 @@ const ResumeCreationFlow = () => {
               Choose from our expertly designed resume templates to stand out and land your dream job.
             </p>
             <button
-              onClick={() => router.push('/resumedetails')}
+              onClick={() => router.push('/signup')}
               className="px-8 py-4 mb-56 bg-green-500 hover:bg-green-600 transition-all font-bold text-lg rounded-full"
             >
               Get Started - Build Your Future!
