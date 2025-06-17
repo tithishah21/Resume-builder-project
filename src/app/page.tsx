@@ -9,6 +9,7 @@ import Features from './features/page';
 
 // Import the new combined section component
 import ResumeCreationFlow from './components/ResumeCreationFlow';
+import FallingShapes from './components/FallingShapes';
 
 
 export default function Home() {
@@ -19,10 +20,11 @@ export default function Home() {
       <Header />
 
       {/* Landing Section (Hero) */}
-      <section id='hero-section' className="bg-gradient-to-br from-blue-900/20 via-gray-950 to-cyan-900/20 h-[180vw] lg:h-[48vw] w-full px-10 z-10 flex items-center justify-center">
+      <section id='hero-section' className="bg-gradient-to-br from-blue-900/20 via-gray-950 to-cyan-900/20 w-full px-4 sm:px-10 pb-20 lg:py-24 z-10 flex items-center justify-center">
         <div className="flex flex-col lg:flex-row gap-10 max-w-9xl w-full">
-          <div className="mt-28 lg:mt-0 flex-1 flex flex-col justify-center items-center lg:items-start text-center lg:text-left">
-            <div className="font-extrabold text-5xl sm:text-7xl lg:text-[5.6rem] leading-tight text-white">Build Your</div>
+          <div className="mt-10 lg:mt-0 flex-1 flex flex-col justify-center items-center lg:items-start text-center lg:text-left">
+            <FallingShapes />
+            <div className="font-extrabold text-5xl sm:text-7xl lg:text-[5.6rem] leading-tight text-white mt-6">Build Your</div>
             <div className="font-extrabold text-5xl sm:text-7xl lg:text-[5.6rem] bg-gradient-to-r from-blue-700 to-cyan-400 bg-clip-text text-transparent mt-2 mb-4">
               Dream Resume
             </div>
@@ -40,7 +42,7 @@ export default function Home() {
           </div>
 
           {/* Right side image */}
-          <div className="mt-10 lg:mt-24 flex-1 flex justify-center lg:justify-end items-center">
+          <div className="hidden lg:flex mt-10 lg:mt-24 flex-1 justify-center lg:justify-end items-center">
             <Image
               src="/resume.png" // Ensure this path is correct in your public folder
               alt="Resume Illustration"
