@@ -93,7 +93,7 @@ const ResumeCreationFlow = () => {
             </p>
           </div>
 
-          <h3 className="text-3xl sm:text-4xl font-extrabold text-center text-white mb-12 mt-20">
+          <h3 className="text-3xl sm:text-3xl font-extrabold text-center text-white mb-12 mt-20">
             Your Resume, In Just <span className="text-cyan-400">4 Simple Steps</span>
           </h3>
 
@@ -101,7 +101,7 @@ const ResumeCreationFlow = () => {
             {steps.map((step, index) => (
               <div
                 key={index}
-                className="relative bg-gray-800 bg-opacity-70 backdrop-blur-sm rounded-xl shadow-lg p-8 flex flex-col items-center text-center border border-blue-500 group transform hover:scale-105 hover:border-gray-700 transition-all duration-300 overflow-hidden"
+                className="relative bg-gray-800 bg-opacity-70 backdrop-blur-sm rounded-xl shadow-lg p-8 flex flex-col items-center text-center border border-blue-500 group md:hover:scale-110 hover:border-gray-700 transition-all duration-300 overflow-hidden"
               >
                 <div className="absolute top-0 right-0 -mr-3 -mt-2 w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-400 text-white font-bold text-3xl rounded-full flex items-center justify-center shadow-md border-2 border-gray-900 z-10">
                   {index + 1}
@@ -119,24 +119,24 @@ const ResumeCreationFlow = () => {
 
       {/* === Your Existing Template Section === */}
       <section className="relative mb-5 py-5 px-6 bg-gray-950 overflow-hidden text-white">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-11 items-center">
           {/* Left Text + CTA */}
           <div>
-            <h2 className="text-6xl font-extrabold mb-12 leading-tight">
+            <h2 className="text-4xl sm:text-4xl md:text-6xl font-extrabold mb-12 leading-tight">
               Explore Our <span className="text-green-400">Winning Templates</span>
             </h2>
-            <p className="text-lg text-gray-300 mb-32">
+            <p className="text-lg text-gray-300 mb-0 md:mb-32">
               Choose from our expertly designed resume templates to stand out and land your dream job.
             </p>
             <button
               onClick={() => router.push('/signup')}
-              className="px-8 py-4 mb-56 bg-green-500 hover:bg-green-600 transition-all font-bold text-lg rounded-full"
+              className="px-8 py-4 mb-10 md:mb-56 bg-green-500 hover:bg-green-600 transition-all font-bold text-lg rounded-full hidden md:inline-block"
             >
               Get Started - Build Your Future!
             </button>
           </div>
 
-          {/* Right Template Preview */}
+          {/* Right Template Preview - Desktop only */}
           <div className="relative w-full h-[820px]">
             {templates.map((template, index) => (
               <div
@@ -162,6 +162,13 @@ const ResumeCreationFlow = () => {
               </div>
             ))}
           </div>
+          {/* Mobile: Green button below animation */}
+          <button
+            onClick={() => router.push('/signup')}
+            className="px-8 py-4 mt-8 bg-green-500 hover:bg-green-600 transition-all font-bold text-lg rounded-full w-full md:hidden"
+          >
+            Get Started - Build Your Future!
+          </button>
         </div>
       </section>
     </>
