@@ -326,13 +326,9 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
           <header className="text-center pb-6 mb-6 border-b border-gray-300">
             <h1 className="text-4xl font-bold mb-2 text-gray-900">{displayData.full_name.toUpperCase()}</h1>
             <p className="text-gray-600 text-lg">{displayData.home}</p>
-            <div className="flex justify-center gap-8 mt-3 text-gray-600">
-              <span className="flex items-center gap-2">
-                <FaPhoneAlt size={14} className="text-blue-700"/> {displayData.phone}
-              </span>
-              <span className="flex items-center gap-2">
-                <IoMail size={16} className="text-blue-700"/> {displayData.email}
-              </span>
+            <div className="flex justify-between items-center mt-3 text-gray-600 text-sm w-full px-0">
+              <span className="text-left">+91 {displayData.phone}</span>
+              <span className="text-right">{displayData.email}</span>
             </div>
           </header>
 
@@ -421,13 +417,13 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
           {displayData.languages && displayData.languages.length > 0 && (
             <section className="mb-6">
               <h2 className="text-xl font-bold mb-3 mt-6 text-gray-800 uppercase tracking-wide border-b border-gray-200 pb-2">Languages</h2>
-              <ul className="list-disc pl-5 text-base text-gray-700">
+              <div className="text-gray-700 text-base md:text-lg leading-relaxed">
                 {displayData.languages.map((lang, index) => (
-                  <li key={index}>
+                  <div key={index}>
                     {lang.language} - <span className="font-medium text-blue-700">{lang.proficiency_level}</span>
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </section>
           )}
 
@@ -739,13 +735,13 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
           {displayData.languages && displayData.languages.length > 0 && (
             <section className="mb-6">
               <h2 className={sectionTitleClasses}>Languages</h2>
-              <ul className="list-disc pl-5 text-sm">
+              <div className="text-gray-700 text-base md:text-lg leading-relaxed flex flex-wrap">
                 {displayData.languages.map((lang, index) => (
-                  <li key={index}>
+                  <span key={index}>
                     {lang.language} - <span className="text-blue-700">{lang.proficiency_level}</span> {/* Using default accent color */}
-                  </li>
+                  </span>
                 ))}
-              </ul>
+              </div>
             </section>
           )}
 

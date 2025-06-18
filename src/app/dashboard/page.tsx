@@ -87,7 +87,7 @@ export default function PrivatePage() {
     <>
       <div className="sticky top-0 z-50 bg-black" id="header2">
         <div className="bg-gray-900 py-4 px-4 border-b border-slate-800 flex flex-row justify-between items-center">
-          <h1 className="text-base font-semibold text-white mx-2 whitespace-pre-line break-words">ResumeBuilder Pro's Dashboard</h1>
+          <h1 className="text-base font-semibold text-white mx-2 whitespace-pre-line break-words">ResumeBuilder Pro&apos;s Dashboard</h1>
           <button 
             onClick={handleLogout}
             className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg font-bold transition-colors"

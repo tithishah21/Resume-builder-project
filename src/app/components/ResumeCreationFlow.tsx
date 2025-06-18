@@ -7,6 +7,7 @@ import { HiOutlineUserCircle } from 'react-icons/hi';
 import { MdOutlineWorkOutline } from 'react-icons/md';
 import { IoDocumentTextOutline } from 'react-icons/io5';
 import { RiFileSearchLine } from 'react-icons/ri';
+import Image from 'next/image';
 
 const templates = [
   { src: '/modern.png', name: 'Modern Professional' },
@@ -151,10 +152,12 @@ const ResumeCreationFlow = () => {
                 }}
                 onClick={() => router.push(`/templates?selected=${template.name}`)}
               >
-                <img
+                <Image
                   src={template.src}
                   alt={template.name}
-                  className="w-full h-full object-contain"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-contain w-full h-full"
                   onError={(e) => {
                     e.currentTarget.src = 'https://placehold.co/250x350/2f2f2f/cccccc?text=Template';
                   }}

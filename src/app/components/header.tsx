@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import GooeyNav from "./gooeynavbar"; // Assuming this is your custom GooeyNav component
 import { Link as ScrollLink } from "react-scroll"; // Renamed to avoid conflict with next/link if you were using it
-import { Menu, X } from "lucide-react";
 
 // Define the navigation item type
 interface NavItem {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 
 interface CardProps {
@@ -35,7 +35,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [paused, setPaused] = useState(false);
 
-  const swap = () => {
+  const swap = useCallback(() => {
     if (cardRefs.current.length < 2) return;
 
     const elFront = cardRefs.current[0];
@@ -80,7 +80,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
       );
     }
 
-    rest.forEach((card, i) => {
+    rest.forEach((card) => {
       if (card) {
         tl.to(
           card,
@@ -101,7 +101,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
     }, undefined, '+=0');
 
     cardRefs.current = [...cardRefs.current.slice(1), cardRefs.current[0]];
-  };
+  }, [cardDistance, verticalDistance]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -115,7 +115,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [paused, delay]);
+  }, [paused, delay, swap]);
 
   const handleMouseEnter = () => {
     if (pauseOnHover) setPaused(true);
