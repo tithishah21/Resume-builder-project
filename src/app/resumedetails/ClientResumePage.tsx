@@ -342,50 +342,55 @@ function Page() {
   // --- PDF Download Function ---
   const handleDownloadPdf = async () => {
     if (!showPreview || !resumeData) {
-        alert("Please generate the resume preview first before downloading.");
-        return;
+      alert("Please generate the resume preview first before downloading.");
+      return;
     }
 
     const input = document.getElementById('resume-content');
     if (input) {
-        const scale = 2; 
+      const scale = 2;
+      try {
+        const canvas = await html2canvas(input, {
+          scale: scale,
+          useCORS: true,
+          logging: true,
+          windowWidth: input.scrollWidth,
+          windowHeight: input.scrollHeight
+        });
 
-        try {
-            const canvas = await html2canvas(input, {
-                scale: scale,
-                useCORS: true,
-                logging: true, 
-                windowWidth: input.scrollWidth, 
-                windowHeight: input.scrollHeight 
-            });
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
 
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4');
+        // Calculate the image height in PDF units
+        const imgWidth = pdfWidth;
+        const imgHeight = (canvas.height * pdfWidth) / canvas.width;
 
-            const imgWidth = 210; 
-            const pageHeight = 100; 
-            const imgHeight = canvas.height * imgWidth / canvas.width;
-            let heightLeft = imgHeight;
-            let position = 0;
+        let heightLeft = imgHeight;
+        let position = 0;
 
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
+        // Add the first page
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
 
-            while (heightLeft >= 0) {
-                position = heightLeft - imgHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-            }
+        heightLeft -= pdfHeight;
 
-            pdf.save(`${resumeData.full_name || 'My_Resume'}-${selectedTemplate || 'template'}.pdf`);
-        } catch (error) {
-            console.error("Error generating PDF:", error);
-            alert("Failed to generate PDF. Please try again.");
+        // Add more pages if necessary
+        while (heightLeft > 0) {
+          position -= pdfHeight;
+          pdf.addPage();
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pdfHeight;
         }
+
+        pdf.save(`${resumeData.full_name || 'My_Resume'}-${selectedTemplate || 'template'}.pdf`);
+      } catch (error) {
+        console.error("Error generating PDF:", error);
+        alert("Failed to generate PDF. Please try again.");
+      }
     } else {
-        console.error("Could not find element with ID 'resume-content'.");
-        alert("Resume content not found for PDF generation.");
+      console.error("Could not find element with ID 'resume-content'.");
+      alert("Resume content not found for PDF generation.");
     }
   };
 
