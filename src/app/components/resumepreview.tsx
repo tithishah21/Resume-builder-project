@@ -57,8 +57,8 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
   switch (templateName) {
     case 'Modern Professional':
       return(
-        <div className='flex flex-col md:flex-row bg-white min-h-[1050px] max-w-4xl mx-auto shadow-2xl rounded-lg overflow-hidden'>
-            <div className='flex flex-col bg-gray-800 text-white w-full md:w-1/3 min-w-0 py-8 px-6'>
+        <div className='flex flex-col md:flex-row bg-white min-h-[1018px] max-w-4xl mx-auto shadow-2xl rounded-none overflow-hidden'>
+            <div className='flex flex-col bg-gray-800 text-white w-full md:w-[40%] min-w-0 py-8 px-6'>
               
               {/* Name (Modern Professional Template) */}
               <div className='text-center mb-8'>
@@ -96,7 +96,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
                     {displayData.skills.map((skill, index) => (
                       <span key={index}>
                         {skill}
-                        {index !== displayData.skills.length - 1 && <span className="mx-1">&middot;</span>}
+                        {index !== displayData.skills.length - 1 && <span className="mx-1 font-bold">&middot;</span>}
                       </span>
                     ))}
                   </div>
@@ -121,14 +121,14 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             <div className='flex flex-col flex-1 bg-white text-gray-800 py-8 px-2 sm:px-6 md:px-8 w-full'> 
               
               {/* Professional Summary (Modern Professional Template)*/}
-              <section className="mb-8"> 
+              <section className="mb-3"> 
                 <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Professional Summary</h2> 
                 <p className="text-gray-700 text-base leading-relaxed">{displayData.summary}</p>
               </section>
 
               {/* Experience (Modern Professional Template)*/}
               {displayData.experience && displayData.experience.length > 0 && (
-                <section className="mb-8"> 
+                <section className="mb-3"> 
                   <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Experience</h2> 
                   {displayData.experience.map((exp, index) => (
                     <div key={index} className="mb-6 last:mb-0"> 
@@ -142,7 +142,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
 
               {/* Education (Modern Professional Template)*/}
               {displayData.education && displayData.education.length > 0 && (
-                <section className="mb-8">
+                <section className="mb-3">
                   <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Education</h2> 
                   {displayData.education.map((edu, index) => (
                     <div key={index} className="mb-4 last:mb-0"> 
@@ -157,27 +157,31 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               )}
 
               {/* Projects (Modern Professional Template)*/}
-              {displayData.project && displayData.project.length > 0 && (
-                <section className="mb-8"> 
-                  <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Projects</h2> {/* Styled heading */}
+              {displayData.project && displayData.project.some(proj => proj.project_title || proj.project_description) && (
+                <section className="mb-3">
+                  <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Projects</h2>
                   {displayData.project.map((proj, index) => (
-                    <div key={index} className="mb-6 last:mb-0"> 
-                      <h3 className="font-semibold text-lg text-gray-900 mb-1">{proj.project_title}</h3>
-                      <p className="text-gray-700 text-sm leading-relaxed">{proj.project_description}</p>
-                    </div>
+                    (proj.project_title || proj.project_description) && (
+                      <div key={index} className="mb-6 last:mb-0">
+                        <h3 className="font-semibold text-lg text-gray-900 mb-1">{proj.project_title}</h3>
+                        <p className="text-gray-700 text-sm leading-relaxed">{proj.project_description}</p>
+                      </div>
+                    )
                   ))}
                 </section>
               )}
 
               {/* Achievements (Modern Professional Template)*/}
-              {displayData.achievement && displayData.achievement.length > 0 && (
-                <section className="mb-8"> 
-                  <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Achievements</h2> {/* Styled heading */}
+              {displayData.achievement && displayData.achievement.some(ach => ach.achievement_title || ach.achievement_description) && (
+                <section className="mb-3">
+                  <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Achievements</h2>
                   {displayData.achievement.map((ach, index) => (
-                    <div key={index} className="mb-6 last:mb-0"> 
-                      <h3 className="font-semibold text-lg text-gray-900 mb-1">{ach.achievement_title}</h3>
-                      <p className="text-gray-700 text-sm leading-relaxed">{ach.achievement_description}</p>
-                    </div>
+                    (ach.achievement_title || ach.achievement_description) && (
+                      <div key={index} className="mb-6 last:mb-0">
+                        <h3 className="font-semibold text-lg text-gray-900 mb-1">{ach.achievement_title}</h3>
+                        <p className="text-gray-700 text-sm leading-relaxed">{ach.achievement_description}</p>
+                      </div>
+                    )
                   ))}
                 </section>
               )}
@@ -194,7 +198,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       );
       case 'Vibrant & Expressive (Gen Z)':
         return (
-          <div className="bg-[#f9e5e1] min-h-[1050px] max-w-full md:max-w-4xl mx-auto shadow-2xl rounded-lg overflow-hidden px-2 sm:px-4 md:px-8 py-6 md:py-10 text-[#4a4a4a] font-sans">
+          <div className="bg-[#f9e5e1] min-h-[1018px] max-w-full md:max-w-4xl mx-auto shadow-2xl rounded-none overflow-hidden px-2 sm:px-4 md:px-8 py-6 md:py-10 text-[#4a4a4a] font-sans">
             {/* Header (Vibrant & Expressive (Gen Z) Template)*/}
             <div className="bg-[#d9747c] text-white p-4 sm:p-8 rounded-t-3xl flex flex-col items-center w-full">
               <h1 className="text-4xl font-bold uppercase">{displayData.full_name}</h1>
@@ -264,7 +268,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
                     {displayData.skills.map((skill, index) => (
                       <span key={index}>
                         {skill}
-                        {index !== displayData.skills.length - 1 && <span className="mx-1">&middot;</span>}
+                        {index !== displayData.skills.length - 1 && <span className="mx-1 font-bold">&middot;</span>}
                       </span>
                     ))}
                   </div>
@@ -273,27 +277,31 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             </div>
 
             {/* Projects (Vibrant & Expressive (Gen Z) Template)*/}
-            {displayData.project?.length > 0 && (
+            {displayData.project && displayData.project.some(proj => proj.project_title || proj.project_description) && (
               <div className="bg-[#fefaf7] px-2 sm:px-6 md:px-8 py-6 border-b border-gray-300 w-full">
                 <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Projects</h2>
                 {displayData.project.map((proj, index) => (
-                  <div key={index} className="mb-4">
-                    <h3 className="font-bold">{proj.project_title}</h3>
-                    <p className="text-sm">{proj.project_description}</p>
-                  </div>
+                  (proj.project_title || proj.project_description) && (
+                    <div key={index} className="mb-4">
+                      <h3 className="font-bold">{proj.project_title}</h3>
+                      <p className="text-sm">{proj.project_description}</p>
+                    </div>
+                  )
                 ))}
               </div>
             )}
 
             {/* Achievements (Vibrant & Expressive (Gen Z) Template)*/}
-            {displayData.achievement?.length > 0 && (
+            {displayData.achievement && displayData.achievement.some(ach => ach.achievement_title || ach.achievement_description) && (
               <div className="bg-[#fff] px-2 sm:px-6 md:px-8 py-6 border-b border-gray-300 w-full">
                 <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Achievements</h2>
                 {displayData.achievement.map((achieve, index) => (
-                  <div key={index} className="mb-4">
-                    <h3 className="font-bold">{achieve.achievement_title}</h3>
-                    <p className="text-sm">{achieve.achievement_description}</p>
-                  </div>
+                  (achieve.achievement_title || achieve.achievement_description) && (
+                    <div key={index} className="mb-4">
+                      <h3 className="font-bold">{achieve.achievement_title}</h3>
+                      <p className="text-sm">{achieve.achievement_description}</p>
+                    </div>
+                  )
                 ))}
               </div>
             )}
@@ -313,7 +321,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       
     case 'Classic Corporate':
       return (
-        <div className="bg-white p-2 sm:p-4 md:p-8 font-sans text-gray-800 shadow-lg rounded-lg max-w-full md:max-w-3xl mx-auto border border-gray-200">
+        <div className="min-h-[1018px] bg-white p-2 sm:p-4 md:p-8 font-sans text-gray-800 shadow-lg rounded-none max-w-full md:max-w-3xl mx-auto border border-gray-200">
           {/* Header - Name, Contact Info (Classic Corporate Template)*/}
           <header className="text-center pb-6 mb-6 border-b border-gray-300">
             <h1 className="text-4xl font-bold mb-2 text-gray-900">{displayData.full_name.toUpperCase()}</h1>
@@ -365,27 +373,31 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
           )}
 
           {/* Projects (Classic Corporate Template)*/}
-          {displayData.project && displayData.project.length > 0 && (
+          {displayData.project && displayData.project.some(proj => proj.project_title || proj.project_description) && (
             <section className="mb-6">
               <h2 className="text-xl font-bold mb-3 mt-6 text-gray-800 uppercase tracking-wide border-b border-gray-200 pb-2">Projects</h2>
               {displayData.project.map((proj, index) => (
-                <div key={index} className="mb-4 last:mb-0">
-                  <h3 className="font-semibold text-lg text-gray-900">{proj.project_title}</h3>
-                  <p className="text-gray-700 text-base leading-relaxed">{proj.project_description}</p>
-                </div>
+                (proj.project_title || proj.project_description) && (
+                  <div key={index} className="mb-4 last:mb-0">
+                    <h3 className="font-semibold text-lg text-gray-900">{proj.project_title}</h3>
+                    <p className="text-gray-700 text-base leading-relaxed">{proj.project_description}</p>
+                  </div>
+                )
               ))}
             </section>
           )}
 
           {/* Achievements (Classic Corporate Template)*/}
-          {displayData.achievement && displayData.achievement.length > 0 && (
+          {displayData.achievement && displayData.achievement.some(ach => ach.achievement_title || ach.achievement_description) && (
             <section className="mb-6">
               <h2 className="text-xl font-bold mb-3 mt-6 text-gray-800 uppercase tracking-wide border-b border-gray-200 pb-2">Achievements</h2>
               {displayData.achievement.map((ach, index) => (
-                <div key={index} className="mb-4 last:mb-0">
-                  <h3 className="font-semibold text-lg text-gray-900">{ach.achievement_title}</h3>
-                  <p className="text-gray-700 text-base leading-relaxed">{ach.achievement_description}</p>
-                </div>
+                (ach.achievement_title || ach.achievement_description) && (
+                  <div key={index} className="mb-4 last:mb-0">
+                    <h3 className="font-semibold text-lg text-gray-900">{ach.achievement_title}</h3>
+                    <p className="text-gray-700 text-base leading-relaxed">{ach.achievement_description}</p>
+                  </div>
+                )
               ))}
             </section>
           )}
@@ -398,7 +410,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
                 {displayData.skills.map((skill, index) => (
                   <span key={index}>
                     {skill}
-                    {index !== displayData.skills.length - 1 && <span className="mx-1">&middot;</span>}
+                    {index !== displayData.skills.length - 1 && <span className="mx-1 font-bold">&middot;</span>}
                   </span>
                 ))}
               </div>
@@ -430,7 +442,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       );
     case 'Tech Minimalist':
       return(
-        <div className="min-h-[1050px] bg-gradient-to-br from-gray-900 to-black p-2 sm:p-4 md:p-6 font-mono text-cyan-400 overflow-hidden relative max-w-full">
+        <div className="min-h-[1018px] bg-gradient-to-br from-gray-900 to-black p-2 sm:p-4 md:p-6 font-mono text-cyan-400 overflow-hidden relative max-w-full">
          
           <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" style={{
             backgroundImage: 'repeating-linear-gradient(0deg, rgba(0,255,255,0.1) 0px, rgba(0,255,255,0.1) 1px, transparent 1px, transparent 20px), repeating-linear-gradient(90deg, rgba(0,255,255,0.1) 0px, rgba(0,255,255,0.1) 1px, transparent 1px, transparent 20px)',
@@ -442,7 +454,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             <div className="border-2 border-cyan-500 rounded-lg h-full w-full opacity-30 animate-pulse"></div>
           </div>
 
-          <div className="relative z-20 max-w-full md:max-w-4xl mx-auto bg-gray-800 bg-opacity-90 rounded-xl shadow-lg p-2 sm:p-6 md:p-8">
+          <div className="relative z-20 max-w-full md:max-w-4xl mx-auto bg-gray-800 bg-opacity-90 rounded-none shadow-lg p-2 sm:p-6 md:p-8">
             {/* Header - Name, Contact Info (Tech Minimalist Template)*/}
             <header className="text-center mb-8 pb-4 border-b border-cyan-600">
               <h1 className="text-5xl font-bold mb-2 text-lime-400 tracking-wider animate-fade-in-down">
@@ -488,7 +500,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
                   {displayData.skills.map((skill, index) => (
                     <span key={index}>
                       {skill}
-                      {index !== displayData.skills.length - 1 && <span className="mx-1">&middot;</span>}
+                      {index !== displayData.skills.length - 1 && <span className="mx-1 font-bold">&middot;</span>}
                     </span>
                   ))}
                 </div>
@@ -541,9 +553,9 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             )}
 
             {/* Projects (Tech Minimalist Template)*/}
-            {displayData.project && displayData.project.length > 0 && (
+            {displayData.project && displayData.project.some(proj => proj.project_title || proj.project_description) && (
               <section className="mb-8">
-                <h2 className="text-2xl font-bold mb-4 text-cyan-400 relative inline-block group"> {/* Added group for hover */}
+                <h2 className="text-2xl font-bold mb-4 text-cyan-400 relative inline-block group">
                   <span className="relative">
                     <span className="z-10">Code & Create</span>
                     <span className="absolute left-0 bottom-0 w-full h-1 bg-lime-500 opacity-50 z-0 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
@@ -551,19 +563,21 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
                 </h2>
                 <div className="space-y-6">
                   {displayData.project.map((proj, index) => (
-                    <div key={index} className="bg-gray-700 bg-opacity-50 p-4 rounded-lg border border-gray-600 hover:border-cyan-500 transition-colors">
-                      <h3 className="font-semibold text-lg text-lime-300 mb-1">{proj.project_title}</h3>
-                      <p className="text-gray-400 text-sm leading-relaxed">{proj.project_description}</p>
-                    </div>
+                    (proj.project_title || proj.project_description) && (
+                      <div key={index} className="bg-gray-700 bg-opacity-50 p-4 rounded-lg border border-gray-600 hover:border-cyan-500 transition-colors">
+                        <h3 className="font-semibold text-lg text-lime-300 mb-1">{proj.project_title}</h3>
+                        <p className="text-gray-400 text-sm leading-relaxed">{proj.project_description}</p>
+                      </div>
+                    )
                   ))}
                 </div>
               </section>
             )}
 
             {/* Achievements (Tech Minimalist Template)*/}
-            {displayData.achievement && displayData.achievement.length > 0 && (
+            {displayData.achievement && displayData.achievement.some(ach => ach.achievement_title || ach.achievement_description) && (
               <section className="mb-8">
-                <h2 className="text-2xl font-bold mb-4 text-cyan-400 relative inline-block group"> {/* Added group for hover */}
+                <h2 className="text-2xl font-bold mb-4 text-cyan-400 relative inline-block group">
                   <span className="relative">
                     <span className="z-10">Milestones</span>
                     <span className="absolute left-0 bottom-0 w-full h-1 bg-lime-500 opacity-50 z-0 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
@@ -571,10 +585,12 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
                 </h2>
                 <div className="space-y-6">
                   {displayData.achievement.map((ach, index) => (
-                    <div key={index} className="bg-gray-700 bg-opacity-50 p-4 rounded-lg border border-gray-600 hover:border-lime-500 transition-colors">
-                      <h3 className="font-semibold text-lg text-lime-300 mb-1">{ach.achievement_title}</h3>
-                      <p className="text-gray-400 text-sm leading-relaxed">{ach.achievement_description}</p>
-                    </div>
+                    (ach.achievement_title || ach.achievement_description) && (
+                      <div key={index} className="bg-gray-700 bg-opacity-50 p-4 rounded-lg border border-gray-600 hover:border-lime-500 transition-colors">
+                        <h3 className="font-semibold text-lg text-lime-300 mb-1">{ach.achievement_title}</h3>
+                        <p className="text-gray-400 text-sm leading-relaxed">{ach.achievement_description}</p>
+                      </div>
+                    )
                   ))}
                 </div>
               </section>
@@ -690,27 +706,31 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
           )}
 
           {/* Projects (Default Template) */}
-          {displayData.project && displayData.project.length > 0 && (
+          {displayData.project && displayData.project.some(proj => proj.project_title || proj.project_description) && (
             <section className="mb-6">
               <h2 className={sectionTitleClasses}>Projects</h2>
               {displayData.project.map((proj, index) => (
-                <div key={index} className="mb-4">
-                  <h3 className="font-semibold text-lg">{proj.project_title}</h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">{proj.project_description}</p>
-                </div>
+                (proj.project_title || proj.project_description) && (
+                  <div key={index} className="mb-4">
+                    <h3 className="font-semibold text-lg">{proj.project_title}</h3>
+                    <p className="text-gray-700 text-sm leading-relaxed">{proj.project_description}</p>
+                  </div>
+                )
               ))}
             </section>
           )}
 
           {/* Achievements (Default Template) */}
-          {displayData.achievement && displayData.achievement.length > 0 && (
+          {displayData.achievement && displayData.achievement.some(ach => ach.achievement_title || ach.achievement_description) && (
             <section className="mb-6">
               <h2 className={sectionTitleClasses}>Achievements</h2>
               {displayData.achievement.map((ach, index) => (
-                <div key={index} className="mb-4">
-                  <h3 className="font-semibold text-lg">{ach.achievement_title}</h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">{ach.achievement_description}</p>
-                </div>
+                (ach.achievement_title || ach.achievement_description) && (
+                  <div key={index} className="mb-4">
+                    <h3 className="font-semibold text-lg">{ach.achievement_title}</h3>
+                    <p className="text-gray-700 text-sm leading-relaxed">{ach.achievement_description}</p>
+                  </div>
+                )
               ))}
             </section>
           )}
