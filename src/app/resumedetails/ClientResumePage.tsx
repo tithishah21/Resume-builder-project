@@ -435,16 +435,18 @@ function Page() {
   return (
     <>
     {/* Floating elements*/}
-    <div className="fixed inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute top-40 left-10 w-20 h-20 bg-yellow-300 rounded-full opacity-20 animate-pulse"></div>
-            <div className="absolute top-40 right-20 w-12 h-12 bg-cyan-300 rounded-lg opacity-30 animate-spin"></div>
-            <div className="absolute bottom-12 left-24 w-10 h-10 bg-pink-400 rounded-full opacity-20 animate-pulse"></div>
-            <div className="absolute bottom-32 right-32 w-16 h-16 bg-orange-500 rounded-full opacity-25 animate-pulse"></div>
-            <div className="absolute top-[50%] left-1 w-8 h-8 bg-sky-300 rotate-45 opacity-20 animate-spin"></div>
-            <div className="absolute top-96 right-2 w-10 h-10 bg-green-300 rounded-full opacity-20 animate-bounce"></div>
-            <div className="absolute top-[96%] right-10 w-16 h-16 bg-fuchsia-500 rounded-lg opacity-30 animate-pulse"></div>
-            <div className="absolute bottom-[30%] left-[10%] w-12 h-12 bg-red-600 rounded-full opacity-25 animate-ping"></div>
-          </div>
+    {!showPreview && (
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-40 left-10 w-20 h-20 bg-yellow-300 rounded-full opacity-20 animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-12 h-12 bg-cyan-300 rounded-lg opacity-30 animate-spin"></div>
+        <div className="absolute bottom-12 left-24 w-10 h-10 bg-pink-400 rounded-full opacity-20 animate-pulse"></div>
+        <div className="absolute bottom-32 right-32 w-16 h-16 bg-orange-500 rounded-full opacity-25 animate-pulse"></div>
+        <div className="absolute top-[50%] left-1 w-8 h-8 bg-sky-300 rotate-45 opacity-20 animate-spin"></div>
+        <div className="absolute top-96 right-2 w-10 h-10 bg-green-300 rounded-full opacity-20 animate-bounce"></div>
+        <div className="absolute top-[96%] right-10 w-16 h-16 bg-fuchsia-500 rounded-lg opacity-30 animate-pulse"></div>
+        <div className="absolute bottom-[30%] left-[10%] w-12 h-12 bg-red-600 rounded-full opacity-25 animate-ping"></div>
+      </div>
+    )}
       <Header2 />
 
       {!showPreview ? (
@@ -539,62 +541,66 @@ function Page() {
               {/* Personal Information */}
               {currentStep == 0 && (
                 <div className='rounded-xl container mx-auto h-auto w-full max-w-4xl lg:max-w-5xl px-2 sm:px-6 lg:px-16 py-5 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col mb-10'>
-                <span className='inline-flex gap-2 my-5'>
-                  <p className='text-cyan-400 text-2xl md:text-3xl font-bold'><IoPeopleOutline /></p>
-                  <p className='text-2xl md:text-3xl font-bold'>Personal Information</p>
-                </span>
-                <div className="flex flex-col gap-2 w-full">
-                  {/* Full Name */}
-                  <label htmlFor="full_name" className="text-base md:text-lg text-gray-300 font-semibold">Full Name</label>
+                  <span className='inline-flex gap-2 my-5'>
+                    <p className='text-cyan-400 text-2xl md:text-3xl font-bold'><IoPeopleOutline /></p>
+                    <p className='text-2xl md:text-3xl font-bold'>Personal Information</p>
+                  </span>
+                  <div className="flex flex-col md:flex-row md:gap-10 w-full">
+                    {/* Full Name */}
+                    <div className="flex flex-col w-full md:w-1/2">
+                      <label htmlFor="full_name" className="text-base md:text-lg text-gray-300 font-semibold">Full Name</label>
+                      <Field
+                        type="text"
+                        id="full_name"
+                        name="full_name"
+                        placeholder="Enter your full name"
+                        className="placeholder:text-base w-full px-5 text-base md:text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
+                      />
+                      {touched.full_name && errors.full_name && <div className="text-red-500 text-sm mt-1">{errors.full_name}</div>}
+                    </div>
+                    {/* Phone Number */}
+                    <div className="flex flex-col w-full md:w-1/2 mt-2 md:mt-0">
+                      <label htmlFor="phone" className="text-base md:text-lg text-gray-300 font-semibold">Phone Number</label>
+                      <Field
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="Enter your phone number"
+                        className="placeholder:text-base w-full px-5 text-base md:text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
+                      />
+                      {touched.phone && errors.phone && <div className="text-red-500 text-sm mt-1">{errors.phone}</div>}
+                    </div>
+                  </div>
+                  <label htmlFor="email" className='text-base md:text-lg text-gray-300 font-semibold mt-6'>Email Address</label>
                   <Field
-                    type="text"
-                    id="full_name"
-                    name="full_name"
-                    placeholder='Enter your full name'
-                    className="placeholder:text-base w-full px-5 text-base md:text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
+                    type='email'
+                    id="email"
+                    name="email"
+                    placeholder='Enter your email address'
+                    className='placeholder:text-base px-5 text-base md:text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20 w-full'
                   />
-                  {touched.full_name && errors.full_name && <div className="text-red-500 text-sm mt-1">{errors.full_name}</div>}
-                  {/* Phone Number */}
-                  <label htmlFor="phone" className="text-base md:text-lg text-gray-300 font-semibold mt-2">Phone Number</label>
+                  {touched.email && errors.email && <div className="text-red-500 text-sm mt-1">{errors.email}</div>}
+                  <label htmlFor="home" className='text-base md:text-lg text-gray-300 font-semibold mt-6'>Home Address</label>
                   <Field
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    placeholder='Enter your phone number'
-                    className="placeholder:text-base w-full px-5 text-base md:text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
+                    as="textarea"
+                    rows={3}
+                    id="home"
+                    name="home"
+                    placeholder='Enter your home address'
+                    className='placeholder:text-base px-5 text-base md:text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20 w-full'
                   />
-                  {touched.phone && errors.phone && <div className="text-red-500 text-sm mt-1">{errors.phone}</div>}
+                  {touched.home && errors.home && <div className="text-red-500 text-sm mt-1">{errors.home}</div>}
+                  <label htmlFor="summary" className='text-base md:text-lg text-gray-300 font-semibold mt-6'>Professional Summary</label>
+                  <Field
+                    as="textarea"
+                    rows={6}
+                    id="summary"
+                    name="summary"
+                    placeholder='Enter a short paragraph that best describes you'
+                    className='placeholder:text-base px-5 text-base md:text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20 w-full'
+                  />
+                  {touched.summary && errors.summary && <div className="text-red-500 text-sm mt-1">{errors.summary}</div>}
                 </div>
-                <label htmlFor="email" className='text-base md:text-lg text-gray-300 font-semibold mt-6'>Email Address</label>
-                <Field
-                  type='email'
-                  id="email"
-                  name="email"
-                  placeholder='Enter your email address'
-                  className='placeholder:text-base px-5 text-base md:text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20 w-full'
-                />
-                {touched.email && errors.email && <div className="text-red-500 text-sm mt-1">{errors.email}</div>}
-                <label htmlFor="home" className='text-base md:text-lg text-gray-300 font-semibold mt-6'>Home Address</label>
-                <Field
-                  as="textarea"
-                  rows={3}
-                  id="home"
-                  name="home"
-                  placeholder='Enter your home address'
-                  className='placeholder:text-base px-5 text-base md:text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20 w-full'
-                />
-                {touched.home && errors.home && <div className="text-red-500 text-sm mt-1">{errors.home}</div>}
-                <label htmlFor="summary" className='text-base md:text-lg text-gray-300 font-semibold mt-6'>Professional Summary</label>
-                <Field
-                  as="textarea"
-                  rows={6}
-                  id="summary"
-                  name="summary"
-                  placeholder='Enter a short paragraph that best describes you'
-                  className='placeholder:text-base px-5 text-base md:text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20 w-full'
-                />
-                {touched.summary && errors.summary && <div className="text-red-500 text-sm mt-1">{errors.summary}</div>}
-              </div>
               )}
 
               

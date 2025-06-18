@@ -57,8 +57,8 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
   switch (templateName) {
     case 'Modern Professional':
       return(
-        <div className='flex flex-row bg-white min-h-[1050px] max-w-4xl mx-auto shadow-2xl rounded-lg overflow-hidden'>
-            <div className='flex flex-col bg-gray-800 text-white w-1/3 min-w-[325px] py-10 px-6'>
+        <div className='flex flex-col md:flex-row bg-white min-h-[1050px] max-w-4xl mx-auto shadow-2xl rounded-lg overflow-hidden'>
+            <div className='flex flex-col bg-gray-800 text-white w-full md:w-1/3 min-w-0 py-8 px-6'>
               
               {/* Name (Modern Professional Template) */}
               <div className='text-center mb-8'>
@@ -68,23 +68,23 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               
               {/* Contact Info (Modern Professional Template)*/}
               <div className='text-left flex flex-col px-2 text-gray-300 mb-16 space-y-4'> 
-                <div className='inline-flex items-center gap-1'>
-                    <div className="flex items-center justify-center w-10 h-8 rounded-full bg-white text-gray-800">
+                <div className='inline-flex items-center gap-2'>
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800">
                         <IoIosHome size={20}/>
                     </div>
-                    {displayData.home}
+                    <span className="break-all">{displayData.home}</span>
                 </div>
-                <div className='inline-flex items-center gap-3'>
+                <div className='inline-flex items-center gap-2'>
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800">
                         <FaPhoneAlt size={16}/>
                     </div>
-                    {displayData.phone}
+                    <span className="break-all">{displayData.phone}</span>
                 </div>
-                <div className='inline-flex items-center gap-3'>
+                <div className='inline-flex items-center gap-2'>
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800">
                         <IoMail size={20}/>
                     </div>
-                    {displayData.email}
+                    <span className="break-all">{displayData.email}</span>
                 </div>
               </div>
 
@@ -120,7 +120,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               )}
             </div>
 
-            <div className='flex flex-col flex-1 bg-white text-gray-800 py-10 px-8'> 
+            <div className='flex flex-col flex-1 bg-white text-gray-800 py-8 px-2 sm:px-6 md:px-8 w-full'> 
               
               {/* Professional Summary (Modern Professional Template)*/}
               <section className="mb-8"> 
@@ -196,9 +196,9 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       );
       case 'Vibrant & Expressive (Gen Z)':
         return (
-          <div className="bg-[#f9e5e1] min-h-[1050px] max-w-4xl mx-auto shadow-2xl rounded-lg overflow-hidden px-6 py-10 text-[#4a4a4a] font-sans">
+          <div className="bg-[#f9e5e1] min-h-[1050px] max-w-full md:max-w-4xl mx-auto shadow-2xl rounded-lg overflow-hidden px-2 sm:px-4 md:px-8 py-6 md:py-10 text-[#4a4a4a] font-sans">
             {/* Header (Vibrant & Expressive (Gen Z) Template)*/}
-            <div className="bg-[#d9747c] text-white p-8 rounded-t-3xl flex flex-col items-center">
+            <div className="bg-[#d9747c] text-white p-4 sm:p-8 rounded-t-3xl flex flex-col items-center w-full">
               <h1 className="text-4xl font-bold uppercase">{displayData.full_name}</h1>
               {/* <p className='text-xs text-gray-300 '>Graphic Designer</p> */}
               
@@ -210,7 +210,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             </div>
 
             {/* Professional Summary (Vibrant & Expressive (Gen Z) Template) */}
-            <div className="bg-[#fff] px-8 py-6 grid grid-cols-1 md:grid-cols-2 gap-8 border-b border-gray-300">
+            <div className="bg-[#fff] px-2 sm:px-6 md:px-8 py-6 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 border-b border-gray-300 w-full">
                 
                 <h2 className="text-xl font-semibold text-[#d9747c] mb-2">About Me</h2>
                 <p className="text-sm leading-relaxed">{displayData.summary}</p>
@@ -218,7 +218,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             </div>
 
             
-            <div className="bg-[#fefaf7] px-8 py-6 grid grid-cols-1 md:grid-cols-2 gap-6 border-b border-gray-300">
+            <div className="bg-[#fefaf7] px-2 sm:px-6 md:px-8 py-6 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 border-b border-gray-300 w-full">
               {/* Education (Vibrant & Expressive (Gen Z) Template) */}
               <div>
                 <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Education</h2>
@@ -245,7 +245,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             </div>
 
      
-            <div className="bg-[#fff] px-8 py-6 grid grid-cols-1 md:grid-cols-2 gap-8 border-b border-gray-300">
+            <div className="bg-[#fff] px-2 sm:px-6 md:px-8 py-6 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 border-b border-gray-300 w-full">
               {/* Languages (Vibrant & Expressive (Gen Z) Template)*/}
               <div>
                 <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Language Skills</h2>
@@ -273,7 +273,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
 
             {/* Projects (Vibrant & Expressive (Gen Z) Template)*/}
             {displayData.project?.length > 0 && (
-              <div className="bg-[#fefaf7] px-8 py-6 border-b border-gray-300">
+              <div className="bg-[#fefaf7] px-2 sm:px-6 md:px-8 py-6 border-b border-gray-300 w-full">
                 <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Projects</h2>
                 {displayData.project.map((proj, index) => (
                   <div key={index} className="mb-4">
@@ -286,7 +286,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
 
             {/* Achievements (Vibrant & Expressive (Gen Z) Template)*/}
             {displayData.achievement?.length > 0 && (
-              <div className="bg-[#fff] px-8 py-6 border-b border-gray-300">
+              <div className="bg-[#fff] px-2 sm:px-6 md:px-8 py-6 border-b border-gray-300 w-full">
                 <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Achievements</h2>
                 {displayData.achievement.map((achieve, index) => (
                   <div key={index} className="mb-4">
@@ -299,7 +299,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
 
             {/* Extra (Vibrant & Expressive (Gen Z) Template)*/}
             {displayData.extra && (
-              <div className="bg-[#fefaf7] px-8 py-6 border-b border-gray-300">
+              <div className="bg-[#fefaf7] px-2 sm:px-6 md:px-8 py-6 border-b border-gray-300 w-full">
                 <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Extras</h2>
                 <p className="text-sm">{displayData.extra}</p>
               </div>
@@ -312,7 +312,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       
     case 'Classic Corporate':
       return (
-        <div className="bg-white p-8 font-sans text-gray-800 shadow-lg rounded-lg max-w-3xl mx-auto border border-gray-200">
+        <div className="bg-white p-2 sm:p-4 md:p-8 font-sans text-gray-800 shadow-lg rounded-lg max-w-full md:max-w-3xl mx-auto border border-gray-200">
           {/* Header - Name, Contact Info (Classic Corporate Template)*/}
           <header className="text-center pb-6 mb-6 border-b border-gray-300">
             <h1 className="text-4xl font-bold mb-2 text-gray-900">{displayData.full_name.toUpperCase()}</h1>
@@ -428,7 +428,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       );
     case 'Tech Minimalist':
       return(
-        <div className="min-h-[1050px] bg-gradient-to-br from-gray-900 to-black p-6 font-mono text-cyan-400 overflow-hidden relative">
+        <div className="min-h-[1050px] bg-gradient-to-br from-gray-900 to-black p-2 sm:p-4 md:p-6 font-mono text-cyan-400 overflow-hidden relative max-w-full">
          
           <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" style={{
             backgroundImage: 'repeating-linear-gradient(0deg, rgba(0,255,255,0.1) 0px, rgba(0,255,255,0.1) 1px, transparent 1px, transparent 20px), repeating-linear-gradient(90deg, rgba(0,255,255,0.1) 0px, rgba(0,255,255,0.1) 1px, transparent 1px, transparent 20px)',
@@ -440,7 +440,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             <div className="border-2 border-cyan-500 rounded-lg h-full w-full opacity-30 animate-pulse"></div>
           </div>
 
-          <div className="relative z-20 max-w-4xl mx-auto bg-gray-800 bg-opacity-90 rounded-xl shadow-lg p-8">
+          <div className="relative z-20 max-w-full md:max-w-4xl mx-auto bg-gray-800 bg-opacity-90 rounded-xl shadow-lg p-2 sm:p-6 md:p-8">
             {/* Header - Name, Contact Info (Tech Minimalist Template)*/}
             <header className="text-center mb-8 pb-4 border-b border-cyan-600">
               <h1 className="text-5xl font-bold mb-2 text-lime-400 tracking-wider animate-fade-in-down">
@@ -625,7 +625,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       );
     default:
       return (
-        <div className="bg-white p-8 text-gray-800 font-sans shadow-lg rounded-lg max-w-2xl mx-auto">
+        <div className="bg-white p-2 sm:p-4 md:p-8 text-gray-800 font-sans shadow-lg rounded-lg max-w-full md:max-w-2xl mx-auto">
           {/* Header - Name, Contact Info (Default Template)*/}
           <header className="text-center pb-4 mb-6 border-b-2 border-gray-300">
             <h1 className="text-4xl font-extrabold mb-2">{displayData.full_name.toUpperCase()}</h1>
