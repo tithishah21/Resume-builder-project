@@ -46,6 +46,7 @@ interface FormValues {
     start_date: string;
     end_date: string;
     job_summary: string;
+    currently_working: boolean;
   }[];
   project: {
     project_title: string;
@@ -413,8 +414,11 @@ function Page() {
         company_name: Yup.string().required('*Company name is required'),
         key_role: Yup.string().required('*Key role is required'),
         start_date: Yup.string().required('*Start date is required'),
-        end_date: Yup.string().required('*End date is required'),
+        end_date: Yup.string().when('currently_working', (currently_working, schema) =>
+          currently_working ? schema : schema.required('*End date is required')
+        ),
         job_summary: Yup.string().min(30, '*Summary must be at least 30 characters').required('Job summary is required'),
+        currently_working: Yup.boolean(),
       })
     ),
     project: Yup.array().of(
@@ -460,7 +464,7 @@ function Page() {
           skills: [],
           education: [{ institution: '', passing_year: '', grade: '' }],
           languages: [{ language: '', proficiency_level: '' }],
-          experience: [{ company_name: '', key_role: '', start_date: '', end_date: '', job_summary: '' }],
+          experience: [{ company_name: '', key_role: '', start_date: '', end_date: '', job_summary: '', currently_working: false }],
           project: [{ project_title: '', project_description: '' }],
           achievement: [{ achievement_title: '', achievement_description: '' }],
           extra: '',
@@ -477,6 +481,10 @@ function Page() {
           const formDataToSubmit: FormValues = {
             ...values,
             skills: skills,
+            experience: values.experience.map(exp => ({
+              ...exp,
+              end_date: exp.currently_working ? 'Currently' : exp.end_date,
+            })),
           };
 
           setResumeData(formDataToSubmit);
@@ -675,8 +683,6 @@ function Page() {
             </div>
           </div>
         )}
-
-              
 
               {/* Education */}
               {currentStep == 2 && (
@@ -908,11 +914,11 @@ function Page() {
                             <div className='flex-1'>
                               <label htmlFor={`experience.${index}.end_date`} className="text-base md:text-lg text-gray-300 font-semibold">End Date</label>
                               <Field
-                                type="text"
+                                type="month"
                                 id={`experience.${index}.end_date`}
                                 name={`experience.${index}.end_date`}
-                                placeholder='e.g., Currently / May, 2025'
-                                className="placeholder:text-base w-full px-5 text-base md:text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20"
+                                disabled={values.experience[index].currently_working}
+                                className={`placeholder:text-base w-full px-5 text-base md:text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20 ${values.experience[index].currently_working ? 'opacity-25 cursor-not-allowed' : ''}`}
                               />
                               {touched.experience?.[index] &&
                                (errors.experience as FieldArrayErrors<typeof values.experience>)?.[index] &&
@@ -922,6 +928,16 @@ function Page() {
                                   {((errors.experience as FormikErrors<typeof values.experience[number]>[])[index] as FormikErrors<typeof values.experience[number]>).end_date}
                                 </div>
                               )}
+                              {/* Checkbox for currently working */}
+                              <div className="flex items-center mt-2 ml-1.5">
+                                <Field
+                                  className="w-4 h-4"
+                                  type="checkbox"
+                                  id={`experience.${index}.currently_working`}
+                                  name={`experience.${index}.currently_working`}
+                                />
+                                <label htmlFor={`experience.${index}.currently_working`} className="ml-1 text-gray-400 text-lg">Currently working here</label>
+                              </div>
                             </div>
                           </div>
                           <div className='flex flex-col gap-2'>
@@ -956,7 +972,7 @@ function Page() {
                       ))}
                       <button
                         type="button"
-                        onClick={() => push({ company_name: '', key_role: '', start_date: '', end_date: '', job_summary: '' })}
+                        onClick={() => push({ company_name: '', key_role: '', start_date: '', end_date: '', job_summary: '', currently_working: false })}
                         className='px-5 py-3 bg-cyan-700 hover:bg-cyan-600 text-white rounded-lg text-base md:text-lg font-semibold w-max'
                       >
                         + Add Another Experience
