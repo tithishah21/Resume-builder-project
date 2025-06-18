@@ -11,6 +11,7 @@ function Page() {
     const router = useRouter();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loadingAuth, setLoadingAuth] = useState(true); 
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const checkLoginStatus = () => {
@@ -35,6 +36,10 @@ function Page() {
         };
 
         checkLoginStatus();
+
+        // Simulate loading or add your actual loading logic here
+        const timer = setTimeout(() => setLoading(false), 1000);
+        return () => clearTimeout(timer);
     }, []); 
 
     const handleSelectTemplate = (templateName: string) => { 
@@ -46,10 +51,14 @@ function Page() {
       }
   };
 
-    if (loadingAuth) {
+    if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-950 text-white">
-                Loading...
+                <div className="flex-col gap-4 w-full flex items-center justify-center">
+                    <div className="w-20 h-20 border-4 border-transparent text-blue-500 text-4xl animate-spin flex items-center justify-center border-t-blue-600 rounded-full">
+                        <div className="w-16 h-16 border-4 border-transparent text-purple-400 text-2xl animate-spin flex items-center justify-center border-t-purple-700 rounded-full"></div>
+                    </div>
+                </div>
             </div>
         );
     }
