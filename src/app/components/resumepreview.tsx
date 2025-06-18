@@ -739,5 +739,4 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
       );
   }
 };
-
 export default ResumePreview;
