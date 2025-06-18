@@ -91,17 +91,15 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               {/* Skills (Modern Professional Template)*/}
               {displayData.skills && displayData.skills.length > 0 && (
                 <section className="mb-8">
-                  <h2 className="text-2xl font-bold text-gray-200 mb-4 border-b border-gray-700 pb-2">Skills</h2> 
-                  <ul className="flex flex-wrap gap-2">
+                  <h2 className="text-2xl font-bold text-gray-200 mb-4 border-b border-gray-700 pb-2">Skills</h2>
+                  <div className="text-gray-200 text-base md:text-lg leading-relaxed flex flex-wrap">
                     {displayData.skills.map((skill, index) => (
-                      <li
-                        key={index}
-                        className="text-gray-200 px-3 py-1 rounded text-sm bg-gray-700 hover:bg-gray-600 transition-colors" 
-                      >
+                      <span key={index}>
                         {skill}
-                      </li>
+                        {index !== displayData.skills.length - 1 && <span className="mx-1">&middot;</span>}
+                      </span>
                     ))}
-                  </ul>
+                  </div>
                 </section>
               )}
 
@@ -259,16 +257,19 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               </div>
 
               {/* Skills (Vibrant & Expressive (Gen Z) Template)*/}
-              <div>
-                <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Skills</h2>
-                <div className="flex flex-wrap gap-3">
-                  {displayData.skills.map((skill, index) => (
-                    <span key={index} className="px-3 py-1 bg-[#f5dcdc] rounded-lg text-sm text-[#4a4a4a] border border-[#d9747c]">
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
+              {displayData.skills && displayData.skills.length > 0 && (
+                <section className="mb-6">
+                  <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Skills</h2>
+                  <div className="text-[#4a4a4a] text-base md:text-lg leading-relaxed flex flex-wrap">
+                    {displayData.skills.map((skill, index) => (
+                      <span key={index}>
+                        {skill}
+                        {index !== displayData.skills.length - 1 && <span className="mx-1">&middot;</span>}
+                      </span>
+                    ))}
+                  </div>
+                </section>
+              )}
             </div>
 
             {/* Projects (Vibrant & Expressive (Gen Z) Template)*/}
@@ -393,13 +394,14 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
           {displayData.skills && displayData.skills.length > 0 && (
             <section className="mb-6">
               <h2 className="text-xl font-bold mb-3 mt-6 text-gray-800 uppercase tracking-wide border-b border-gray-200 pb-2">Skills</h2>
-              <ul className="flex flex-wrap gap-2 text-sm">
+              <div className="text-gray-700 text-base md:text-lg leading-relaxed flex flex-wrap">
                 {displayData.skills.map((skill, index) => (
-                  <li key={index} className="px-3 py-1 rounded-full bg-gray-100 border border-gray-300 text-gray-700">
+                  <span key={index}>
                     {skill}
-                  </li>
+                    {index !== displayData.skills.length - 1 && <span className="mx-1">&middot;</span>}
+                  </span>
                 ))}
-              </ul>
+              </div>
             </section>
           )}
 
@@ -476,19 +478,17 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
             {/* Skills (Tech Minimalist Template)*/}
             {displayData.skills && displayData.skills.length > 0 && (
               <section className="mb-8">
-                <h2 className="text-2xl font-bold mb-4 text-cyan-400 relative inline-block group"> {/* Added group for hover */}
+                <h2 className="text-2xl font-bold mb-4 text-cyan-400 relative inline-block group">
                   <span className="relative">
                     <span className="z-10">Skill Matrix</span>
                     <span className="absolute left-0 bottom-0 w-full h-1 bg-lime-500 opacity-50 z-0 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
                   </span>
                 </h2>
-                <div className="flex flex-wrap gap-3">
+                <div className="text-blue-200 text-base md:text-lg leading-relaxed flex flex-wrap">
                   {displayData.skills.map((skill, index) => (
-                    <span
-                      key={index}
-                      className="px-4 py-1 rounded text-sm bg-blue-700 bg-opacity-70 text-blue-200 border border-blue-500 transform hover:scale-105 transition-all duration-200 shadow-md"
-                    >
+                    <span key={index}>
                       {skill}
+                      {index !== displayData.skills.length - 1 && <span className="mx-1">&middot;</span>}
                     </span>
                   ))}
                 </div>
@@ -647,14 +647,15 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
           {/* Skills (Default Template)*/}
           {displayData.skills && displayData.skills.length > 0 && (
             <section className="mb-6">
-              <h2 className="text-xl font-bold mb-3 mt-6 text-gray-700 uppercase tracking-wider border-b border-gray-200 pb-2">Skills</h2>
-              <ul className="flex flex-wrap gap-2 text-sm text-center items-center">
+              <h2 className={sectionTitleClasses}>Skills</h2>
+              <div className="text-blue-700 text-base md:text-lg leading-relaxed flex flex-wrap">
                 {displayData.skills.map((skill, index) => (
-                  <li key={index} className={`text-center align-middle justify-center px-3 py-1 rounded-full bg-gray-200 text-blue-700`}> {/* Using default accent color */}
+                  <span key={index}>
                     {skill}
-                  </li>
+                    {index !== displayData.skills.length - 1 && <span className="mx-1">&middot;</span>}
+                  </span>
                 ))}
-              </ul>
+              </div>
             </section>
           )}
 
