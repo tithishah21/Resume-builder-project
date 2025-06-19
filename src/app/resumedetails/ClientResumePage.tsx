@@ -160,7 +160,8 @@ function Page() {
             setPrefillValues(null);
             return;
           }
-          const { data, error } = await supabase
+          const supabase = createClient();
+          const { data } = await supabase
             .from('resumes')
             .select('*')
             .eq('email', parsedUser.email)
@@ -171,7 +172,7 @@ function Page() {
           } else {
             setPrefillValues(null);
           }
-        } catch (err) {
+        } catch {
           setPrefillValues(null);
         }
       };

@@ -10,7 +10,6 @@ import Footer from '../components/footer';
 function Page() { 
     const router = useRouter();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [loadingAuth, setLoadingAuth] = useState(true); 
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -32,7 +31,6 @@ function Page() {
                     }
                 }
             }
-            setLoadingAuth(false); 
         };
 
         checkLoginStatus();
