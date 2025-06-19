@@ -8,7 +8,7 @@ import { FiEdit } from "react-icons/fi";
 import { createClient } from '../../../utils/supabase/client';
 import { FaRobot } from 'react-icons/fa';
 import ResumeTipsScroll from '../components/stackcard';
-
+import ScrollReveal from '../components/scrollreveal';
 interface User {
   name?: string;
   email?: string;
@@ -109,7 +109,7 @@ export default function PrivatePage() {
         </div>
       </div>
 
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 text-white px-2 sm:px-4 py-6 sm:py-8">
+      <div className="min-h-screen-90 bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 text-white px-2 sm:px-4 py-6 sm:py-8">
         <div className="w-full">
           <div className="flex items-center space-x-2 text-3xl sm:text-5xl font-bold mt-3 mb-4 flex-wrap">
             <span className="text-white">Build</span>
@@ -125,7 +125,7 @@ export default function PrivatePage() {
             <span className="text-white">Resume!</span>
           </div>
 
-          <div className="text-gray-300 text-base sm:text-xl mb-8 sm:mb-12">
+          <div className="text-gray-300 text-base sm:text-xl mb-10 sm:mb-12">
             Ready to take your career to the next level? Let&apos;s build something amazing.
           </div>
 
@@ -184,6 +184,19 @@ export default function PrivatePage() {
       <div className="">
         <ResumeTipsScroll />
       </div>
+      <div>
+        <ScrollReveal
+          baseOpacity={0}
+          enableBlur={true}
+          baseRotation={5}
+          blurStrength={10}
+          containerClassName="text-center text-sm"
+          textClassName='text-sm text-blue-600'
+        >
+          Recruiters decide in 6 seconds—make it count.
+        </ScrollReveal>
+      </div> 
+      <br />
       <Footer />
     </>
   );
