@@ -35,7 +35,7 @@ export default function PrivatePage() {
       supabase
         .from('resumes')
         .select('*')
-        .eq('email', parsedUser.email)
+        .eq('email', parsedUser.email.toLowerCase())
         .single()
         .then(({ data }) => setHasResume(!!data));
     } catch (error) {
