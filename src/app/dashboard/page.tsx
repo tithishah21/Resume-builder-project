@@ -184,18 +184,8 @@ export default function PrivatePage() {
             </div>
           </div>
 
-          {/* Authentication Status */}
-          <div className="mx-auto items-center w-full max-w-md sm:max-w-2xl mt-8 sm:mt-12 bg-[#d1ecf1] text-[#0c5460] rounded-lg p-4 sm:p-6 border border-[#bee5eb]">
-            <h3 className="text-lg font-semibold mb-4">Protected Content</h3>
-            <p>This is your private dashboard. Only authenticated users can see this content.</p>
-            
-            <div className="mt-4 p-4 bg-gray-800 rounded border border-gray-600">
-              <h4 className="font-medium text-green-400 mb-2">✅ Authentication Status</h4>
-              <p className="text-xs text-gray-300">
-                (You are successfully signed in with your custom authentication system)
-              </p>
-            </div>
-          </div>
+          
+          
         </div>
       </div>
 

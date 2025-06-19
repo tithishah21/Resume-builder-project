@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Formik, Form, Field, FieldArray, FormikErrors } from 'formik';
 import * as Yup from 'yup';
-
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
@@ -148,7 +147,35 @@ function Page() {
         setPrefillValues(null);
       }
     } else {
-      setPrefillValues(null);
+      // Fallback: fetch from Supabase if resumeData is not in localStorage
+      const fetchFromSupabase = async () => {
+        const userData = localStorage.getItem('user');
+        if (!userData) {
+          setPrefillValues(null);
+          return;
+        }
+        try {
+          const parsedUser = JSON.parse(userData);
+          if (!parsedUser.email) {
+            setPrefillValues(null);
+            return;
+          }
+          const { data, error } = await supabase
+            .from('resumes')
+            .select('*')
+            .eq('email', parsedUser.email)
+            .single();
+          if (data) {
+            setPrefillValues(data);
+            if (data.skills) setSkills(data.skills);
+          } else {
+            setPrefillValues(null);
+          }
+        } catch (err) {
+          setPrefillValues(null);
+        }
+      };
+      fetchFromSupabase();
     }
   }, []);
 
