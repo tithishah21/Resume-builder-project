@@ -7,6 +7,7 @@ import { FaPlus } from "react-icons/fa6";
 import { FiEdit } from "react-icons/fi";
 import { createClient } from '../../../utils/supabase/client';
 import { FaRobot } from 'react-icons/fa';
+import ResumeTipsScroll from '../components/stackcard';
 
 interface User {
   name?: string;
@@ -116,9 +117,6 @@ export default function PrivatePage() {
               texts={['Impactful', 'Creative', 'Professional', 'Stunning', 'Smart']}
               mainClassName="bg-gradient-to-r from-blue-800 to-purple-600 text-black px-2 sm:px-3 py-0.5 sm:py-1 rounded-lg"
               staggerFrom="last"
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "-110%" }}
               staggerDuration={0.025}
               splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
               transition={{ type: "spring", damping: 30, stiffness: 400 }}
@@ -133,7 +131,7 @@ export default function PrivatePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center">
             {/* Create Resume Card */}
-            <div className={`w-full max-w-xs sm:max-w-md h-auto bg-gradient-to-br from-blue-200/100 to-cyan-950/100 border-blue-500/30 p-4 sm:p-8 cursor-pointer hover:from-blue-900/70 hover:to-cyan-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl mx-auto flex flex-col justify-center mb-6 ${hasResume ? 'opacity-50 pointer-events-none' : ''}`} title={hasResume ? 'You already have a resume. Edit it or delete to create a new one.' : ''}>
+            <div className={`w-full max-w-xs sm:max-w-md h-auto bg-gradient-to-br from-blue-200/100 to-cyan-950/100 border-blue-500/30 p-4 sm:p-8 cursor-pointer hover:from-blue-900/70 hover:to-cyan-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl mx-auto flex flex-col justify-center mb-0 ${hasResume ? 'opacity-50 pointer-events-none' : ''}`} title={hasResume ? 'You already have a resume. Edit it or delete to create a new one.' : ''}>
               <div className="text-4xl sm:text-5xl mt-2 sm:mt-4 w-14 h-14 sm:w-24 sm:h-24 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300">
                 <FaPlus />
               </div>
@@ -150,7 +148,7 @@ export default function PrivatePage() {
             </div>
 
             {/* Edit Resume Card */}
-            <div className={`w-full max-w-xs sm:max-w-md h-auto bg-gradient-to-br from-purple-200/100 to-pink-900/100 border-purple-500/30 p-4 sm:p-8 cursor-pointer hover:from-purple-900/70 hover:to-pink-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl mx-auto flex flex-col justify-center mb-6 ${!hasResume ? 'opacity-50 pointer-events-none' : ''}`} title={!hasResume ? 'No resume found. Create one first!' : ''}>
+            <div className={`w-full max-w-xs sm:max-w-md h-auto bg-gradient-to-br from-purple-200/100 to-pink-900/100 border-purple-500/30 p-4 sm:p-8 cursor-pointer hover:from-purple-900/70 hover:to-pink-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl mx-auto flex flex-col justify-center mb-0 ${!hasResume ? 'opacity-50 pointer-events-none' : ''}`} title={!hasResume ? 'No resume found. Create one first!' : ''}>
               <div className="text-4xl sm:text-5xl mt-2 sm:mt-4 w-14 h-14 sm:w-24 sm:h-24 bg-gradient-to-r from-purple-500 to-pink-400 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300">
                 <FiEdit />
               </div>
@@ -166,7 +164,7 @@ export default function PrivatePage() {
             </div>
             
             {/* AI prep card */}
-            <div className="w-full max-w-xs sm:max-w-md h-auto bg-gradient-to-br from-lime-200/100 to-green-900/100 border-green-500/30 p-4 sm:p-8 cursor-pointer hover:from-lime-900/70 hover:to-emerald-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl mx-auto flex flex-col justify-center mb-6">
+            <div className="w-full max-w-xs sm:max-w-md h-auto bg-gradient-to-br from-lime-200/100 to-green-900/100 border-green-500/30 p-4 sm:p-8 cursor-pointer hover:from-lime-900/70 hover:to-emerald-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl mx-auto flex flex-col justify-center mb-0">
               <div className="text-4xl sm:text-5xl mt-2 sm:mt-4 w-14 h-14 sm:w-24 sm:h-24 bg-gradient-to-r from-green-300 to-green-900 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300">
                 <FaRobot />
               </div>
@@ -183,7 +181,9 @@ export default function PrivatePage() {
           
         </div>
       </div>
-
+      <div className="">
+        <ResumeTipsScroll />
+      </div>
       <Footer />
     </>
   );
