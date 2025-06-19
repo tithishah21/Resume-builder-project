@@ -20,6 +20,7 @@ export default function PrivatePage() {
   const [loading, setLoading] = useState(true);
   const [prefillValues, setPrefillValues] = useState<any | null>(null);
   const [skills, setSkills] = useState<string[]>([]);
+  const [hasResume, setHasResume] = useState<boolean | null>(null);
 
   useEffect(() => {
     const userData = localStorage.getItem('user');
@@ -31,13 +32,20 @@ export default function PrivatePage() {
     try {
       const parsedUser = JSON.parse(userData);
       setUser(parsedUser);
+      // Check if user has a resume
+      const supabase = createClient();
+      supabase
+        .from('resumes')
+        .select('*')
+        .eq('email', parsedUser.email)
+        .single()
+        .then(({ data }) => setHasResume(!!data));
     } catch (error) {
       console.error('Error parsing user data:', error);
       localStorage.removeItem('user'); 
       router.push('/signin');
       return;
     }
-    
     setLoading(false);
   }, [router]);
 
@@ -143,7 +151,7 @@ export default function PrivatePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center">
             {/* Create Resume Card */}
-            <div className="w-full max-w-xs sm:max-w-md h-auto bg-gradient-to-br from-blue-200/100 to-cyan-950/100 border-blue-500/30 p-4 sm:p-8 cursor-pointer hover:from-blue-900/70 hover:to-cyan-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl mx-auto flex flex-col justify-center mb-6">
+            <div className={`w-full max-w-xs sm:max-w-md h-auto bg-gradient-to-br from-blue-200/100 to-cyan-950/100 border-blue-500/30 p-4 sm:p-8 cursor-pointer hover:from-blue-900/70 hover:to-cyan-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl mx-auto flex flex-col justify-center mb-6 ${hasResume ? 'opacity-50 pointer-events-none' : ''}`} title={hasResume ? 'You already have a resume. Edit it or delete to create a new one.' : ''}>
               <div className="text-4xl sm:text-5xl mt-2 sm:mt-4 w-14 h-14 sm:w-24 sm:h-24 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300">
                 <FaPlus />
               </div>
@@ -152,22 +160,27 @@ export default function PrivatePage() {
               <button 
                 onClick={() => router.push('/templates')}
                 className="w-full sm:w-auto max-w-xs md:px-24 lg:px-28 py-2 sm:py-3 bg-gradient-to-r from-blue-700 to-cyan-500 hover:from-blue-800 hover:to-cyan-600 text-white font-semibold rounded-lg mt-2 sm:mt-5 mx-auto"
+                disabled={!!hasResume}
               >
                 Get Started
               </button>
+              {hasResume && <div className="text-xs text-center text-gray-700 mt-2">You already have a resume. Edit it or delete to create a new one.</div>}
             </div>
 
             {/* Edit Resume Card */}
-            <div className="w-full max-w-xs sm:max-w-md h-auto bg-gradient-to-br from-purple-200/100 to-pink-900/100 border-purple-500/30 p-4 sm:p-8 cursor-pointer hover:from-purple-900/70 hover:to-pink-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl mx-auto flex flex-col justify-center mb-6">
+            <div className={`w-full max-w-xs sm:max-w-md h-auto bg-gradient-to-br from-purple-200/100 to-pink-900/100 border-purple-500/30 p-4 sm:p-8 cursor-pointer hover:from-purple-900/70 hover:to-pink-900/70 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.25)] rounded-xl mx-auto flex flex-col justify-center mb-6 ${!hasResume ? 'opacity-50 pointer-events-none' : ''}`} title={!hasResume ? 'No resume found. Create one first!' : ''}>
               <div className="text-4xl sm:text-5xl mt-2 sm:mt-4 w-14 h-14 sm:w-24 sm:h-24 bg-gradient-to-r from-purple-500 to-pink-400 rounded-2xl flex items-center justify-center mx-auto group-hover:shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300">
                 <FiEdit />
               </div>
               <div className="text-xl sm:text-2xl font-extrabold mt-3 mb-3 sm:mb-5 tracking-tight leading-tight text-center">Edit Your Resume </div>
               <div className="text-sm sm:text-lg text-center mb-3 sm:mb-5 ">Update your existing resume with our powerful editor!</div>
               <button onClick={handleEditResume}
-                className="w-full sm:w-auto max-w-xs md:px-24 lg:px-24 py-2 sm:py-3 outline text-purple-100 hover:bg-purple-500/10 border-y-1 border-x-1 font-semibold rounded-lg mt-2 sm:mt-5 mx-auto">
+                className="w-full sm:w-auto max-w-xs md:px-24 lg:px-24 py-2 sm:py-3 outline text-purple-100 hover:bg-purple-500/10 border-y-1 border-x-1 font-semibold rounded-lg mt-2 sm:mt-5 mx-auto"
+                disabled={hasResume === false}
+              >
                 Continue Editing
               </button>
+              {!hasResume && <div className="text-xs text-center text-gray-700 mt-2">No resume found. Create one first!</div>}
             </div>
             
             {/* AI prep card */}
