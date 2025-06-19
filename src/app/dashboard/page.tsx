@@ -18,7 +18,8 @@ export default function PrivatePage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-
+  const [prefillValues, setPrefillValues] = useState<any | null>(null);
+  const [skills, setSkills] = useState<string[]>([]);
 
   useEffect(() => {
     const userData = localStorage.getItem('user');
@@ -39,6 +40,22 @@ export default function PrivatePage() {
     
     setLoading(false);
   }, [router]);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('resumeData');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        setPrefillValues(parsed);
+        if (parsed.skills) setSkills(parsed.skills);
+        localStorage.removeItem('resumeData');
+      } catch {
+        setPrefillValues(null);
+      }
+    } else {
+      setPrefillValues(null);
+    }
+  }, []);
 
   const handleEditResume = async () => {
     const userData = localStorage.getItem('user');

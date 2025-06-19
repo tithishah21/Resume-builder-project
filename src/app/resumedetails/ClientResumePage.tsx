@@ -75,6 +75,8 @@ function Page() {
 
   const [currentStep, setCurrentStep] = useState(0);
 
+  const [prefillValues, setPrefillValues] = useState<FormValues | null | undefined>(undefined);
+
   const supabase = createClient();
   const totalSteps = 8;
   const calculateProgress = () => {
@@ -133,6 +135,22 @@ function Page() {
     getTemplateFromUrl();
 
   }, [searchParams]);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('resumeData');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        setPrefillValues(parsed);
+        if (parsed.skills) setSkills(parsed.skills);
+        localStorage.removeItem('resumeData');
+      } catch {
+        setPrefillValues(null);
+      }
+    } else {
+      setPrefillValues(null);
+    }
+  }, []);
 
   const suggestedSkills = [
   // 🧑‍💻 Tech & Development
@@ -441,6 +459,19 @@ function Page() {
     extra: Yup.string(),
   });
 
+  // Show loader while checking for prefill data
+  if (prefillValues === undefined) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-950 text-white">
+        <div className="flex-col gap-4 w-full flex items-center justify-center">
+          <div className="w-20 h-20 border-4 border-transparent text-blue-500 text-4xl animate-spin flex items-center justify-center border-t-blue-400 rounded-full">
+            <div className="w-16 h-16 border-4 border-transparent text-purple-400 text-2xl animate-spin flex items-center justify-center border-t-red-400 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
     {/* Floating elements*/}
@@ -460,7 +491,7 @@ function Page() {
 
       {!showPreview ? (
       <Formik<FormValues>
-        initialValues={{
+        initialValues={prefillValues || {
           full_name: '',
           phone: '',
           email: '',

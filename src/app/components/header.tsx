@@ -54,7 +54,7 @@ function Header() {
 
   return (
     <div className="sticky top-0 z-50 bg-black" id="header">
-      <div className="bg-gray-900 py-6 border-b border-slate-800 flex justify-between items-center px-4 lg:px-9">
+      <div className="bg-gray-900 py-6 border-b border-slate-800 flex justify-between items-center px-2 lg:px-9">
         {/* Mobile: Hamburger + Logo + Sign Up */}
         <div className="lg:hidden flex items-center justify-start w-full">
           {/* Left: Animated Hamburger */}
@@ -81,7 +81,7 @@ function Header() {
             smooth={true}
             duration={500}
             offset={-70}
-            className="text-xl font-semibold text-white mx-2 cursor-pointer"
+            className="text-lg lg:text-xl font-semibold text-white mx-2 cursor-pointer"
             onClick={() => setMenuOpen(false)}
           >
             ResumeBuilder Pro
@@ -90,7 +90,7 @@ function Header() {
           {/* Right: Sign Up */}
           <button
             onClick={() => router.push("/signup")}
-            className="mx-8 rounded-lg px-4 py-2 text-sm font-bold bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow hover:from-blue-700 hover:to-cyan-600 transition-all"
+            className="mx-8 rounded-lg px-4 py-2 text-xs lg:text-sm font-bold bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow hover:from-blue-700 hover:to-cyan-600 transition-all"
           >
             Sign Up
           </button>
