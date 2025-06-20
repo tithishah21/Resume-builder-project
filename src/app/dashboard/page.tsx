@@ -8,7 +8,7 @@ import { FiEdit } from "react-icons/fi";
 import { createClient } from '../../../utils/supabase/client';
 import { FaRobot } from 'react-icons/fa';
 import ResumeTipsScroll from '../components/stackcard';
-import ScrollReveal from '../components/scrollreveal';
+// import ScrollReveal from '../components/scrollreveal';
 interface User {
   name?: string;
   email?: string;

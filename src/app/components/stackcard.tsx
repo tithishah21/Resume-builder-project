@@ -114,11 +114,6 @@ const Card: React.FC<CardProps> = ({
   targetScale,
 }) => {
   const container = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: container,
-    offset: ['start end', 'start start'],
-  });
-
   const scale = useTransform(progress, range, [1, targetScale]);
 
   // Split description and example if present

@@ -11,8 +11,7 @@ import React, {
     AnimatePresence,
     Transition,
     type VariantLabels,
-    type Target,
-    type AnimationControls,
+    animationControls,
     type TargetAndTransition,
   } from "framer-motion";
   
@@ -34,9 +33,13 @@ import React, {
     > {
     texts: string[];
     transition?: Transition;
-    initial?: boolean | Target | VariantLabels;
-    animate?: boolean | VariantLabels | AnimationControls | TargetAndTransition;
-    exit?: Target | VariantLabels;
+    initial?: boolean | TargetAndTransition | VariantLabels;
+    animate?:
+      | boolean
+      | VariantLabels
+      | ReturnType<typeof animationControls>
+      | TargetAndTransition;
+    exit?: TargetAndTransition | VariantLabels;
     animatePresenceMode?: "sync" | "wait";
     animatePresenceInitial?: boolean;
     rotationInterval?: number;
