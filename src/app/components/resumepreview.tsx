@@ -2,6 +2,7 @@ import React from 'react';
 import { FaPhoneAlt } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 import { IoIosHome } from "react-icons/io";
+
 interface FormValues {
   full_name: string;
   phone: string;
@@ -458,13 +459,12 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               <p className="text-gray-400 text-lg mb-4">Software Engineer | AI Enthusiast | Cloud Architect</p> {/* Example tech roles */}
               <div className="flex flex-wrap justify-center gap-6 text-gray-300 text-sm">
                 <span className="flex items-center gap-2">
-                  <IoIosHome size={18} className="text-cyan-400"/> {displayData.home}
+                  {/* Removed IoIosHome icon */}
+                  {displayData.home}
                 </span>
                 <span className="flex items-center gap-2">
-                  <FaPhoneAlt size={14} className="text-cyan-400"/> {displayData.phone}
-                </span>
-                <span className="flex items-center gap-2">
-                  <IoMail size={16} className="text-cyan-400"/> {displayData.email}
+                  {/* Removed FaPhoneAlt icon */}
+                  +91 {displayData.phone} &nbsp;|&nbsp; {displayData.email}
                 </span>
               </div>
             </header>
@@ -514,7 +514,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
                 <div className="space-y-6">
                   {displayData.experience.map((exp, index) => (
                     <div key={index} className="relative pl-6 pb-4 border-l-2 border-dashed border-gray-600 last:border-l-0 last:pb-0">
-                      <div className="absolute -left-1.5 top-0 w-3 h-3 bg-cyan-500 rounded-full animate-pulse-light"></div>
+                      {/* Removed the green/blue bullet dot */}
                       <h3 className="text-xl font-bold text-lime-400 mb-1">{exp.key_role}</h3>
                       <p className="text-gray-300 text-sm">{exp.company_name} <span className="text-gray-500">({exp.start_date} - {exp.end_date})</span></p>
                       <p className="text-gray-400 text-sm leading-relaxed mt-2">{exp.job_summary}</p>
