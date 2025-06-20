@@ -397,6 +397,14 @@ function Page() {
 
     const input = document.getElementById('resume-content');
     if (input) {
+      // Store original width and style
+      const originalWidth = input.style.width;
+      const originalMaxWidth = input.style.maxWidth;
+
+      // Set to fixed desktop width for PDF
+      input.style.width = "1024px";
+      input.style.maxWidth = "1024px";
+
       const scale = 2;
       try {
         const canvas = await html2canvas(input, {
@@ -436,6 +444,10 @@ function Page() {
       } catch (error) {
         console.error("Error generating PDF:", error);
         alert("Failed to generate PDF. Please try again.");
+      } finally {
+        // Restore original width
+        input.style.width = originalWidth;
+        input.style.maxWidth = originalMaxWidth;
       }
     } else {
       console.error("Could not find element with ID 'resume-content'.");
