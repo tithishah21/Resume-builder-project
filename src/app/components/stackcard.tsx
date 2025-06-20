@@ -135,7 +135,7 @@ const Card: React.FC<CardProps> = ({
   return (
     <div
       ref={container}
-      className='h-screen flex items-center justify-center sticky top-0'
+      className='h-screen flex items-start justify-center sticky top-0 pt-24'
     >
       <motion.div
         style={{
@@ -143,17 +143,17 @@ const Card: React.FC<CardProps> = ({
           scale,
           top: `calc(-5vh + ${i * 25}px)`,
         }}
-        className='flex flex-col md:flex-row items-center justify-center md:justify-between relative -top-[10%] h-auto min-h-[400px] md:h-[400px] sm-h-[300px] w-[90%] max-w-5xl rounded-2xl p-6 md:p-12 origin-top shadow-lg'
+        className='flex flex-col md:flex-row items-center justify-center md:justify-between relative h-auto min-h-[400px] md:h-[400px] w-[90%] max-w-7xl rounded-2xl p-6 md:p-12 origin-top shadow-lg'
       >
         <h2 className='text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center md:text-left w-full md:w-1/2 mb-6 md:mb-0'>{title}</h2>
         <div className='w-full md:w-1/2 text-center md:text-right'>
-            <p className='text-base md:text-lg lg:text-xl text-white leading-relaxed'>{mainDesc}</p>
-            {example && (
-                <p className='text-sm md:text-base text-blue-100 italic mt-4'>
-                    <span className='font-bold not-italic text-blue-200'>Example:</span> {example}
-                </p>
-            )}
-        </div>
+             <p className='text-base md:text-lg lg:text-xl text-white leading-relaxed'>{mainDesc}</p>
+             {example && (
+                 <p className='text-sm md:text-base text-blue-100 italic mt-4'>
+                     <span className='font-bold not-italic text-blue-200'>Example:</span> {example}
+                 </p>
+             )}
+         </div>
       </motion.div>
     </div>
   );
