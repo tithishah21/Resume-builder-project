@@ -5,24 +5,18 @@ import { Formik, Form, Field, FieldArray, FormikErrors } from 'formik';
 import * as Yup from 'yup';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-
 import ResumePreview from '../components/resumepreview'; 
-
 import { IoPeopleOutline } from "react-icons/io5";
 import { HiOutlineLightBulb } from "react-icons/hi";
 import { FaGraduationCap } from "react-icons/fa6";
 import { IoLanguage } from "react-icons/io5";
 import { BsBagDashFill } from "react-icons/bs";
 import { BsFillBookmarkPlusFill } from "react-icons/bs";
-
 import { FaProjectDiagram } from "react-icons/fa";
 import { FaTrophy } from "react-icons/fa6";
-
 import Header2 from '../components/header2';
 import Footer from '../components/footer';
-
 import { createClient } from '../../../utils/supabase/client';
-
 interface FormValues {
   full_name: string;
   phone: string;
@@ -142,6 +136,10 @@ function Page() {
         const parsed = JSON.parse(stored);
         setPrefillValues(parsed);
         if (parsed.skills) setSkills(parsed.skills);
+        // If no template in URL, set from prefillValues
+        if (!searchParams.get('template') && parsed.templates) {
+          setSelectedTemplate(parsed.templates);
+        }
         localStorage.removeItem('resumeData');
       } catch {
         setPrefillValues(null);
@@ -169,6 +167,10 @@ function Page() {
           if (data) {
             setPrefillValues(data);
             if (data.skills) setSkills(data.skills);
+            // If no template in URL, set from prefillValues
+            if (!searchParams.get('template') && data.templates) {
+              setSelectedTemplate(data.templates);
+            }
           } else {
             setPrefillValues(null);
           }
@@ -551,22 +553,40 @@ function Page() {
             })),
           };
 
-          setResumeData(formDataToSubmit);
-          setShowPreview(true);
-
-          console.log("Submitting Data to Supabase:", formDataToSubmit);
+          // Remove id if present (ignore TS error if id is not in FormValues)
+          const { id: _omitId, ...formDataWithoutId } = formDataToSubmit as any;
 
           try {
-            const { data, error } = await supabase
+            // Check if a resume exists for this email
+            const { data: existingResume, error: fetchError } = await supabase
               .from('resumes')
-              .insert([{ user_id: userId, ...formDataToSubmit }])
-              .select();
+              .select('*')
+              .eq('email', formDataToSubmit.email)
+              .single();
 
-            if (error) {
-              console.error('Error inserting resume data:', error);
-              alert(`Error saving resume: ${error.message}`);
+            let saveError = null;
+            if (existingResume) {
+              // Update existing resume
+              const { error: updateError } = await supabase
+                .from('resumes')
+                .update({ ...formDataWithoutId, templates: selectedTemplate })
+                .eq('email', formDataToSubmit.email);
+              saveError = updateError;
             } else {
-              console.log('Resume data inserted successfully:', data);
+              // Insert new resume
+              const { error: insertError } = await supabase
+                .from('resumes')
+                .insert([{ ...formDataWithoutId, templates: selectedTemplate }]);
+              saveError = insertError;
+            }
+
+            setResumeData(formDataToSubmit);
+            setShowPreview(true);
+
+            if (saveError) {
+              console.error('Error saving resume:', saveError);
+              alert(`Error saving resume: ${saveError.message}`);
+            } else {
               alert('Resume saved successfully! Scroll down to see the preview.');
             }
           } catch (err) {
@@ -650,6 +670,7 @@ function Page() {
                     name="email"
                     placeholder='Enter your email address'
                     className='placeholder:text-base px-5 text-base md:text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20 w-full'
+                    disabled={!!prefillValues}
                   />
                   {touched.email && errors.email && <div className="text-red-500 text-sm mt-1">{errors.email}</div>}
                   <label htmlFor="home" className='text-base md:text-lg text-gray-300 font-semibold mt-6'>Home Address</label>
@@ -982,6 +1003,11 @@ function Page() {
                                 id={`experience.${index}.end_date`}
                                 name={`experience.${index}.end_date`}
                                 disabled={values.experience[index].currently_working}
+                                value={
+                                  values.experience[index].currently_working
+                                    ? ""
+                                    : values.experience[index].end_date
+                                }
                                 className={`placeholder:text-base w-full px-5 text-base md:text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20 ${values.experience[index].currently_working ? 'opacity-25 cursor-not-allowed' : ''}`}
                               />
                               {touched.experience?.[index] &&

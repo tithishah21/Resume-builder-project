@@ -7,7 +7,6 @@ import bcrypt from 'bcryptjs';
 
 function Page() {
   const router = useRouter();
-
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

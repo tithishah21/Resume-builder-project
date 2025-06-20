@@ -1,14 +1,15 @@
 "use client";
 import React, { useEffect, useState } from 'react'; 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { FaBriefcase, FaPalette } from 'react-icons/fa';
 import { MdCorporateFare } from "react-icons/md";
 import { IoBulb } from "react-icons/io5";
 import Header2 from '../components/header2';
 import Footer from '../components/footer';
-
 function Page() { 
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const isEditMode = searchParams.get('edit') === 'true';
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loading, setLoading] = useState(true);
 
@@ -42,7 +43,9 @@ function Page() {
 
     const handleSelectTemplate = (templateName: string) => { 
       if (isLoggedIn) {
-          router.push(`/resumedetails?template=${encodeURIComponent(templateName)}`);
+          // If in edit mode, add &edit=true to the URL
+          const editParam = isEditMode ? '&edit=true' : '';
+          router.push(`/resumedetails?template=${encodeURIComponent(templateName)}${editParam}`);
       } else {
           alert('Please sign in to create a resume.');
           router.push('/signin');

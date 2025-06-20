@@ -48,28 +48,11 @@ export default function PrivatePage() {
     setLoading(false);
   }, [router]);
 
-  const handleEditResume = async () => {
-    const userData = localStorage.getItem('user');
-    if (!userData) {
-      router.push('/signin');
-      return;
-    }
-    const parsedUser = JSON.parse(userData);
-    const supabase = createClient();
-    const { data, error } = await supabase
-      .from('resumes')
-      .select('*')
-      .eq('email', parsedUser.email)
-      .single();
-    if (error || !data) {
-      console.log("No resume found. Redirecting to create page...");
-      alert("No resume found! Edit your resume by first creating resume");
-      router.push('/templates');
-      return;
-    }
-    localStorage.setItem('resumeData', JSON.stringify(data));
-
-    router.push('/resumedetails');
+  const handleEditResume = () => {
+    // Optionally, you can set a flag in localStorage if you want to distinguish edit mode
+    localStorage.setItem('editMode', 'true');
+    // Redirect to templates page
+    router.push('/templates?edit=true');
   };
 
   const handleLogout = () => {
