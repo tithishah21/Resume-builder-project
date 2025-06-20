@@ -67,6 +67,7 @@ function Page() {
   const [resumeData, setResumeData] = useState<FormValues | null>(null);
 
   const [currentStep, setCurrentStep] = useState(0);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
   const [prefillValues, setPrefillValues] = useState<FormValues | null | undefined>(undefined);
 
@@ -388,71 +389,66 @@ function Page() {
     updated.splice(index, 1);
     setSkills(updated);
   };
+
+  useEffect(() => {
+    if (!isGeneratingPdf) return;
+
+    const generateAndDownload = async () => {
+      const input = document.getElementById('resume-content');
+      if (input) {
+        const scale = 2;
+        try {
+          const canvas = await html2canvas(input, {
+            scale: scale,
+            useCORS: true,
+            logging: true,
+            windowWidth: 1024,
+            windowHeight: input.scrollHeight,
+          });
+
+          const imgData = canvas.toDataURL('image/png');
+          const pdf = new jsPDF('p', 'mm', 'a4');
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = pdf.internal.pageSize.getHeight();
+
+          const imgWidth = pdfWidth;
+          const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+          let heightLeft = imgHeight;
+          let position = 0;
+
+          pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+          heightLeft -= pdfHeight;
+
+          while (heightLeft > 0) {
+            position -= pdfHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pdfHeight;
+          }
+
+          if (resumeData) {
+            pdf.save(`${resumeData.full_name || 'My_Resume'}-${selectedTemplate || 'template'}.pdf`);
+          }
+        } catch (error) {
+          console.error("Error generating PDF:", error);
+          alert("Failed to generate PDF. Please try again.");
+        } finally {
+          setIsGeneratingPdf(false);
+        }
+      }
+    };
+    
+    setTimeout(generateAndDownload, 100);
+  }, [isGeneratingPdf, resumeData, selectedTemplate]);
+
   // --- PDF Download Function ---
   const handleDownloadPdf = async () => {
     if (!showPreview || !resumeData) {
       alert("Please generate the resume preview first before downloading.");
       return;
     }
-
-    const input = document.getElementById('resume-content');
-    if (input) {
-      // Store original width and style
-      const originalWidth = input.style.width;
-      const originalMaxWidth = input.style.maxWidth;
-
-      // Set to fixed desktop width for PDF
-      input.style.width = "1024px";
-      input.style.maxWidth = "1024px";
-
-      const scale = 2;
-      try {
-        const canvas = await html2canvas(input, {
-          scale: scale,
-          useCORS: true,
-          logging: true,
-          windowWidth: input.scrollWidth,
-          windowHeight: input.scrollHeight
-        });
-
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-
-        // Calculate the image height in PDF units
-        const imgWidth = pdfWidth;
-        const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-
-        let heightLeft = imgHeight;
-        let position = 0;
-
-        // Add the first page
-        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-
-        heightLeft -= pdfHeight;
-
-        // Add more pages if necessary
-        while (heightLeft > 0) {
-          position -= pdfHeight;
-          pdf.addPage();
-          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-          heightLeft -= pdfHeight;
-        }
-
-        pdf.save(`${resumeData.full_name || 'My_Resume'}-${selectedTemplate || 'template'}.pdf`);
-      } catch (error) {
-        console.error("Error generating PDF:", error);
-        alert("Failed to generate PDF. Please try again.");
-      } finally {
-        // Restore original width
-        input.style.width = originalWidth;
-        input.style.maxWidth = originalMaxWidth;
-      }
-    } else {
-      console.error("Could not find element with ID 'resume-content'.");
-      alert("Resume content not found for PDF generation.");
-    }
+    setIsGeneratingPdf(true);
   };
 
   // --- Yup Validation Schema ---
@@ -1048,7 +1044,7 @@ function Page() {
                                     }
                                   }}
                                 />
-                                <label htmlFor={`experience.${index}.currently_working`} className="ml-1 text-gray-400 text-lg">Currently working here</label>
+                                <label htmlFor={`experience.${index}.currently_working`} className="ml-1 text-gray-400 text-lg">Currently</label>
                               </div>
                             </div>
                           </div>
@@ -1305,9 +1301,9 @@ function Page() {
       <div className="py-3 bg-gray-950 flex flex-col items-center justify-center min-h-screen pt-3 px-2 sm:px-4 md:px-6"> 
       {/*Resume Preview */}
         <h2 className="text-2xl md:text-4xl font-bold text-white mb-8 text-center">Your Resume Preview</h2>
-        <div id="resume-content" className="w-full max-w-3xl mx-auto overflow-x-auto"> 
+        <div id="resume-content" className="w-full max-w-4xl mx-auto overflow-x-auto"> 
             {resumeData && selectedTemplate ? (
-                <ResumePreview formData={resumeData} templateName={selectedTemplate} />
+                <ResumePreview formData={resumeData} templateName={selectedTemplate} isGeneratingPdf={isGeneratingPdf} />
             ) : (
                 <p className="text-white">Loading preview... If nothing appears, please go back and try again.</p>
             )}

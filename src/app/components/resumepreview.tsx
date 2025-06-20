@@ -40,9 +40,10 @@ interface FormValues {
 interface ResumePreviewProps {
   formData: FormValues;
   templateName: string | null;
+  isGeneratingPdf?: boolean;
 }
 
-const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName }) => {
+const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, isGeneratingPdf }) => {
 
   const displayData = formData;
 
@@ -57,8 +58,8 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
   switch (templateName) {
     case 'Modern Professional':
       return(
-        <div className='flex flex-col md:flex-row bg-white min-h-[1018px] max-w-4xl mx-auto shadow-2xl rounded-none overflow-hidden'>
-            <div className='flex flex-col bg-gray-800 text-white w-full md:w-[40%] min-w-0 py-8 px-6'>
+        <div className={`flex bg-white min-h-[1018px] max-w-4xl mx-auto shadow-2xl rounded-none overflow-hidden ${isGeneratingPdf ? 'flex-row' : 'flex-col md:flex-row'}`}>
+            <div className={`flex flex-col bg-gray-800 text-white min-w-0 py-8 px-6 ${isGeneratingPdf ? 'w-[40%]' : 'w-full md:w-[40%]'}`}>
               
               {/* Name (Modern Professional Template) */}
               <div className='text-center mb-8'>
@@ -68,23 +69,23 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName })
               
               {/* Contact Info (Modern Professional Template)*/}
               <div className='text-left flex flex-col px-2 text-gray-300 mb-16 space-y-4'> 
-                <div className='inline-flex items-center gap-2'>
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800">
-                        <IoIosHome size={20}/>
+                <div className='inline-flex items-center gap-4'>
+                    <div className="flex items-center justify-center w-12 h-8 rounded-full bg-white text-gray-800">
+                        <IoIosHome size={18}/>
                     </div>
-                    <span className="break-all">{displayData.home}</span>
+                    <span className="break-words">{displayData.home}</span>
                 </div>
                 <div className='inline-flex items-center gap-2'>
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800">
                         <FaPhoneAlt size={16}/>
                     </div>
-                    <span className="break-all">{displayData.phone}</span>
+                    <span className="break-words">+91 {displayData.phone}</span>
                 </div>
                 <div className='inline-flex items-center gap-2'>
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800">
                         <IoMail size={20}/>
                     </div>
-                    <span className="break-all">{displayData.email}</span>
+                    <span className="break-words">{displayData.email}</span>
                 </div>
               </div>
 
