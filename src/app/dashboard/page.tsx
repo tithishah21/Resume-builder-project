@@ -184,7 +184,7 @@ export default function PrivatePage() {
       <div className="">
         <ResumeTipsScroll />
       </div>
-      <div>
+      {/* <div>
         <ScrollReveal
           baseOpacity={0}
           enableBlur={true}
@@ -196,7 +196,7 @@ export default function PrivatePage() {
           Recruiters decide in 6 seconds—make it count.
         </ScrollReveal>
       </div> 
-      <br />
+      <br /> */}
       <Footer />
     </>
   );
