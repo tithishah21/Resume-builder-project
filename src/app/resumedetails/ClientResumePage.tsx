@@ -88,6 +88,7 @@ function Page() {
     }
   }, [currentStep]);
   
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const getUserIdFromLocalStorage = () => {
       const storedUserString = localStorage.getItem('user');
@@ -536,7 +537,7 @@ function Page() {
           extra: '',
         }}
         validationSchema={validationSchema}
-        onSubmit={async (values, { setSubmitting, setFieldValue }) => {
+        onSubmit={async (values, { setSubmitting }) => {
           if (!userId) {
             alert('User not logged in or user ID not found in local storage. Please log in.');
             setSubmitting(false);
@@ -553,12 +554,14 @@ function Page() {
             })),
           };
 
-          // Remove id if present (ignore TS error if id is not in FormValues)
-          const { id: _omitId, ...formDataWithoutId } = formDataToSubmit as any;
+          const formDataWithoutId = { ...formDataToSubmit };
+          if ('id' in formDataWithoutId) {
+            delete (formDataWithoutId as Record<string, unknown>).id;
+          }
 
           try {
             // Check if a resume exists for this email
-            const { data: existingResume, error: fetchError } = await supabase
+            const { data: existingResume } = await supabase
               .from('resumes')
               .select('*')
               .eq('email', formDataToSubmit.email)
