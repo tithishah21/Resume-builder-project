@@ -536,7 +536,7 @@ function Page() {
           extra: '',
         }}
         validationSchema={validationSchema}
-        onSubmit={async (values, { setSubmitting  }) => {
+        onSubmit={async (values, { setSubmitting, setFieldValue }) => {
           if (!userId) {
             alert('User not logged in or user ID not found in local storage. Please log in.');
             setSubmitting(false);
@@ -597,7 +597,7 @@ function Page() {
           }
         }}
       >
-        {({ values, errors, touched, isSubmitting }) => (
+        {({ values, errors, touched, isSubmitting, setFieldValue }) => (
           <Form>
             <div className='w-full min-h-screen bg-gray-950 text-white lg:px-0 sm:px-4 md:px-6 py-0'>
 
@@ -1008,6 +1008,7 @@ function Page() {
                                     ? ""
                                     : values.experience[index].end_date
                                 }
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue(`experience.${index}.end_date`, e.target.value)}
                                 className={`placeholder:text-base w-full px-5 text-base md:text-lg py-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-cyan-400 focus:ring-cyan-400/20 ${values.experience[index].currently_working ? 'opacity-25 cursor-not-allowed' : ''}`}
                               />
                               {touched.experience?.[index] &&
@@ -1025,6 +1026,12 @@ function Page() {
                                   type="checkbox"
                                   id={`experience.${index}.currently_working`}
                                   name={`experience.${index}.currently_working`}
+                                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    setFieldValue(`experience.${index}.currently_working`, e.target.checked);
+                                    if (e.target.checked) {
+                                      setFieldValue(`experience.${index}.end_date`, "");
+                                    }
+                                  }}
                                 />
                                 <label htmlFor={`experience.${index}.currently_working`} className="ml-1 text-gray-400 text-lg">Currently working here</label>
                               </div>
