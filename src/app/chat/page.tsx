@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { createClient } from '../../../utils/supabase/client';
-import { FaUser, FaPaperPlane, FaRobot } from 'react-icons/fa';
+import { FaPaperPlane, FaRobot } from 'react-icons/fa';
 import Header2 from '../components/header2';
 import Footer from '../components/footer';
 import TrueFocus from '../components/truefocus';
@@ -58,10 +58,13 @@ export default function ChatPage() {
 
         let initialMessage = "";
         if (resume) {
+          // Define types for experience and project
+          type Experience = { key_role: string };
+          type Project = { project_title: string };
           const context = `
             The user has the following skills: ${resume.skills?.join(', ') || 'Not specified'}.
-            Their experience includes: ${resume.experience?.map((e: { key_role: any; }) => e.key_role).join(', ') || 'Not specified'}.
-            Their projects include: ${resume.project?.map((p: { project_title: any; }) => p.project_title).join(', ') || 'Not specified'}.
+            Their experience includes: ${(resume.experience as Experience[] | undefined)?.map((e) => e.key_role).join(', ') || 'Not specified'}.
+            Their projects include: ${(resume.project as Project[] | undefined)?.map((p) => p.project_title).join(', ') || 'Not specified'}.
           `;
           setResumeContext(context);
           initialMessage = `Hello! I've reviewed your resume. It looks like you have experience with skills like ${resume.skills?.join(', ') || '...various technologies'}. I'm ready to help you practice for your interview by providing you with a list of both technical and behavioral questions that you can practice answering.`;
