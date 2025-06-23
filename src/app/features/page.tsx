@@ -4,6 +4,7 @@ import SpotlightCard from '../components/spotlightcard';
 import { RxLightningBolt } from 'react-icons/rx';
 import { MdOutlineShield } from 'react-icons/md';
 import { FaRegFilePdf } from 'react-icons/fa6';
+import { FaRobot } from 'react-icons/fa';
 
 function Features() {
   return (
@@ -61,6 +62,24 @@ function Features() {
             </div>
             <div className="text-lg sm:text-xl md:text-2xl font-semibold my-6 md:my-10 leading-tight">Export to PDFs</div>
             <div className="text-base sm:text-lg">Export your resumes to professional-looking PDF files with a single click.</div>
+          </SpotlightCard>
+        </div>
+
+        {/* AI Interview Prep */}
+        <div>
+          <SpotlightCard
+            className="w-full max-w-xs md:w-[25vw] md:h-[27vw]"
+            spotlightColor="rgba(0, 123, 255, 1)" // blue
+          >
+            <div className="w-16 h-16 md:w-[5vw] md:h-[5vw] bg-gradient-to-r from-cyan-400 to-blue-700 rounded-lg flex justify-center items-center">
+              <FaRobot size={40} />
+            </div>
+            <div className="text-lg sm:text-xl md:text-2xl font-semibold my-6 md:my-10 leading-tight">
+              AI Interview Prep
+            </div>
+            <div className="text-base sm:text-lg">
+              Practice real interview questions with an AI-powered coach. Get instant feedback and tailored questions to help you ace your next interview!
+            </div>
           </SpotlightCard>
         </div>
       </div>
