@@ -33,14 +33,27 @@ export default function ChatPage() {
   // This helper robot runs ONCE when you open the chat room
   useEffect(() => {
     const initializeChat = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      // Try to get user email from localStorage (like in edit resume)
+      let userEmail = null;
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        try {
+          const parsedUser = JSON.parse(userData);
+          userEmail = parsedUser.email;
+        } catch {}
+      }
+      // Fallback: get from Supabase auth if not in localStorage
+      if (!userEmail) {
+        const { data: { user } } = await supabase.auth.getUser();
+        userEmail = user?.email;
+      }
       const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-      if (user) {
+      if (userEmail) {
         const { data: resume } = await supabase
           .from('resumes')
           .select('skills, experience, project')
-          .eq('email', user.email)
+          .eq('email', userEmail)
           .single();
 
         let initialMessage = "";
@@ -51,7 +64,7 @@ export default function ChatPage() {
             Their projects include: ${resume.project?.map((p: { project_title: any; }) => p.project_title).join(', ') || 'Not specified'}.
           `;
           setResumeContext(context);
-          initialMessage = `Hello! I've reviewed your resume. It looks like you have experience with skills like ${resume.skills?.[0] || '...various technologies'}. I'm ready to help you practice for your interview. Ask me anything, or say "ask me a question" to start!`;
+          initialMessage = `Hello! I've reviewed your resume. It looks like you have experience with skills like ${resume.skills?.join(', ') || '...various technologies'}. I'm ready to help you practice for your interview by providing you with a list of both technical and behavioral questions that you can practice answering.`;
         } else {
           initialMessage = "Hello! I'm your AI Interview Coach. It looks like you haven't created a resume with us yet. To get started, please tell me what job role or skills you'd like to practice for.";
         }
