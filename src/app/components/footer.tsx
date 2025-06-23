@@ -11,9 +11,14 @@ function footer() {
         </div>
         <div className="flex flex-col items-center text-base lg:text-lg text-gray-400">
           <span>© 2025 ResumeBuilder Pro. All rights reserved.</span>
-          <span className="text-base text-gray-500 mt-1 font-extrabold">
+          <a
+            href="https://www.linkedin.com/in/tithi-shah-032a11288"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-base text-gray-500 mt-1 font-extrabold hover:text-cyan-400 transition-colors"
+          >
             &lt;Made by Tithi with <span className="text-red-500">♥</span> /&gt;
-          </span>
+          </a>
         </div>
       </footer>
     </div>
