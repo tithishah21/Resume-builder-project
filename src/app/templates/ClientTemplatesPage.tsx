@@ -83,7 +83,7 @@ function ClientTemplatesPage() {
                             <FaBriefcase className='mr-2' /> Professional
                         </span>
                         <p className='text-gray-400 mb-6'>
-                            Clean lines, subtle design, and strategic use of white space for a polished, impactful presentation.
+                        Traditional format perfect for formal environments.
                         </p>
                         <button
                             onClick={() => handleSelectTemplate('Modern Professional')} 
@@ -115,7 +115,7 @@ function ClientTemplatesPage() {
                             <MdCorporateFare className='mr-2' /> Corporate
                         </span>
                         <p className='text-gray-400 mb-6'>
-                            Traditional format perfect for corporate environments and formal industries.
+                            Clean lines, subtle design, and strategic use of white space for a polished, impactful presentation.
                         </p>
                         <button
                             onClick={() => handleSelectTemplate('Classic Corporate')} 
