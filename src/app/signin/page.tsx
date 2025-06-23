@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import Footer from '../components/footer';
 import { createClient } from '../../../utils/supabase/client';
 import bcrypt from 'bcryptjs';
+import { FaArrowLeft } from 'react-icons/fa';
 
 export default function SignInPage() {
   const router = useRouter();
@@ -76,6 +77,13 @@ export default function SignInPage() {
 
   return (
     <div>
+      <button
+        className="absolute top-6 left-6 text-cyan-400 hover:text-cyan-600 text-3xl z-50"
+        onClick={() => router.push('/')}
+        aria-label="Go back"
+      >
+        <FaArrowLeft />
+      </button>
       <div className="min-h-screen flex justify-center lg:pt-12 lg:pb-12 bg-gray-950 text-white">
         <div className="lg:rounded-xl container mx-auto w-full max-w-lg px-6 sm:px-10 py-10 sm:py-16 flex justify-center border bg-gray-900/50 border-gray-700 backdrop-blur-sm flex-col">
           <h1 className="font-extrabold text-4xl text-center">Welcome Back</h1>

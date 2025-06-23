@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Footer from '../components/footer';
 import { createClient } from '../../../utils/supabase/client'; 
 import bcrypt from 'bcryptjs';
+import { FaArrowLeft } from 'react-icons/fa';
 
 function Page() {
   const router = useRouter();
@@ -102,6 +103,13 @@ function Page() {
 
   return (
     <div>
+      <button
+        className="absolute top-6 left-6 text-cyan-400 hover:text-cyan-600 text-3xl z-50"
+        onClick={() => router.push('/')}
+        aria-label="Go back"
+      >
+        <FaArrowLeft />
+      </button>
       <div className="min-h-screen flex justify-center lg:pt-12 lg:pb-12 bg-gray-950 text-white">
         <form
           onSubmit={handleSubmit}
