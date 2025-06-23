@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import GooeyNav from "./gooeynavbar"; // Assuming this is your custom GooeyNav component
 import { Link as ScrollLink } from "react-scroll"; // Renamed to avoid conflict with next/link if you were using it
-
 // Define the navigation item type
 interface NavItem {
   label: string;
@@ -23,7 +22,7 @@ function Header() {
     { label: "Home", type: "scroll", href: "#hero-section", targetId: "hero-section" },
     { label: "Features", type: "scroll", targetId: "features-section", href: "#features-section" },
     { label: "Steps", type: "scroll", targetId: "creation-flow", href: "#creation-flow" },
-    { label: "Templates", type: "route", path: "/templates", href: "/templates" }, // Full path for external page
+    { label: "Templates", type: "scroll", targetId: "templates", href: "#templates" }, // Full path for external page
   ];
 
   // Helper function for smooth scrolling

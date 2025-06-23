@@ -11,7 +11,6 @@ import Features from './features/page';
 import ResumeCreationFlow from './components/ResumeCreationFlow';
 import FallingShapes from './components/FallingShapes';
 
-
 export default function Home() {
   const router = useRouter();
 

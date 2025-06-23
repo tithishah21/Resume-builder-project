@@ -8,7 +8,6 @@ import { MdOutlineWorkOutline } from 'react-icons/md';
 import { IoDocumentTextOutline } from 'react-icons/io5';
 import { RiFileSearchLine } from 'react-icons/ri';
 import Image from 'next/image';
-
 const templates = [
   { src: '/modern.png', name: 'Modern Professional' },
   { src: '/genz.png', name: 'Vibrant & Expressive' },
@@ -119,7 +118,7 @@ const ResumeCreationFlow = () => {
       </section>
 
       {/* === Your Existing Template Section === */}
-      <section className="relative mb-5 py-5 px-6 bg-gray-950 overflow-hidden text-white">
+      <section id="templates" className="relative mb-5 py-5 px-6 bg-gray-950 overflow-hidden text-white">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-11 items-center">
           {/* Left Text + CTA */}
           <div>
