@@ -9,6 +9,7 @@ import { createClient } from '../../../utils/supabase/client';
 import { FaRobot } from 'react-icons/fa';
 import ResumeTipsScroll from '../components/stackcard';
 // import ScrollReveal from '../components/scrollreveal';
+
 interface User {
   name?: string;
   email?: string;
@@ -154,7 +155,9 @@ export default function PrivatePage() {
               <div className="text-xl sm:text-2xl font-extrabold mt-3 mb-3 sm:mb-5 tracking-tight leading-tight text-center">Interview Prep with AI</div>
               <div className="text-sm sm:text-lg text-center mb-3 sm:mb-5 ">Practice your interview skills with AI-powered questions!</div>
               
-              <button className="w-full sm:w-auto max-w-xs md:px-24 lg:px-24 py-2 sm:py-3 bg-gradient-to-r from-green-700 to-emerald-500 hover:from-green-800 hover:to-emerald-600 font-semibold rounded-lg mt-2 sm:mt-5 mx-auto">
+              <button 
+                onClick={() => router.push('/chat')}
+                className="w-full sm:w-auto max-w-xs md:px-24 lg:px-24 py-2 sm:py-3 bg-gradient-to-r from-green-700 to-emerald-500 hover:from-green-800 hover:to-emerald-600 font-semibold rounded-lg mt-2 sm:mt-5 mx-auto">
                 Start Practicing
               </button>
             </div>
