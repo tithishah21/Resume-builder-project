@@ -9,8 +9,11 @@ function footer() {
             ResumeBuilder Pro
           </h1>
         </div>
-        <div className="text-base lg:text-lg text-gray-400">
-          © 2025 ResumeBuilder Pro. All rights reserved.
+        <div className="flex flex-col items-center text-base lg:text-lg text-gray-400">
+          <span>© 2025 ResumeBuilder Pro. All rights reserved.</span>
+          <span className="text-base text-gray-500 mt-1 font-extrabold">
+            &lt;Made by Tithi with <span className="text-red-500">♥</span> /&gt;
+          </span>
         </div>
       </footer>
     </div>
