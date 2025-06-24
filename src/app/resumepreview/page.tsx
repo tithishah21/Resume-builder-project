@@ -1,17 +1,18 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import ResumePreview from "../components/resumepreview";
 import Header2 from "../components/header2";
 import Footer from "../components/footer";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { FormValues } from "../components/resumepreview";
 
-export default function ResumePreviewPage() {
+function ResumePreviewPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const templateName = searchParams.get("template");
-  const [resumeData, setResumeData] = useState(null);
+  const [resumeData, setResumeData] = useState<FormValues | null>(null);
   const [loading, setLoading] = useState(true);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
@@ -52,7 +53,7 @@ export default function ResumePreviewPage() {
       setLoading(false);
     };
     fetchFromSupabase();
-  }, [router]);
+  }, [router, searchParams]);
 
   useEffect(() => {
     if (!isGeneratingPdf) return;
@@ -84,12 +85,10 @@ export default function ResumePreviewPage() {
             pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
             heightLeft -= pdfHeight;
           }
-          if (resumeData && typeof resumeData === "object" && resumeData !== null) {
-            // @ts-ignore
-            const fullName = (resumeData as any).full_name || "My_Resume";
-            pdf.save(`${fullName}-${templateName || "template"}.pdf`);
+          if (resumeData) {
+            pdf.save(`${resumeData.full_name || "My_Resume"}-${templateName || "template"}.pdf`);
           }
-        } catch (error) {
+        } catch {
           alert("Failed to generate PDF. Please try again.");
         } finally {
           setIsGeneratingPdf(false);
@@ -152,5 +151,13 @@ export default function ResumePreviewPage() {
       </div>
       <Footer />
     </>
+  );
+}
+
+export default function ResumePreviewPage() {
+  return (
+    <Suspense fallback={<div className="text-white p-10">Loading preview...</div>}>
+      <ResumePreviewPageInner />
+    </Suspense>
   );
 } 
