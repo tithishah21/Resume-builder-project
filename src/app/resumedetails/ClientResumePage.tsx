@@ -457,8 +457,8 @@ function Page() {
     full_name: Yup.string().required('*Full Name is required'),
     phone: Yup.string().matches(/^\+?[0-9]{10,15}$/, 'Invalid phone number').required('*Phone number is required'),
     email: Yup.string().email('Invalid email address').required('*Email is required'),
-    home: Yup.string().min(10, 'Address must be at least 10 characters').required('*Home Address is required'),
-    summary: Yup.string().min(50, 'Summary must be at least 50 characters').required('*Professional Summary is required'),
+    home: Yup.string().required('*Home Address is required'),
+    summary: Yup.string().required('*Professional Summary is required'),
     education: Yup.array().of(
       Yup.object().shape({
         institution: Yup.string().required('*Institution name is required'),
@@ -480,7 +480,7 @@ function Page() {
         end_date: Yup.string().when('currently_working', (currently_working, schema) =>
           currently_working ? schema : schema.required('*End date is required')
         ),
-        job_summary: Yup.string().min(30, '*Summary must be at least 30 characters').required('Job summary is required'),
+        job_summary: Yup.string().required('Job summary is required'),
         currently_working: Yup.boolean(),
       })
     ),
@@ -1283,7 +1283,7 @@ function Page() {
                     </button>
                 )}
 
-                {currentStep === 7 && ( 
+                {currentStep === 7 && (
                     <button
                     type="submit"
                     disabled={isSubmitting}
