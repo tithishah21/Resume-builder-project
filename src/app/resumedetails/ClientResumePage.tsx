@@ -17,6 +17,7 @@ import { FaTrophy } from "react-icons/fa6";
 import Header2 from '../components/header2';
 import Footer from '../components/footer';
 import { createClient } from '../../../utils/supabase/client';
+
 interface FormValues {
   full_name: string;
   phone: string;
