@@ -85,11 +85,26 @@ function ClientTemplatesPage() {
                         <p className='text-gray-400 mb-6'>
                         Traditional format perfect for formal environments.
                         </p>
-                        <button
+                        {isEditMode ? (
+                          <div className="flex flex-col gap-2">
+                            <button
+                              onClick={() => handleSelectTemplate('Modern Professional')}
+                              className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
+                              Continue Editing
+                            </button>
+                            <button
+                              onClick={() => router.push(`/resumepreview?template=Modern%20Professional`)}
+                              className='w-full py-2 bg-gray-700 rounded-md text-white font-medium hover:scale-105 transition'>
+                              Resume Preview
+                            </button>
+                          </div>
+                        ) : (
+                          <button
                             onClick={() => handleSelectTemplate('Modern Professional')} 
                             className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
                             Select Template
-                        </button>
+                          </button>
+                        )}
                     </div>
 
                     <div className='bg-[#0f172a] rounded-2xl p-6 border border-gray-700 shadow-md hover:shadow-pink-500/20 transition duration-300'>
@@ -101,11 +116,26 @@ function ClientTemplatesPage() {
                         <p className='text-gray-400 mb-6'>
                             Eye-catching design ideal for creative industries and design roles.
                         </p>
-                        <button
+                        {isEditMode ? (
+                          <div className="flex flex-col gap-2">
+                            <button
+                              onClick={() => handleSelectTemplate('Vibrant & Expressive (Gen Z)')}
+                              className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
+                              Continue Editing
+                            </button>
+                            <button
+                              onClick={() => router.push(`/resumepreview?template=Vibrant%20%26%20Expressive%20(Gen%20Z)`)}
+                              className='w-full py-2 bg-gray-700 rounded-md text-white font-medium hover:scale-105 transition'>
+                              Resume Preview
+                            </button>
+                          </div>
+                        ) : (
+                          <button
                             onClick={() => handleSelectTemplate('Vibrant & Expressive (Gen Z)')} 
                             className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
                             Select Template
-                        </button>
+                          </button>
+                        )}
                     </div>
 
                     <div className='bg-[#0f172a] rounded-2xl p-6 border border-gray-700 shadow-md hover:shadow-pink-500/20 transition duration-300'>
@@ -117,11 +147,26 @@ function ClientTemplatesPage() {
                         <p className='text-gray-400 mb-6'>
                             Clean lines, subtle design, and strategic use of white space for a polished, impactful presentation.
                         </p>
-                        <button
+                        {isEditMode ? (
+                          <div className="flex flex-col gap-2">
+                            <button
+                              onClick={() => handleSelectTemplate('Classic Corporate')}
+                              className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
+                              Continue Editing
+                            </button>
+                            <button
+                              onClick={() => router.push(`/resumepreview?template=Classic%20Corporate`)}
+                              className='w-full py-2 bg-gray-700 rounded-md text-white font-medium hover:scale-105 transition'>
+                              Resume Preview
+                            </button>
+                          </div>
+                        ) : (
+                          <button
                             onClick={() => handleSelectTemplate('Classic Corporate')} 
                             className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
                             Select Template
-                        </button>
+                          </button>
+                        )}
                     </div>
 
                     <div className='bg-[#0f172a] rounded-2xl p-6 border border-gray-700 shadow-md hover:shadow-pink-500/20 transition duration-300'>
@@ -133,11 +178,26 @@ function ClientTemplatesPage() {
                         <p className='text-gray-400 mb-6'>
                             Highlighting skills and achievements with a clear, concise format optimized for data-driven and engineering roles.
                         </p>
-                        <button
+                        {isEditMode ? (
+                          <div className="flex flex-col gap-2">
+                            <button
+                              onClick={() => handleSelectTemplate('Tech Minimalist')}
+                              className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
+                              Continue Editing
+                            </button>
+                            <button
+                              onClick={() => router.push(`/resumepreview?template=Tech%20Minimalist`)}
+                              className='w-full py-2 bg-gray-700 rounded-md text-white font-medium hover:scale-105 transition'>
+                              Resume Preview
+                            </button>
+                          </div>
+                        ) : (
+                          <button
                             onClick={() => handleSelectTemplate('Tech Minimalist')} 
                             className='w-full py-2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-md text-white font-medium hover:scale-105 transition'>
                             Select Template
-                        </button>
+                          </button>
+                        )}
                     </div>
                 </div>
             </div>
