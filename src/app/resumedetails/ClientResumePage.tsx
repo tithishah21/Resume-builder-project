@@ -553,13 +553,14 @@ function Page() {
           }
           setSubmitting(true);
 
-          const formDataToSubmit: FormValues = {
+          const formDataToSubmit: FormValues & { user_id: string | null } = {
             ...values,
             skills: skills,
             experience: values.experience.map(exp => ({
               ...exp,
               end_date: exp.currently_working ? 'Currently' : exp.end_date,
             })),
+            user_id: userId,
           };
 
           const formDataWithoutId = { ...formDataToSubmit };
@@ -580,14 +581,14 @@ function Page() {
               // Update existing resume
               const { error: updateError } = await supabase
                 .from('resumes')
-                .update({ ...formDataWithoutId, templates: selectedTemplate })
+                .update({ ...formDataWithoutId, templates: selectedTemplate, user_id: userId })
                 .eq('email', formDataToSubmit.email);
               saveError = updateError;
             } else {
               // Insert new resume
               const { error: insertError } = await supabase
                 .from('resumes')
-                .insert([{ ...formDataWithoutId, templates: selectedTemplate }]);
+                .insert([{ ...formDataWithoutId, templates: selectedTemplate, user_id: userId }]);
               saveError = insertError;
             }
 
