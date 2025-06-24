@@ -2,6 +2,7 @@ import React from 'react';
 import { FaPhoneAlt } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 import { IoIosHome } from "react-icons/io";
+
 interface FormValues {
   full_name: string;
   phone: string;
