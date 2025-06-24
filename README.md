@@ -1,9 +1,9 @@
-💼 RESUME BUILDER PRO — AI-POWERED RESUME CREATION PLATFORM
+# 💼 RESUME BUILDER PRO — AI-POWERED RESUME CREATION PLATFORM
 
 
 ResumeBuilderPro is a fully responsive, full-stack web application designed to simplify and supercharge the resume-building process for users of all experience levels. From elegant template selection to an intelligent AI-powered interview preparation chatbot, this project is packed with thoughtfully engineered features, modern design, and seamless user experience.
 
-🚀 FEATURES AT A GLANCE:- 
+## 🚀 FEATURES AT A GLANCE:- 
 
 - Responsive Landing Page
   -Beautifully animated with Tailwind CSS + ShadCN. Includes:
@@ -49,7 +49,7 @@ ResumeBuilderPro is a fully responsive, full-stack web application designed to s
   - Downloadable as a well-styled, clean PDF document
 
 
-🧑‍💻 Tech Stack:-
+## 🧑‍💻 Tech Stack:-
 
 - Frontend
   - Next.js (App Router) + TypeScript for scalable architecture 
@@ -77,15 +77,15 @@ ResumeBuilderPro is a fully responsive, full-stack web application designed to s
   - Vercel for fast and reliable deployment
   - Docker-ready mindset for production readiness
 
-🛡️ Other Highlights
+## 🛡️ Other Highlights
 - All user data is stored securely via Supabase policies
 - Templates and form access managed using query parameters
 - Each page has a loading state for seamless user experience
 - Modular design using reusable components
 - Clean separation between UI, logic, and state
   
-📸 Live Preview:-
+## 📸 Live Preview:-
 👉 https://resume-builder-project-flame.vercel.app
 
 
-💡 ResumeBuilderPro is more than a tool — it's an intelligent platform that makes resume creation feel effortless and powerful, with AI features that go beyond what most web apps offer.
+### 💡 ResumeBuilderPro is more than a tool — it's an intelligent platform that makes resume creation feel effortless and powerful, with AI features that go beyond what most web apps offer.
