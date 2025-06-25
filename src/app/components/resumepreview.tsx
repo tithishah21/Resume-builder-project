@@ -51,10 +51,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
     return <div className="text-white text-center">No resume data to display.</div>;
   }
 
-  
   const sectionTitleClasses = "text-xl font-bold mb-3 mt-6";
-
-
   switch (templateName) {
     case 'Modern Professional':
       return(
@@ -70,7 +67,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
               {/* Contact Info (Modern Professional Template)*/}
               <div className='text-left flex flex-col px-2 text-gray-300 mb-16 space-y-4'> 
                 <div className='inline-flex items-center gap-4'>
-                    <div className="flex items-center justify-center w-12 h-8 rounded-full bg-white text-gray-800">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white text-gray-800">
                         <IoIosHome size={18}/>
                     </div>
                     <span className="break-words">{displayData.home}</span>
@@ -124,7 +121,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
               {/* Professional Summary (Modern Professional Template)*/}
               <section className="mb-3"> 
                 <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Professional Summary</h2> 
-                <p className="text-gray-700 text-base leading-relaxed">{displayData.summary}</p>
+                <p className="text-gray-700 text-base leading-relaxed whitespace-pre-line">{displayData.summary}</p>
               </section>
 
               {/* Experience (Modern Professional Template)*/}
@@ -135,7 +132,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
                     <div key={index} className="mb-6 last:mb-0"> 
                       <h3 className="font-semibold text-lg text-gray-900">{exp.key_role} <span className="font-bold text-gray-600">@ {exp.company_name}</span></h3>
                       <p className="text-gray-500 text-sm mb-2">{exp.start_date} - {exp.end_date}</p>
-                      <p className="text-gray-700 text-sm leading-relaxed">{exp.job_summary}</p>
+                      <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{exp.job_summary}</p>
                     </div>
                   ))}
                 </section>
@@ -165,7 +162,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
                     (proj.project_title || proj.project_description) && (
                       <div key={index} className="mb-6 last:mb-0">
                         <h3 className="font-semibold text-lg text-gray-900 mb-1">{proj.project_title}</h3>
-                        <p className="text-gray-700 text-sm leading-relaxed">{proj.project_description}</p>
+                        <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{proj.project_description}</p>
                       </div>
                     )
                   ))}
@@ -180,7 +177,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
                     (ach.achievement_title || ach.achievement_description) && (
                       <div key={index} className="mb-6 last:mb-0">
                         <h3 className="font-semibold text-lg text-gray-900 mb-1">{ach.achievement_title}</h3>
-                        <p className="text-gray-700 text-sm leading-relaxed">{ach.achievement_description}</p>
+                        <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{ach.achievement_description}</p>
                       </div>
                     )
                   ))}
@@ -191,7 +188,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
               {displayData.extra && (
                 <section>
                   <h2 className="text-2xl font-bold text-gray-700 mb-4 border-b border-gray-300 pb-2">Additional Information</h2> {/* Styled heading */}
-                  <p className="text-gray-700 text-sm leading-relaxed">{displayData.extra}</p>
+                  <p className="text-gray-700 text-base leading-relaxed whitespace-pre-line">{displayData.extra}</p>
                 </section>
               )}
             </div>
@@ -216,7 +213,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
             <div className="bg-[#fff] px-2 sm:px-6 md:px-8 py-6 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 border-b border-gray-300 w-full">
                 
                 <h2 className="text-xl font-semibold text-[#d9747c] mb-2">About Me</h2>
-                <p className="text-sm leading-relaxed">{displayData.summary}</p>
+                <p className="text-sm leading-relaxed whitespace-pre-line">{displayData.summary}</p>
               
             </div>
 
@@ -241,7 +238,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
                     <h3 className="font-bold">{exp.key_role}</h3>
                     <p className="text-sm text-[#d9747c] font-semibold">{exp.company_name}</p>
                     <p className="text-sm text-[#777] mb-1">{exp.start_date} → {exp.end_date}</p>
-                    <p className="text-sm">{exp.job_summary}</p>
+                    <p className="text-sm whitespace-pre-line">{exp.job_summary}</p>
                   </div>
                 ))}
               </div>
@@ -285,7 +282,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
                   (proj.project_title || proj.project_description) && (
                     <div key={index} className="mb-4">
                       <h3 className="font-bold">{proj.project_title}</h3>
-                      <p className="text-sm">{proj.project_description}</p>
+                      <p className="text-sm whitespace-pre-line">{proj.project_description}</p>
                     </div>
                   )
                 ))}
@@ -300,7 +297,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
                   (achieve.achievement_title || achieve.achievement_description) && (
                     <div key={index} className="mb-4">
                       <h3 className="font-bold">{achieve.achievement_title}</h3>
-                      <p className="text-sm">{achieve.achievement_description}</p>
+                      <p className="text-sm whitespace-pre-line">{achieve.achievement_description}</p>
                     </div>
                   )
                 ))}
@@ -311,7 +308,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
             {displayData.extra && (
               <div className="bg-[#fefaf7] px-2 sm:px-6 md:px-8 py-6 border-b border-gray-300 w-full">
                 <h2 className="text-xl font-semibold text-[#d9747c] mb-4 uppercase">Extras</h2>
-                <p className="text-sm">{displayData.extra}</p>
+                <p className="text-sm whitespace-pre-line">{displayData.extra}</p>
               </div>
             )}
 
@@ -341,7 +338,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
           {/* Professional Summary (Classic Corporate Template)*/}
           <section className="mb-6">
             <h2 className="text-xl font-bold mb-3 mt-6 text-gray-800 uppercase tracking-wide border-b border-gray-200 pb-2">Professional Summary</h2>
-            <p className="text-gray-700 text-base leading-relaxed">{displayData.summary}</p>
+            <p className="text-gray-700 text-base leading-relaxed whitespace-pre-line">{displayData.summary}</p>
           </section>
 
           {/* Experience (Classic Corporate Template)*/}
@@ -352,7 +349,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
                 <div key={index} className="mb-4 last:mb-0">
                   <h3 className="font-semibold text-lg text-gray-900">{exp.key_role} <span className="font-normal text-gray-600">@ {exp.company_name}</span></h3>
                   <p className="text-gray-500 text-sm mb-1">{exp.start_date} - {exp.end_date}</p>
-                  <p className="text-gray-700 text-base leading-relaxed">{exp.job_summary}</p>
+                  <p className="text-gray-700 text-base leading-relaxed whitespace-pre-line">{exp.job_summary}</p>
                 </div>
               ))}
             </section>
@@ -382,7 +379,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
                 (proj.project_title || proj.project_description) && (
                   <div key={index} className="mb-4 last:mb-0">
                     <h3 className="font-semibold text-lg text-gray-900">{proj.project_title}</h3>
-                    <p className="text-gray-700 text-base leading-relaxed">{proj.project_description}</p>
+                    <p className="text-gray-700 text-base leading-relaxed whitespace-pre-line">{proj.project_description}</p>
                   </div>
                 )
               ))}
@@ -397,7 +394,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
                 (ach.achievement_title || ach.achievement_description) && (
                   <div key={index} className="mb-4 last:mb-0">
                     <h3 className="font-semibold text-lg text-gray-900">{ach.achievement_title}</h3>
-                    <p className="text-gray-700 text-base leading-relaxed">{ach.achievement_description}</p>
+                    <p className="text-gray-700 text-base leading-relaxed whitespace-pre-line">{ach.achievement_description}</p>
                   </div>
                 )
               ))}
@@ -437,7 +434,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
           {displayData.extra && (
             <section>
               <h2 className="text-xl font-bold mb-3 mt-6 text-gray-800 uppercase tracking-wide border-b border-gray-200 pb-2">Additional Information</h2>
-              <p className="text-gray-700 text-base leading-relaxed">{displayData.extra}</p>
+              <p className="text-gray-700 text-base leading-relaxed whitespace-pre-line">{displayData.extra}</p>
             </section>
           )}
         </div>
@@ -479,7 +476,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
                   <span className="absolute left-0 bottom-0 w-full h-1 bg-lime-500 opacity-50 z-0 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
                 </span>
               </h2>
-              <p className="text-gray-300 text-base leading-relaxed border-l-2 border-lime-400 pl-4 py-2 bg-gray-700 bg-opacity-50 rounded-md">
+              <p className="text-gray-300 text-base leading-relaxed border-l-2 border-lime-400 pl-4 py-2 bg-gray-700 bg-opacity-50 rounded-md whitespace-pre-line">
                 {displayData.summary}
               </p>
             </section>
@@ -519,7 +516,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
                       {/* Removed the green/blue bullet dot */}
                       <h3 className="text-xl font-bold text-lime-400 mb-1">{exp.key_role}</h3>
                       <p className="text-gray-300 text-sm">{exp.company_name} <span className="text-gray-500">({exp.start_date} - {exp.end_date})</span></p>
-                      <p className="text-gray-400 text-sm leading-relaxed mt-2">{exp.job_summary}</p>
+                      <p className="text-gray-400 text-sm leading-relaxed whitespace-pre-line mt-2">{exp.job_summary}</p>
                     </div>
                   ))}
                 </div>
@@ -563,7 +560,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
                     (proj.project_title || proj.project_description) && (
                       <div key={index} className="bg-gray-700 bg-opacity-50 p-4 rounded-lg border border-gray-600 hover:border-cyan-500 transition-colors">
                         <h3 className="font-semibold text-lg text-lime-300 mb-1">{proj.project_title}</h3>
-                        <p className="text-gray-400 text-sm leading-relaxed">{proj.project_description}</p>
+                        <p className="text-gray-400 text-sm leading-relaxed whitespace-pre-line">{proj.project_description}</p>
                       </div>
                     )
                   ))}
@@ -585,7 +582,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
                     (ach.achievement_title || ach.achievement_description) && (
                       <div key={index} className="bg-gray-700 bg-opacity-50 p-4 rounded-lg border border-gray-600 hover:border-lime-500 transition-colors">
                         <h3 className="font-semibold text-lg text-lime-300 mb-1">{ach.achievement_title}</h3>
-                        <p className="text-gray-400 text-sm leading-relaxed">{ach.achievement_description}</p>
+                        <p className="text-gray-400 text-sm leading-relaxed whitespace-pre-line">{ach.achievement_description}</p>
                       </div>
                     )
                   ))}
@@ -623,7 +620,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
                     <span className="absolute left-0 bottom-0 w-full h-1 bg-lime-500 opacity-50 z-0 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
                   </span>
                 </h2>
-                <p className="text-gray-300 text-base leading-relaxed border-l-2 border-lime-400 pl-4 py-2 bg-gray-700 bg-opacity-50 rounded-md">
+                <p className="text-gray-300 text-base leading-relaxed border-l-2 border-lime-400 pl-4 py-2 bg-gray-700 bg-opacity-50 rounded-md whitespace-pre-line">
                   {displayData.extra}
                 </p>
               </section>
@@ -655,7 +652,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
           {/* Professional Summary (Default Template)*/}
           <section className="mb-6">
             <h2 className="text-xl font-bold mb-3 mt-6 text-gray-700 uppercase tracking-wider border-b border-gray-200 pb-2">Professional Summary</h2>
-            <p className="text-gray-700 text-sm leading-relaxed">{displayData.summary}</p>
+            <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{displayData.summary}</p>
           </section>
 
           {/* Skills (Default Template)*/}
@@ -681,7 +678,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
                 <div key={index} className="mb-4">
                   <h3 className="font-semibold text-lg">{exp.key_role} @ {exp.company_name}</h3>
                   <p className="text-gray-600 text-sm mb-1">{exp.start_date} - {exp.end_date}</p>
-                  <p className="text-gray-700 text-sm leading-relaxed">{exp.job_summary}</p>
+                  <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{exp.job_summary}</p>
                 </div>
               ))}
             </section>
@@ -711,7 +708,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
                 (proj.project_title || proj.project_description) && (
                   <div key={index} className="mb-4">
                     <h3 className="font-semibold text-lg">{proj.project_title}</h3>
-                    <p className="text-gray-700 text-sm leading-relaxed">{proj.project_description}</p>
+                    <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{proj.project_description}</p>
                   </div>
                 )
               ))}
@@ -726,7 +723,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
                 (ach.achievement_title || ach.achievement_description) && (
                   <div key={index} className="mb-4">
                     <h3 className="font-semibold text-lg">{ach.achievement_title}</h3>
-                    <p className="text-gray-700 text-sm leading-relaxed">{ach.achievement_description}</p>
+                    <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{ach.achievement_description}</p>
                   </div>
                 )
               ))}
@@ -751,7 +748,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
           {displayData.extra && (
             <section>
               <h2 className={sectionTitleClasses}>Additional Information</h2>
-              <p className="text-gray-700 text-sm leading-relaxed">{displayData.extra}</p>
+              <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{displayData.extra}</p>
             </section>
           )}
         </div>
