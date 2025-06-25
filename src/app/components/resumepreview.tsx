@@ -325,7 +325,12 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
         <div className="min-h-[1018px] bg-white p-2 sm:p-4 md:p-8 font-sans text-gray-800 shadow-lg rounded-none max-w-full md:max-w-3xl mx-auto border border-gray-200">
           {/* Header - Name, Contact Info (Classic Corporate Template)*/}
           <header className="text-center pb-6 mb-6 border-b border-gray-300">
-            <h1 className="text-4xl font-bold mb-2 text-gray-900">{displayData.full_name.toUpperCase()}</h1>
+            <h1
+              className="text-4xl font-bold mb-2 text-gray-900"
+              style={{ wordSpacing: "0.3em" }}
+            >
+              {displayData.full_name.toUpperCase()}
+            </h1>
             <p className="text-gray-600 text-lg">{displayData.home}</p>
             <div className="flex justify-between items-center mt-3 text-gray-600 text-sm w-full px-0">
               <span className="text-left">+91 {displayData.phone}</span>
