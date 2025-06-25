@@ -457,15 +457,11 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
               <h1 className="text-5xl font-bold mb-2 text-lime-400 tracking-wider animate-fade-in-down">
                 {displayData.full_name.toUpperCase()}
               </h1>
-              <p className="text-gray-400 text-lg mb-4">Software Engineer | AI Enthusiast | Cloud Architect</p> {/* Example tech roles */}
-              <div className="flex flex-wrap justify-center gap-6 text-gray-300 text-sm">
-                <span className="flex items-center gap-2">
-                  {/* Removed IoIosHome icon */}
-                  {displayData.home}
-                </span>
+              {/* <p className="text-gray-400 text-lg mb-4">Software Engineer | AI Enthusiast | Cloud Architect</p> Example tech roles */}
+              <div className="flex flex-wrap justify-center gap-6 text-gray-300 text-sm mt-6">
                 <span className="flex items-center gap-2">
                   {/* Removed FaPhoneAlt icon */}
-                  +91 {displayData.phone} &nbsp;|&nbsp; {displayData.email}
+                  +91 {displayData.phone} &nbsp;|&nbsp; {displayData.email} &nbsp;|&nbsp; {displayData.home}
                 </span>
               </div>
             </header>
@@ -601,12 +597,13 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
                     <span className="absolute left-0 bottom-0 w-full h-1 bg-lime-500 opacity-50 z-0 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
                   </span>
                 </h2>
-                <div className="flex flex-wrap gap-4">
+                <div className="text-gray-300 text-base md:text-lg leading-relaxed">
                   {displayData.languages.map((lang, index) => (
-                    <div key={index} className="bg-gray-700 bg-opacity-50 px-6 py-3 rounded-full border border-gray-600 text-gray-300 hover:border-cyan-500 transition-colors">
+                    <span key={index}>
                       <span className="font-bold">{lang.language}</span>
-                      <span className="text-lime-400 ml-2">[{lang.proficiency_level.split(' ')[0].toUpperCase()}]</span> {/* Simplified proficiency display */}
-                    </div>
+                      <span className="text-lime-400 ml-1">[{lang.proficiency_level.split(' ')[0].toUpperCase()}]</span>
+                      {index !== displayData.languages.length - 1 && <span>, </span>}
+                    </span>
                   ))}
                 </div>
               </section>
