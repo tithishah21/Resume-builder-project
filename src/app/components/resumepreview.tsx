@@ -199,7 +199,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ formData, templateName, i
           <div className="bg-[#f9e5e1] min-h-[1018px] max-w-full md:max-w-4xl mx-auto shadow-2xl rounded-none overflow-hidden px-2 sm:px-4 md:px-8 py-6 md:py-10 text-[#4a4a4a] font-sans">
             {/* Header (Vibrant & Expressive (Gen Z) Template)*/}
             <div className="bg-[#d9747c] text-white p-4 sm:p-8 rounded-t-3xl flex flex-col items-center w-full">
-              <h1 className="text-4xl font-bold uppercase">{displayData.full_name}</h1>
+              <h1 className="text-4xl font-bold uppercase" style={{ wordSpacing: "0.3em" }}>{displayData.full_name}</h1>
               {/* <p className='text-xs text-gray-300 '>Graphic Designer</p> */}
               
               <div className="mt-4 text-sm space-y-1 text-center">
