@@ -6,7 +6,7 @@ ResumeBuilderPro is a fully responsive, full-stack web application designed to s
 ## 🚀 FEATURES AT A GLANCE:- 
 
 - Responsive Landing Page
-  -Beautifully animated with Tailwind CSS + ShadCN. Includes:
+  - Beautifully animated with Tailwind CSS + ShadCN. Includes:
     - Features section with smooth reveal animations 
     - Step-by-step resume creation guide 
     - Live template showcase with motion-based card stacks
