@@ -17,9 +17,8 @@ export default function Home() {
   return (
     <>
       <Header />
-
       {/* Landing Section (Hero) */}
-      <section id='hero-section' className="bg-gradient-to-br from-blue-900/20 via-gray-950 to-cyan-900/20 w-full px-4 sm:px-10 pb-20 lg:py-24 z-10 flex items-center justify-center">
+      <section id='hero-section' className="bg-gray-950 w-full px-4 sm:px-10 pb-20 lg:py-24 z-10 flex items-center justify-center">
         <div className="flex flex-col lg:flex-row gap-10 max-w-9xl w-full">
           <div className="mt-10 lg:mt-0 flex-1 flex flex-col justify-center items-center lg:items-start text-center lg:text-left">
             <FallingShapes />
@@ -34,7 +33,7 @@ export default function Home() {
             </div>
             <button
               onClick={() => router.push('/signup')}
-              className="mt-12 py-3 px-8 sm:py-4 sm:px-16 lg:px-52 rounded-lg text-xl sm:text-3xl leading-tight bg-gradient-to-r from-blue-800 to-cyan-400 font-semibold hover:from-blue-900 hover:to-cyan-600 shadow-lg hover:shadow-blue-500/25 transition-all duration-200"
+              className="mt-12 py-3 px-8 sm:py-4 sm:px-16 lg:px-52 rounded-lg text-xl text-white sm:text-3xl leading-tight bg-gradient-to-r from-blue-800 to-cyan-400 font-semibold hover:from-blue-900 hover:to-cyan-600 shadow-lg hover:shadow-blue-500/25 transition-all duration-200"
             >
               Let&apos;s Get Started
             </button>
