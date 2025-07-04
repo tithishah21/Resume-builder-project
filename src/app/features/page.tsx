@@ -8,7 +8,7 @@ import { FaRobot } from 'react-icons/fa';
 
 function Features() {
   return (
-    <section className="bg-gray-900/50 w-full min-h-[50vw] scroll-mt-24" id="features-section">
+    <section className="bg-black w-full min-h-[50vw] scroll-mt-24" id="features-section">
       <div className="pt-20 text-white font-semibold text-3xl sm:text-4xl md:text-5xl text-center leading-tight">
         Why Choose ResumeBuilder Pro?
       </div>
@@ -16,7 +16,7 @@ function Features() {
         Let&apos;s explore the features...
       </div>
 
-      <div className="flex flex-col md:flex-row justify-evenly items-center gap-8 md:gap-0 pb-5">
+      <div className="flex flex-col md:flex-row justify-evenly items-center gap-8 md:gap-0 pb-5 text-white">
         {/* Lightning Fast */}
         <div>
           <SpotlightCard
