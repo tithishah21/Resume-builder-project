@@ -86,7 +86,7 @@ export default function PrivatePage() {
           <h1 className="text-base font-semibold text-white mx-2 whitespace-pre-line break-words">ResumeBuilder Pro&apos;s Dashboard</h1>
           <button 
             onClick={handleLogout}
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg font-bold transition-colors"
+            className="text-white px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg font-bold transition-colors"
           >
             Logout
           </button>
