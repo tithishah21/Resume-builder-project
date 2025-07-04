@@ -118,7 +118,7 @@ const ResumeCreationFlow = () => {
       </section>
 
       {/* === Your Existing Template Section === */}
-      <section id="templates" className="relative mb-5 py-5 px-6 bg-gray-950 overflow-hidden text-white">
+      <section id="templates" className="relative mb-0 py-5 px-6 bg-gray-950 overflow-hidden text-white">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-11 items-center">
           {/* Left Text + CTA */}
           <div>
